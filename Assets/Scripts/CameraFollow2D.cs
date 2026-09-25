@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Camera : MonoBehaviour
+public class CameraFollow2D : MonoBehaviour
 {
     [Header("Target")]
     [SerializeField] private Transform _target;
