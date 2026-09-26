@@ -52,15 +52,17 @@ public class PlayerRangeInteraction : MonoBehaviour
 
         GameObject target = nearbyObjects[0];
 
-        Door door = target.GetComponentInParent<Door>();
+        BuyItemDevice buyDevice = target.GetComponentInParent<BuyItemDevice>();
+        if (buyDevice != null)
+        {
+            buyDevice.Interact();
+            return;
+        }
 
+        Door door = target.GetComponentInParent<Door>();
         if (door != null)
         {
             door.ToggleDoor();
-        }
-        else
-        {
-            target.SetActive(true);
         }
     }
 }
