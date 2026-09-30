@@ -52,6 +52,13 @@ public class PlayerRangeInteraction : MonoBehaviour
 
         GameObject target = nearbyObjects[0];
 
+        Transport transport = target.GetComponentInParent<Transport>();
+        if (transport != null)
+        {
+            transport.Interact();
+            return;
+        }
+
         BuyItemDevice buyDevice = target.GetComponentInParent<BuyItemDevice>();
         if (buyDevice != null)
         {

@@ -13,4 +13,10 @@ public class BuyItemDevice : MonoBehaviour
             buyItemPanel.SetActive(true);
         }
     }
+
+    public void Close()
+    {
+        buyItemPanel.SetActive(false);
+
+    }
 }
