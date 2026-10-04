@@ -30,6 +30,12 @@ public class PlayerRangeInteraction : MonoBehaviour
         {
             nearbyObjects.Add(target);
         }
+
+        RangeHighlight highlight = other.GetComponentInParent<RangeHighlight>();
+        if (highlight != null)
+        {
+            highlight.SetPlayerInRange(other, true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -39,6 +45,12 @@ public class PlayerRangeInteraction : MonoBehaviour
             : other.gameObject;
 
         nearbyObjects.Remove(target);
+
+        RangeHighlight highlight = other.GetComponentInParent<RangeHighlight>();
+        if (highlight != null)
+        {
+            highlight.SetPlayerInRange(other, false);
+        }
     }
 
     private void InteractWithNearestObject()
