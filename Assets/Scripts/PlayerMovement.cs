@@ -4,6 +4,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private Transform visualRoot;
+    [SerializeField] private float turnSpeed = 360f;
 
     private Rigidbody rb;
     private Vector3 movement;
@@ -23,6 +25,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (movement.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(movement, Vector3.up);
+
+            visualRoot.rotation = Quaternion.RotateTowards(
+                visualRoot.rotation,
+                targetRotation,
+                turnSpeed * Time.fixedDeltaTime
+            );
+        }
+
         rb.MovePosition(
             rb.position + movement * moveSpeed * Time.fixedDeltaTime
         );
