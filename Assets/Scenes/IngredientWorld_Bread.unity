@@ -1048,8 +1048,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngredientCreature
   _data: {fileID: 11400000, guid: 8ac8327ad8c39594f8c56e35c7fee2ff, type: 2}
-  _detectRange: 4
-  _safeRange: 7
+  _detectRange: 6
+  _safeRange: 5
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
