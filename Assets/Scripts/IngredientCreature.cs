@@ -22,6 +22,7 @@ public class IngredientCreature : MonoBehaviour
 
     [Header("Stun")]
     [SerializeField] private float _stunDuration = 2f;
+    [SerializeField] private float _catchRange = 1.5f; // how close the player must be to press E
 
 
     [Header("Debug - read only")]
@@ -82,11 +83,20 @@ public class IngredientCreature : MonoBehaviour
         ChangeState(State.Stunned);
     }
 
+    private void Catch()
+    {
+        ChangeState(State.Caught);
+        Inventory.Instance.Add(_data);   // 1 ingredient for now, catch bonus comes later
+        gameObject.SetActive(false);
+    }
+
     private void Update()
     {
-        // DEBUG ONLY: delete this when the wand calls Stun()
-        if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
-            Stun();
+        if (_state != State.Stunned) return;
+        if (DistanceToPlayer() > _catchRange) return;
+
+        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+            Catch();
     }
 
     // ---------- States ----------

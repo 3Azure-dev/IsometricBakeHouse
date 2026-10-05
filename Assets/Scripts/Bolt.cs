@@ -43,6 +43,14 @@ public class Bolt : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // did we hit a creature?
+        if (other.TryGetComponent(out IngredientCreature creature))
+        {
+            creature.Stun();
+            Despawn();
+            return;
+        }
+
         // is the thing we hit on the Ground layer?
         if ((_groundLayer.value & (1 << other.gameObject.layer)) != 0)
             Despawn();
