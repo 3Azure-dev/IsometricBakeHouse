@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7535204018137464643
+--- !u!1 &4447440805401344962
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 519693783947825453}
-  - component: {fileID: 4879862877526948285}
+  - component: {fileID: 4041048687510658973}
+  - component: {fileID: 988914585291794125}
+  - component: {fileID: 8398929506687797656}
   m_Layer: 0
   m_Name: Inventory
   m_TagString: Untagged
@@ -17,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &519693783947825453
+--- !u!4 &4041048687510658973
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7535204018137464643}
+  m_GameObject: {fileID: 4447440805401344962}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.67008, y: 16.4937, z: -0.03556}
@@ -32,15 +33,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4879862877526948285
+--- !u!114 &988914585291794125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7535204018137464643}
+  m_GameObject: {fileID: 4447440805401344962}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83a818114ce1dbe4ea0daabd59508890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &8398929506687797656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4447440805401344962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af98a9066a0b66f4b9681c30f98d6e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  testIngredient: {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
