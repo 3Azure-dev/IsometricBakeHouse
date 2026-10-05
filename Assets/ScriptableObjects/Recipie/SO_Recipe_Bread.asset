@@ -17,9 +17,9 @@ MonoBehaviour:
   unlockLevel: 1
   blueprintCost: 0
   huntedIngredients:
+  - {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
   - {fileID: 11400000, guid: 8ac8327ad8c39594f8c56e35c7fee2ff, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: c2cac85afad5de249b80048fc6526883, type: 2}
   autoAppliedIngredient: Salt
   requiredEquipment: {fileID: 11400000, guid: 68aa76871f3208c4b9c11c7533af3a23, type: 2}
   cookTime: 10
