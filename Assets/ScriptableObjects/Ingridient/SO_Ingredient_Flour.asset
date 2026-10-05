@@ -15,3 +15,9 @@ MonoBehaviour:
   ingredientName: Flour
   icon: {fileID: 0}
   fleeSpeed: 6
+  jumpForce: 8
+  detectRange: 4
+  safeRange: 7
+  stunDuration: 2
+  catchRange: 1.5
+  ingredientsPerCatch: 3
