@@ -2,25 +2,46 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class ExitDoor : MonoBehaviour
+public class ExitDoor1 : MonoBehaviour
 {
     [SerializeField] private string sceneToLoad = "Bakery";
+    [SerializeField] private GameObject ePrompt;
 
     private bool playerInRange;
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void Start()
     {
-        if (other.CompareTag("Player")) playerInRange = true;
+        if (ePrompt != null)
+            ePrompt.SetActive(false);
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) playerInRange = false;
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = true;
+
+            if (ePrompt != null)
+                ePrompt.SetActive(true);
+        }
     }
 
-    void Update()
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (playerInRange && Keyboard.current.eKey.wasPressedThisFrame)
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = false;
+
+            if (ePrompt != null)
+                ePrompt.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (playerInRange &&
+            Keyboard.current != null &&
+            Keyboard.current.eKey.wasPressedThisFrame)
         {
             SceneManager.LoadScene(sceneToLoad);
         }
