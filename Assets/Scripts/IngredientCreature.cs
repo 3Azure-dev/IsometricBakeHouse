@@ -6,23 +6,12 @@ public class IngredientCreature : MonoBehaviour
 {
     public enum State { Idle, Fleeing, Stunned, Caught }
 
-    [Header("Data")]
+    [Header("Data - all game feel numbers live in this asset")]
     [SerializeField] private IngredientData _data;
 
-
-    [Header("Flee")]
-    [SerializeField] private float _detectRange = 4f; // starts fleeing inside this
-    [SerializeField] private float _safeRange = 7f;   // calms down outside this
-
-
-    [Header("Jump")]
+    [Header("Technical")]
     [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private float _jumpForce = 8f;
     [SerializeField] private float _lookAhead = 0.3f;
-
-    [Header("Stun")]
-    [SerializeField] private float _stunDuration = 2f;
-
 
     [Header("Debug - read only")]
     [SerializeField] private State _state = State.Idle;
@@ -30,8 +19,6 @@ public class IngredientCreature : MonoBehaviour
     private Rigidbody2D _rb;
     private Collider2D _col;
     private Transform _player;
-    private float _fleeSpeed;
-
     private float _stunTimer;
 
     public State CurrentState => _state;
@@ -50,7 +37,6 @@ public class IngredientCreature : MonoBehaviour
             enabled = false;
             return;
         }
-        _fleeSpeed = _data.fleeSpeed;
 
         GameObject playerObj = GameObject.FindWithTag("Player"); // runs once, not every frame
         if (playerObj != null) _player = playerObj.transform;
@@ -68,6 +54,15 @@ public class IngredientCreature : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (_state != State.Stunned) return;
+        if (DistanceToPlayer() > _data.catchRange) return;
+
+        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+            Catch();
+    }
+
     private void ChangeState(State newState)
     {
         if (newState == _state) return;
@@ -77,16 +72,16 @@ public class IngredientCreature : MonoBehaviour
 
     public void Stun()
     {
-        if (_state == State.Caught) return; // already caught, ignore
-        _stunTimer = _stunDuration;         // zapping again resets the timer
+        if (_state == State.Caught) return;   // already caught, ignore
+        _stunTimer = _data.stunDuration;      // zapping again resets the timer
         ChangeState(State.Stunned);
     }
 
-    private void Update()
+    private void Catch()
     {
-        // DEBUG ONLY: delete this when the wand calls Stun()
-        if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
-            Stun();
+        ChangeState(State.Caught);
+        Inventory.Instance.Add(_data, _data.ingredientsPerCatch);
+        gameObject.SetActive(false);
     }
 
     // ---------- States ----------
@@ -94,13 +89,13 @@ public class IngredientCreature : MonoBehaviour
     private void UpdateIdle()
     {
         StopMovingSideways();
-        if (DistanceToPlayer() < _detectRange)
+        if (DistanceToPlayer() < _data.detectRange)
             ChangeState(State.Fleeing);
     }
 
     private void UpdateFleeing()
     {
-        if (DistanceToPlayer() > _safeRange)
+        if (DistanceToPlayer() > _data.safeRange)
         {
             ChangeState(State.Idle);
             return;
@@ -108,7 +103,7 @@ public class IngredientCreature : MonoBehaviour
 
         // +1 if player is on our left (run right), -1 if on our right (run left)
         float direction = Mathf.Sign(transform.position.x - _player.position.x);
-        _rb.linearVelocity = new Vector2(direction * _fleeSpeed, _rb.linearVelocity.y);
+        _rb.linearVelocity = new Vector2(direction * _data.fleeSpeed, _rb.linearVelocity.y);
 
         if (IsGrounded())
         {
@@ -145,15 +140,12 @@ public class IngredientCreature : MonoBehaviour
         _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
     }
 
-    private void OnDrawGizmosSelected()
+    private void Jump()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, _detectRange);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, _safeRange);
+        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _data.jumpForce);
     }
 
-        private bool IsGrounded()
+    private bool IsGrounded()
     {
         Bounds b = _col.bounds;
         Vector2 feet = new Vector2(b.center.x, b.min.y);
@@ -174,22 +166,28 @@ public class IngredientCreature : MonoBehaviour
         return !Physics2D.Raycast(origin, Vector2.down, 1f, _groundLayer); // nothing below = gap
     }
 
-    private void Jump()
-    {
-        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _jumpForce);
-    }
-
-        private bool CeilingAhead(float dir)
+    private bool CeilingAhead(float dir)
     {
         Bounds b = _col.bounds;
 
         // how high the jump goes: v^2 / (2 * gravity)
         float gravity = Mathf.Abs(Physics2D.gravity.y) * _rb.gravityScale;
-        float jumpHeight = (_jumpForce * _jumpForce) / (2f * gravity);
+        float jumpHeight = (_data.jumpForce * _data.jumpForce) / (2f * gravity);
 
         // a box sitting above the head, reaching forward toward the gap
         Vector2 center = new Vector2(b.center.x + dir * b.size.x, b.max.y + jumpHeight * 0.5f);
         Vector2 size = new Vector2(b.size.x * 2f, jumpHeight);
         return Physics2D.OverlapBox(center, size, 0f, _groundLayer);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (_data == null) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _data.detectRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, _data.safeRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _data.catchRange);
     }
 }
