@@ -20,4 +20,4 @@ MonoBehaviour:
   safeRange: 7
   stunDuration: 2
   catchRange: 1.5
-  ingredientsPerCatch: 3
+  ingredientsPerCatch: 1
