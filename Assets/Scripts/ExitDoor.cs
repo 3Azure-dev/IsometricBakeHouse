@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class ExitDoor1 : MonoBehaviour
 {
-    [SerializeField] private string sceneToLoad = "Bakery";
     [SerializeField] private GameObject ePrompt;
+    [SerializeField] private LevelCompleteUI levelCompleteUI;
 
     private bool playerInRange;
+    private bool levelCompleted;
 
     private void Start()
     {
@@ -40,10 +40,17 @@ public class ExitDoor1 : MonoBehaviour
     private void Update()
     {
         if (playerInRange &&
+            !levelCompleted &&
             Keyboard.current != null &&
             Keyboard.current.eKey.wasPressedThisFrame)
         {
-            SceneManager.LoadScene(sceneToLoad);
+            levelCompleted = true;
+
+            if (ePrompt != null)
+                ePrompt.SetActive(false);
+
+            if (levelCompleteUI != null)
+                levelCompleteUI.ShowLevelComplete();
         }
     }
 }

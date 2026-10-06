@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class IngredientCreature1 : MonoBehaviour
+public class IngredientCreature : MonoBehaviour
 {
     public enum State { Idle, Fleeing, Stunned, Caught }
 
@@ -80,7 +80,7 @@ public class IngredientCreature1 : MonoBehaviour
     private void Catch()
     {
         ChangeState(State.Caught);
-        Inventory1.Instance.Add(_data, _data.ingredientsPerCatch);
+        Inventory.Instance.Add(_data, _data.ingredientsPerCatch);
         gameObject.SetActive(false);
     }
 

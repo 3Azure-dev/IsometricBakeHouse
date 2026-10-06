@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory1 : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
     // Singleton: one Inventory, reachable from anywhere
-    public static Inventory1 Instance { get; private set; }
+    public static Inventory Instance { get; private set; }
 
     // Observer: UI and shelf listen to this to know when a count changes
     public event Action<IngredientData, int> OnChanged;
@@ -44,16 +44,5 @@ public class Inventory1 : MonoBehaviour
     public int GetCount(IngredientData ingredient)
     {
         return counts.TryGetValue(ingredient, out int count) ? count : 0;
-    }
-    public int GetTotalIngredientCount()
-    {
-        int total = 0;
-
-        foreach (int count in counts.Values)
-        {
-            total += count;
-        }
-
-        return total;
     }
 }
