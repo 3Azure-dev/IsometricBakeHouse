@@ -1,6 +1,5 @@
 public enum CustomerType
 {
-    Regular,
-    Student,
+    Normal,
     VIP
 }
