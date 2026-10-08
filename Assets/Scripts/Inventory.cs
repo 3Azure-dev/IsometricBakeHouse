@@ -45,6 +45,29 @@ public class Inventory1 : MonoBehaviour
     {
         return counts.TryGetValue(ingredient, out int count) ? count : 0;
     }
+
+
+    // True if the player has 1 of every ingredient the recipe needs
+    public bool CanCook(RecipeData recipe)
+    {
+        foreach (IngredientData ingredient in recipe.huntedIngredients)
+        {
+            if (GetCount(ingredient) < 1) return false;
+        }
+        return true;
+    }
+
+    // Removes the ingredients. Returns false and removes nothing if something is missing
+    public bool UseIngredients(RecipeData recipe)
+    {
+        if (!CanCook(recipe)) return false;
+
+        foreach (IngredientData ingredient in recipe.huntedIngredients)
+        {
+            Remove(ingredient);
+        }
+        return true;
+    }
     public int GetTotalIngredientCount()
     {
         int total = 0;

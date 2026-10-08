@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2174463132433567821}
-  - component: {fileID: 717270776667871282}
+  - component: {fileID: -4536029019286661188}
   - component: {fileID: 7827816144222173230}
   - component: {fileID: 7547551640763400215}
   - component: {fileID: 7221062605650769358}
   - component: {fileID: -6164289807251716286}
   m_Layer: 0
-  m_Name: Creature_Flour
+  m_Name: Creature_Seeds
   m_TagString: Untagged
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -37,7 +37,7 @@ Transform:
   - {fileID: 2439542781829841003}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &717270776667871282
+--- !u!114 &-4536029019286661188
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,15 +46,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1110111097688326356}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a54426d9585edf45a8207895c160103, type: 3}
+  m_Script: {fileID: 11500000, guid: f3135686e4eb21340a365abf1b617273, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IngredientCreature
-  _data: {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::SeedsCreature
+  _data: {fileID: 11400000, guid: c2cac85afad5de249b80048fc6526883, type: 2}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
   _lookAhead: 0.3
   _state: 0
+  _puddlePrefab: {fileID: 8048579113560669760, guid: 153a4c2726191f846b7bcfa6e6646770, type: 3}
 --- !u!212 &7827816144222173230
 SpriteRenderer:
   serializedVersion: 3
@@ -105,7 +106,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+  m_Color: {r: 0.54509807, g: 0.3529412, b: 0.16862746, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

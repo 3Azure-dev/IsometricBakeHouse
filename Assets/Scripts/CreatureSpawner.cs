@@ -3,7 +3,11 @@ using UnityEngine;
 
 public class CreatureSpawner : MonoBehaviour
 {
-    [SerializeField] private IngredientCreature1 _creaturePrefab;
+    [Tooltip("The creature types this level can spawn")]
+    [SerializeField] private IngredientCreature1[] _creaturePrefabs;
+
+    [Tooltip("Every creature type spawns at least this many times. The rest of the points are random")]
+    [SerializeField] private int _minPerType = 3;
 
     [Tooltip("A creature that falls below this height goes back to its spawn point")]
     [SerializeField] private float _fallHeight = -10f;
@@ -13,12 +17,38 @@ public class CreatureSpawner : MonoBehaviour
 
     private void Start()
     {
-        // every child of this object is a spawn point
-        foreach (Transform point in transform)
+        // 1. make a list of what to spawn
+        List<IngredientCreature1> toSpawn = new();
+
+        // first, the guaranteed ones
+        foreach (IngredientCreature1 prefab in _creaturePrefabs)
+            for (int n = 0; n < _minPerType; n++)
+                toSpawn.Add(prefab);
+
+        // then fill the leftover points with random types
+        while (toSpawn.Count < transform.childCount)
+            toSpawn.Add(_creaturePrefabs[Random.Range(0, _creaturePrefabs.Length)]);
+
+        if (toSpawn.Count > transform.childCount)
         {
-            IngredientCreature1 creature = Instantiate(_creaturePrefab, point.position, Quaternion.identity);
+            Debug.LogError($"{name}: not enough spawn points! Need at least {toSpawn.Count}");
+            return;
+        }
+
+        // 2. shuffle the list
+        for (int i = 0; i < toSpawn.Count; i++)
+        {
+            int swap = Random.Range(i, toSpawn.Count);
+            (toSpawn[i], toSpawn[swap]) = (toSpawn[swap], toSpawn[i]);
+        }
+
+        // 3. every child of this object is a spawn point
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Vector3 home = transform.GetChild(i).position;
+            IngredientCreature1 creature = Instantiate(toSpawn[i], home, Quaternion.identity);
             _creatures.Add(creature);
-            _homes.Add(point.position);
+            _homes.Add(home);
         }
     }
 

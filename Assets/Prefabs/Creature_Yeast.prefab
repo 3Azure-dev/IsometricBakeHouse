@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7221062605650769358}
   - component: {fileID: -6164289807251716286}
   m_Layer: 0
-  m_Name: Creature_Flour
+  m_Name: Creature_Yeast
   m_TagString: Untagged
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a54426d9585edf45a8207895c160103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngredientCreature
-  _data: {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
+  _data: {fileID: 11400000, guid: 8ac8327ad8c39594f8c56e35c7fee2ff, type: 2}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -105,7 +105,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+  m_Color: {r: 0.9490196, g: 0.7882353, b: 0.29803923, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

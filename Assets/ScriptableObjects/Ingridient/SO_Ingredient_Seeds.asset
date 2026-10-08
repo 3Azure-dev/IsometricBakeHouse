@@ -15,3 +15,13 @@ MonoBehaviour:
   ingredientName: Seeds
   icon: {fileID: 0}
   fleeSpeed: 6
+  jumpForce: 8
+  gravityScale: 1
+  detectRange: 2.5
+  safeRange: 7
+  stunDuration: 2
+  catchRange: 1.5
+  ingredientsPerCatch: 1
+  hoverHeight: 3
+  bobAmount: 0.3
+  bobSpeed: 2
