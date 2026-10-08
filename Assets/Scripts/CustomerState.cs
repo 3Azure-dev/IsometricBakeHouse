@@ -2,13 +2,10 @@ public enum CustomerState
 {
     GoingToSeat,
     Thinking,
-    WaitingForCounter,
-    GoingToCounter,
+    WaitingForPlayer,
     Ordering,
-    ReturningToSeat,
     WaitingForFood,
-    GoingToCollect,
-    ReturningAfterCollect,
     Eating,
-    Leaving
+    Leaving,
+    ReturningBecauseNoSeat
 }
