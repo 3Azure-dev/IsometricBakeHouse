@@ -120,6 +120,15 @@ public class PlayerRangeInteraction : MonoBehaviour
             return;
         }
 
+        IngredientShelfInteractable shelf =
+    target.GetComponentInParent<IngredientShelfInteractable>();
+
+        if (shelf != null)
+        {
+            shelf.Interact();
+            return;
+        }
+
 
         // DOOR
         Door door =
