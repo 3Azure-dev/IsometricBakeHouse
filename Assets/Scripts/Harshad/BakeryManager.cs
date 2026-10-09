@@ -10,6 +10,11 @@ public class BakeryOrderManager : MonoBehaviour
 
     private int nextOrderID = 1;
 
+
+    // --------------------------------------------------
+    // AWAKE
+    // --------------------------------------------------
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -21,41 +26,53 @@ public class BakeryOrderManager : MonoBehaviour
         Instance = this;
     }
 
+
+    // --------------------------------------------------
+    // CREATE ORDER
+    // --------------------------------------------------
+
     public BakeryOrder CreateOrder(
         CustomerController customer,
-        List<FoodType> items)
+        FoodType item)
     {
         BakeryOrder order =
             new BakeryOrder();
 
-        order.orderID = nextOrderID++;
+        order.orderID =
+            nextOrderID++;
 
-        order.customer = customer;
+        order.customer =
+            customer;
 
-        order.items =
-            new List<FoodType>(items);
+        order.item =
+            item;
 
-        order.isAccepted = false;
-
-        order.isCompleted = false;
+        order.isAccepted =
+            false;
 
         orders.Add(order);
 
         Debug.Log(
             "Created Order #" +
-            order.orderID
+            order.orderID +
+            " for " +
+            item
         );
 
         return order;
     }
+
+
+    // --------------------------------------------------
+    // GET CUSTOMER ORDER
+    // --------------------------------------------------
 
     public BakeryOrder GetOrderForCustomer(
         CustomerController customer)
     {
         foreach (BakeryOrder order in orders)
         {
-            if (order.customer == customer &&
-                !order.isCompleted)
+            if (order.customer == customer)
             {
                 return order;
             }
@@ -64,27 +81,40 @@ public class BakeryOrderManager : MonoBehaviour
         return null;
     }
 
+
+    // --------------------------------------------------
+    // ACCEPT ORDER
+    // --------------------------------------------------
+
     public void AcceptOrder(int orderID)
     {
         BakeryOrder order =
             GetOrder(orderID);
 
         if (order == null)
+        {
             return;
+        }
 
-        order.isAccepted = true;
+        if (order.isAccepted)
+        {
+            return;
+        }
+
+        order.isAccepted =
+            true;
 
         Debug.Log(
             "Order #" +
             orderID +
             " accepted."
         );
-
-        if (order.customer != null)
-        {
-            order.customer.OrderAccepted();
-        }
     }
+
+
+    // --------------------------------------------------
+    // REJECT ORDER
+    // --------------------------------------------------
 
     public void RejectOrder(int orderID)
     {
@@ -92,7 +122,9 @@ public class BakeryOrderManager : MonoBehaviour
             GetOrder(orderID);
 
         if (order == null)
+        {
             return;
+        }
 
         Debug.Log(
             "Order #" +
@@ -100,38 +132,13 @@ public class BakeryOrderManager : MonoBehaviour
             " rejected."
         );
 
-        if (order.customer != null)
-        {
-            order.customer.OrderRejected();
-        }
-
         orders.Remove(order);
     }
 
-    public void CompleteOrder(int orderID)
-    {
-        BakeryOrder order =
-            GetOrder(orderID);
 
-        if (order == null)
-            return;
-
-        if (!order.isAccepted)
-            return;
-
-        order.isCompleted = true;
-
-        Debug.Log(
-            "Order #" +
-            orderID +
-            " completed."
-        );
-
-        if (order.customer != null)
-        {
-            order.customer.OrderCompleted();
-        }
-    }
+    // --------------------------------------------------
+    // GET ORDER
+    // --------------------------------------------------
 
     private BakeryOrder GetOrder(int orderID)
     {
