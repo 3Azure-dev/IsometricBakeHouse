@@ -1912,7 +1912,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1708429171}
         m_TargetAssemblyTypeName: LevelCompleteUI, Assembly-CSharp
         m_MethodName: BackToBakery
         m_Mode: 1
@@ -8643,10 +8643,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea7390ab7b6a134c9663e6e81675eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelCompleteUI
-  panel: {fileID: 0}
-  canvasGroup: {fileID: 0}
-  ingredientsText: {fileID: 0}
-  flourIngredient: {fileID: 0}
+  panel: {fileID: 2145811275}
+  canvasGroup: {fileID: 2145811277}
+  ingredientsText: {fileID: 1081810183}
+  flourIngredient: {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
   fadeDuration: 0.5
 --- !u!1 &1830845724
 GameObject:
