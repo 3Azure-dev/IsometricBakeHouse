@@ -74,15 +74,28 @@ public class IngredientCreature1 : MonoBehaviour
 
     public void Stun()
     {
-        if (_state == State.Caught) return;   // already caught, ignore
-        _stunTimer = _data.stunDuration;      // zapping again resets the timer
+        if (_state == State.Caught) return;
+
+        if (_state != State.Stunned && BreadSFX.Instance != null)
+        {
+            BreadSFX.Instance.PlayCreatureStunned();
+        }
+
+        _stunTimer = _data.stunDuration;
         ChangeState(State.Stunned);
     }
 
     private void Catch()
     {
         ChangeState(State.Caught);
+
         Inventory1.Instance.Add(_data, _data.ingredientsPerCatch);
+
+        if (BreadSFX.Instance != null)
+        {
+            BreadSFX.Instance.PlayCreatureCaught();
+        }
+
         gameObject.SetActive(false);
     }
 
