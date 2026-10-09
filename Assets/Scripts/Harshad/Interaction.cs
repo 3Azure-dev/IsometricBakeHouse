@@ -129,6 +129,15 @@ public class PlayerRangeInteraction : MonoBehaviour
             return;
         }
 
+        OvenController oven =
+    target.GetComponentInParent<OvenController>();
+
+        if (oven != null)
+        {
+            oven.Interact();
+            return;
+        }
+
 
         // DOOR
         Door door =

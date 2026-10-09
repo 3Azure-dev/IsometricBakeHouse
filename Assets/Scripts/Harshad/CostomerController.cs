@@ -24,7 +24,8 @@ public class CustomerController : MonoBehaviour
     // The ONE food this customer wants
     private FoodType chosenFood;
 
-
+    [SerializeField]
+    private ThinkingBubble thinkingBubble;
     // --------------------------------------------------
     // START CUSTOMER
     // --------------------------------------------------
@@ -80,21 +81,21 @@ public class CustomerController : MonoBehaviour
 
                 if (MoveTo(mySeat.position))
                 {
-                    state =
-                        CustomerState.Thinking;
+                    state = CustomerState.Thinking;
 
                     timer = 0f;
 
                     CreateMyOrder();
 
-                    Debug.Log(
-                        name +
-                        " is sitting and thinking."
-                    );
+                    if (thinkingBubble != null)
+                    {
+                        thinkingBubble.Show(GetOrderText());
+                    }
+
+                    Debug.Log(name + " is sitting and thinking.");
                 }
 
                 break;
-
 
             case CustomerState.Thinking:
 
@@ -102,14 +103,12 @@ public class CustomerController : MonoBehaviour
 
                 if (timer >= thinkingTime)
                 {
-                    state =
-                        CustomerState.WaitingForPlayer;
+                    state = CustomerState.WaitingForPlayer;
 
                     timer = 0f;
 
                     Debug.Log(
-                        name +
-                        " finished thinking and is waiting for the player."
+                        name + " finished thinking and is waiting for the player."
                     );
                 }
 
@@ -279,6 +278,12 @@ public class CustomerController : MonoBehaviour
 
     public void OrderAccepted()
     {
+
+        if (thinkingBubble != null)
+        {
+            thinkingBubble.Hide();
+        }
+
         if (state != CustomerState.Ordering)
         {
             Debug.Log(
@@ -511,6 +516,12 @@ public class CustomerController : MonoBehaviour
 
     private void ResetCustomer()
     {
+
+        if (thinkingBubble != null)
+        {
+            thinkingBubble.Hide();
+        }
+
         mySeat = null;
 
         myOrder = null;
