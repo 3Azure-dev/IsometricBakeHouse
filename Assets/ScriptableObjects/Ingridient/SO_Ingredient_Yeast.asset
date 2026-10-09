@@ -15,3 +15,13 @@ MonoBehaviour:
   ingredientName: Yeast
   icon: {fileID: 0}
   fleeSpeed: 6
+  jumpForce: 9
+  gravityScale: 0.4
+  detectRange: 4
+  safeRange: 7
+  stunDuration: 2
+  catchRange: 1.5
+  ingredientsPerCatch: 1
+  hoverHeight: 3
+  bobAmount: 0.3
+  bobSpeed: 2

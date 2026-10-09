@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     private bool _jumpPressed;
     private bool _isGrounded;
 
+    private float _slowMultiplier = 1f; // 1 = normal speed, 0.5 = half speed
+    private float _slowTimer;
+
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -41,7 +44,14 @@ public class PlayerController : MonoBehaviour
     {
         _isGrounded = CheckGround();
 
-        _rb.linearVelocity = new Vector2(_moveInput * _moveSpeed, _rb.linearVelocity.y);
+        // count the slow down, then go back to normal speed
+        if (_slowTimer > 0f)
+        {
+            _slowTimer -= Time.fixedDeltaTime;
+            if (_slowTimer <= 0f) _slowMultiplier = 1f;
+        }
+
+        _rb.linearVelocity = new Vector2(_moveInput * _moveSpeed * _slowMultiplier, _rb.linearVelocity.y);
 
         if (_jumpPressed && _isGrounded)
             _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _jumpForce);
@@ -63,6 +73,13 @@ public class PlayerController : MonoBehaviour
             CurrentState = Mathf.Abs(_moveInput) > 0.01f ? PlayerState.Running : PlayerState.Idle;
         else
             CurrentState = _rb.linearVelocity.y > 0f ? PlayerState.Jumping : PlayerState.Falling;
+    }
+
+    // Anything can call this to slow the player for a short time
+    public void ApplySlow(float multiplier, float duration)
+    {
+        _slowMultiplier = multiplier;
+        _slowTimer = duration;
     }
 
     void OnDrawGizmosSelected()

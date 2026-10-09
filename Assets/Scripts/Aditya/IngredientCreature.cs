@@ -7,23 +7,23 @@ public class IngredientCreature1 : MonoBehaviour
     public enum State { Idle, Fleeing, Stunned, Caught }
 
     [Header("Data - all game feel numbers live in this asset")]
-    [SerializeField] private IngredientData _data;
+    [SerializeField] protected IngredientData _data;
 
     [Header("Technical")]
-    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] protected LayerMask _groundLayer;
     [SerializeField] private float _lookAhead = 0.3f;
 
     [Header("Debug - read only")]
     [SerializeField] private State _state = State.Idle;
 
-    private Rigidbody2D _rb;
-    private Collider2D _col;
-    private Transform _player;
-    private float _stunTimer;
+    protected Rigidbody2D _rb;
+    protected Collider2D _col;
+    protected Transform _player;
+    protected float _stunTimer;
 
     public State CurrentState => _state;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<Collider2D>();
@@ -41,6 +41,8 @@ public class IngredientCreature1 : MonoBehaviour
         GameObject playerObj = GameObject.FindWithTag("Player"); // runs once, not every frame
         if (playerObj != null) _player = playerObj.transform;
         else Debug.LogError($"{name}: no object tagged Player found!");
+
+        _rb.gravityScale = _data.gravityScale;
     }
 
     private void FixedUpdate()
@@ -63,7 +65,7 @@ public class IngredientCreature1 : MonoBehaviour
             Catch();
     }
 
-    private void ChangeState(State newState)
+    protected virtual void ChangeState(State newState)
     {
         if (newState == _state) return;
         _state = newState;
@@ -86,14 +88,14 @@ public class IngredientCreature1 : MonoBehaviour
 
     // ---------- States ----------
 
-    private void UpdateIdle()
+    protected virtual void UpdateIdle()
     {
         StopMovingSideways();
         if (DistanceToPlayer() < _data.detectRange)
             ChangeState(State.Fleeing);
     }
 
-    private void UpdateFleeing()
+    protected virtual void UpdateFleeing()
     {
         if (DistanceToPlayer() > _data.safeRange)
         {
@@ -119,7 +121,7 @@ public class IngredientCreature1 : MonoBehaviour
         }
     }
 
-    private void UpdateStunned()
+    protected virtual void UpdateStunned()
     {
         StopMovingSideways();
         _stunTimer -= Time.fixedDeltaTime;
@@ -129,13 +131,13 @@ public class IngredientCreature1 : MonoBehaviour
 
     // ---------- Helpers ----------
 
-    private float DistanceToPlayer()
+    protected virtual float DistanceToPlayer()
     {
         if (_player == null) return Mathf.Infinity;
         return Vector2.Distance(transform.position, _player.position);
     }
 
-    private void StopMovingSideways()
+    protected virtual void StopMovingSideways()
     {
         _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
     }
@@ -145,7 +147,7 @@ public class IngredientCreature1 : MonoBehaviour
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _data.jumpForce);
     }
 
-    private bool IsGrounded()
+    protected bool IsGrounded()
     {
         Bounds b = _col.bounds;
         Vector2 feet = new Vector2(b.center.x, b.min.y);
