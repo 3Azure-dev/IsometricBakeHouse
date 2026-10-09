@@ -631,7 +631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   ePrompt: {fileID: 882865576}
-  levelCompleteUI: {fileID: 1708429171}
+  levelCompleteUI: {fileID: 1708429172}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,7 +1475,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1708429171}
+      - m_Target: {fileID: 1708429172}
         m_TargetAssemblyTypeName: LevelCompleteUI, Assembly-CSharp
         m_MethodName: BackToBakery
         m_Mode: 1
@@ -7651,7 +7651,7 @@ GameObject:
   - component: {fileID: 1708429169}
   - component: {fileID: 1708429168}
   - component: {fileID: 1708429167}
-  - component: {fileID: 1708429171}
+  - component: {fileID: 1708429172}
   m_Layer: 5
   m_Name: LevelCompleteCanvas
   m_TagString: Untagged
@@ -7743,7 +7743,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1708429171
+--- !u!114 &1708429172
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7752,7 +7752,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1708429166}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0887ac1b681c6eb409f6c30d7c99fda0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ea7390ab7b6a134c9663e6e81675eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelCompleteUI
   panel: {fileID: 2145811275}
