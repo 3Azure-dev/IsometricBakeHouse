@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Collections;
 
@@ -6,53 +6,90 @@ public class CoinCounterUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text coinAmountText;
 
-    private int coins = 250;
+    private int coins;
     private Coroutine popCoroutine;
+    private Vector3 originalScale;
 
-    private void Start()
+    private void Awake()
     {
+        originalScale = transform.localScale;
+    }
+
+    private void OnEnable()
+    {
+        Wallet wallet = Wallet.Instance;
+
+        if (wallet == null)
+        {
+            Debug.LogError("CoinCounterUI: Wallet.Instance was not found.");
+            return;
+        }
+
+        // Subscribe to the existing Wallet event.
+        wallet.CoinsChanged += HandleCoinsChanged;
+
+        // Display the current balance immediately.
+        coins = wallet.Coins;
         UpdateCoinText();
     }
-    private void Update()
+
+    private void OnDisable()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        // Unsubscribe when this UI is disabled or destroyed.
+        if (Wallet.Instance != null)
         {
-            TestCoinChange();
+            Wallet.Instance.CoinsChanged -= HandleCoinsChanged;
         }
+
+        if (popCoroutine != null)
+        {
+            StopCoroutine(popCoroutine);
+            popCoroutine = null;
+        }
+
+        transform.localScale = originalScale;
     }
 
-    public void SetCoins(int newAmount)
+    private void HandleCoinsChanged(int newAmount)
     {
         if (coins == newAmount)
             return;
 
         coins = newAmount;
+
         UpdateCoinText();
         PlayPopAnimation();
     }
 
     private void UpdateCoinText()
     {
-        if (coinAmountText != null)
+        if (coinAmountText == null)
         {
-            coinAmountText.text = "?? " + coins;
+            Debug.LogError(
+                "CoinCounterUI: Assign the TextMeshPro component in the Inspector."
+            );
+            return;
         }
+
+        coinAmountText.text = "🪙 " + coins;
     }
 
     private void PlayPopAnimation()
     {
         if (popCoroutine != null)
+        {
             StopCoroutine(popCoroutine);
+            popCoroutine = null;
+        }
 
+        transform.localScale = originalScale;
         popCoroutine = StartCoroutine(PopAnimation());
     }
 
     private IEnumerator PopAnimation()
     {
-        Vector3 originalScale = transform.localScale;
-        Vector3 enlargedScale = originalScale * 1.15f;
-
         float duration = 0.12f;
+        Vector3 enlargedScale = originalScale * 1.15f;
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -85,9 +122,5 @@ public class CoinCounterUI : MonoBehaviour
 
         transform.localScale = originalScale;
         popCoroutine = null;
-    }
-    public void TestCoinChange()
-    {
-        SetCoins(coins + 10);
     }
 }
