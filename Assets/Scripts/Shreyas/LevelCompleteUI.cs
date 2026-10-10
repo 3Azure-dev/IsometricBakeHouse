@@ -19,7 +19,7 @@ public class LevelCompleteUI : MonoBehaviour
 
     public void ShowLevelComplete()
     {
-        int count = Inventory1.Instance.GetCount(flourIngredient);
+        int count = Inventory1.Instance.GetTotalIngredientCount();
 
         ingredientsText.text = "Ingredients Collected: " + count;
 
