@@ -1,10 +1,15 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class IngredientCreature1 : MonoBehaviour
 {
     public enum State { Idle, Fleeing, Stunned, Caught }
+
+    // the level tracker listens to these
+    public static event Action<IngredientCreature1> CreatureCaught;
+    public static event Action<IngredientCreature1> CreatureEscaped;
 
     [Header("Data - all game feel numbers live in this asset")]
     [SerializeField] protected IngredientData _data;
@@ -90,12 +95,21 @@ public class IngredientCreature1 : MonoBehaviour
         ChangeState(State.Caught);
 
         Inventory1.Instance.Add(_data, _data.ingredientsPerCatch);
+        CreatureCaught?.Invoke(this);
 
         if (BreadSFX.Instance != null)
         {
             BreadSFX.Instance.PlayCreatureCaught();
         }
 
+        gameObject.SetActive(false);
+    }
+
+    [ContextMenu("Test: Escape")]
+    public void Escape()
+    {
+        if (_state == State.Caught) return;
+        CreatureEscaped?.Invoke(this);
         gameObject.SetActive(false);
     }
 
@@ -110,7 +124,7 @@ public class IngredientCreature1 : MonoBehaviour
 
     protected virtual void UpdateFleeing()
     {
-        if (DistanceToPlayer() > _data.safeRange)
+        if (DistanceToPlayer() > _data.safeRange && IsGrounded())
         {
             ChangeState(State.Idle);
             return;
