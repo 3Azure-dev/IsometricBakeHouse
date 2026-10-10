@@ -45,5 +45,10 @@ public class WandFire1 : MonoBehaviour
     {
         Bolt1 bolt = _pool.Get();
         bolt.Launch(_firePoint.position, _aim.AimDirection);
+
+        if (BreadSFX.Instance != null)
+        {
+            BreadSFX.Instance.PlayWandZap();
+        }
     }
 }
