@@ -180,7 +180,7 @@ public class IngredientCreature1 : MonoBehaviour
         _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
     }
 
-    private void Jump()
+    protected void Jump()
     {
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _data.jumpForce);
     }
@@ -192,21 +192,21 @@ public class IngredientCreature1 : MonoBehaviour
         return Physics2D.OverlapBox(feet, new Vector2(b.size.x * 0.9f, 0.1f), 0f, _groundLayer);
     }
 
-    private bool WallAhead(float dir)
+    protected bool WallAhead(float dir)
     {
         Bounds b = _col.bounds;
         Vector2 origin = new Vector2(b.center.x, b.min.y + 0.1f); // ray at foot height
         return Physics2D.Raycast(origin, Vector2.right * dir, b.extents.x + _lookAhead, _groundLayer);
     }
 
-    private bool GapAhead(float dir)
+    protected bool GapAhead(float dir)
     {
         Bounds b = _col.bounds;
         Vector2 origin = new Vector2(b.center.x + dir * (b.extents.x + _lookAhead), b.min.y + 0.1f);
         return !Physics2D.Raycast(origin, Vector2.down, 1f, _groundLayer); // nothing below = gap
     }
 
-    private bool CeilingAhead(float dir)
+    protected bool CeilingAhead(float dir)
     {
         Bounds b = _col.bounds;
 

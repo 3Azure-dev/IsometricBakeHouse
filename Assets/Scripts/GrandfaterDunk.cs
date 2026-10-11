@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 // Runs the Grandfather dunk when the level is empty.
 public class GrandfatherDunk : MonoBehaviour
 {
-    public enum State { Waiting, Aiming, Result }
+    public enum State { Waiting, Ready, Aiming, Result }
 
     [SerializeField] private DunkData _data;
 
@@ -76,13 +76,14 @@ public class GrandfatherDunk : MonoBehaviour
             return;
         }
 
-        StartAiming();
+        _state = State.Ready; // wait for the player to reach the dunk spot
+        Debug.Log("Grandfather is waiting near the exit");
     }
 
     [ContextMenu("Test: Start Dunk")]
     private void StartAiming()
     {
-        if (_state != State.Waiting) return;
+        if (_state == State.Aiming || _state == State.Result) return;
 
         // the aim starts from the player
         GameObject player = GameObject.FindWithTag("Player");
@@ -101,6 +102,7 @@ public class GrandfatherDunk : MonoBehaviour
         _speed = 1f;
         _phase = 0f;
         _state = State.Aiming;
+
         StartCoroutine(SpeedUp());
     }
 
@@ -117,6 +119,13 @@ public class GrandfatherDunk : MonoBehaviour
 
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             Throw();
+    }
+
+    // the dunk starts when the player stands in the dunk spot
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (_state != State.Ready) return;
+        if (other.CompareTag("Player")) StartAiming();
     }
 
     // Coroutine: waits, makes the aim faster, repeats
