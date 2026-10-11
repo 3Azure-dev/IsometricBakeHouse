@@ -20,8 +20,15 @@ public class GrandfatherDunk : MonoBehaviour
     [SerializeField] private float _maxAngle = 80f;
     [SerializeField] private float _potDistance = 5f;
 
+    [Header("Sack throw")]
+    [SerializeField] private Transform _sack;
+    [SerializeField] private float _throwTime = 0.6f;  // seconds in the air
+    [SerializeField] private float _arcHeight = 1.5f;  // how much the throw bends
+
     [Header("Testing")]
     [SerializeField] private bool _alwaysGrandfatherDay = true; // until the day timer exists
+
+    [SerializeField] private bool _testLoop = false; // dunk restarts after every throw
 
     [Header("Debug - read only")]
     [SerializeField] private State _state = State.Waiting;
@@ -65,6 +72,7 @@ public class GrandfatherDunk : MonoBehaviour
     {
         _aimPivot.gameObject.SetActive(false);
         _pot.gameObject.SetActive(false);
+        _sack.gameObject.SetActive(false);
     }
 
     private void OnLevelEmpty(int caught)
@@ -146,6 +154,48 @@ public class GrandfatherDunk : MonoBehaviour
         float distance = Mathf.Abs(_aim - _data.hitZoneCenter);
         bool hit = distance <= _data.hitZoneSize / 2f;
 
+        StartCoroutine(ThrowSack(hit));
+    }
+
+    // Coroutine: the sack flies in a curve, then the result shows
+// Coroutine: the sack is lobbed up above the pot, then comes down
+    private IEnumerator ThrowSack(bool hit)
+    {
+        _aimPivot.gameObject.SetActive(false);
+
+        Vector3 start = _aimPivot.position;
+        Vector3 pot = _pot.position;
+        Vector3 end; // where the sack lands
+
+        if (hit)
+        {
+            end = pot; // drops into the pot
+        }
+        else
+        {
+            // aimed too low = flies past the pot, aimed too high = falls short
+            float off = _aim - _data.hitZoneCenter;
+            float missX = -Mathf.Sign(off) * (1f + Mathf.Abs(off) * 6f);
+            end = new Vector3(pot.x + missX, start.y, 0f); // lands on the floor beside the pot
+        }
+        
+        // the top of the throw is exactly _arcHeight above the pot
+        float topY = pot.y + _arcHeight;
+        float bendY = 2f * topY - (start.y + end.y) / 2f;
+        Vector3 bend = new Vector3((start.x + end.x) / 2f, bendY, 0f);
+        _sack.gameObject.SetActive(true);
+
+        float t = 0f; // 0 = start of the throw, 1 = landed
+        while (t < 1f)
+        {
+            t += Time.deltaTime / _throwTime;
+            float u = 1f - t;
+            _sack.position = u * u * start + 2f * u * t * bend + t * t * end; // curve formula
+            yield return null; // wait one frame
+        }
+
+        _sack.gameObject.SetActive(false);
+
         Debug.Log(hit ? "DUNK HIT" : "DUNK MISS");
         if (hit) GiveBonus();
 
@@ -170,6 +220,18 @@ public class GrandfatherDunk : MonoBehaviour
     private IEnumerator Finish(bool hit)
     {
         yield return new WaitForSeconds(1f);
+
+        // testing: skip the ending and start the dunk again
+        if (_testLoop)
+        {
+            if (_pot.TryGetComponent(out SpriteRenderer potSprite))
+                potSprite.color = Color.white;
+
+            UnfreezePlayer();
+            _state = State.Waiting;
+            StartAiming();
+            yield break; // stop this coroutine here
+        }
 
         _aimPivot.gameObject.SetActive(false);
         _pot.gameObject.SetActive(false);

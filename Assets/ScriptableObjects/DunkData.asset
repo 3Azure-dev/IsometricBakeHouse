@@ -16,6 +16,6 @@ MonoBehaviour:
   speedUpEvery: 2
   speedUpAmount: 0.15
   maxSpeed: 3
-  hitZoneCenter: 0.5
-  hitZoneSize: 0.2
+  hitZoneCenter: 0.36
+  hitZoneSize: 0.13
   bonusMultiplier: 2
