@@ -13,6 +13,7 @@ public class MouldZone : MonoBehaviour
     [SerializeField] private IngredientCreature1[] _creaturePrefabs;
 
     private static float _nextMouldTime; // one cooldown shared by all zones
+    public float CooldownDuration => _settings != null ? _settings.cooldown : 0f;
     private bool _playerInside;
     private bool _used;
 
