@@ -72,4 +72,12 @@ public class LevelTracker : MonoBehaviour
         Debug.Log($"LEVEL EMPTY - caught {_caught}");
         LevelEmpty?.Invoke(_caught);
     }
+
+    [ContextMenu("Test: Empty Level")]
+    private void TestEmptyLevel()
+    {
+        if (_fired) return;
+        _fired = true;
+        LevelEmpty?.Invoke(_caught);
+    }
 }

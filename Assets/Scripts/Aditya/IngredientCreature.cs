@@ -30,6 +30,8 @@ public class IngredientCreature1 : MonoBehaviour
 
     public State CurrentState => _state;
 
+    public IngredientData Data => _data;
+
     protected virtual void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();

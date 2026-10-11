@@ -21,10 +21,10 @@ public class ExitDoor1 : MonoBehaviour
         if (sr != null) sr.color = lockedColor;
     }
 
-    private void OnEnable()  => LevelTracker.LevelEmpty += Unlock;
-    private void OnDisable() => LevelTracker.LevelEmpty -= Unlock;
+    private void OnEnable()  => GrandfatherDunk.HuntFinished += Unlock;
+    private void OnDisable() => GrandfatherDunk.HuntFinished -= Unlock;
 
-    private void Unlock(int caught)
+    private void Unlock()
     {
         unlocked = true;
         if (sr != null) sr.color = unlockedColor;
