@@ -1537,6 +1537,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   ePrompt: {fileID: 882865576}
   levelCompleteUI: {fileID: 1708429171}
+  lockedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  unlockedColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3199,7 +3201,7 @@ Transform:
   m_GameObject: {fileID: 1513798558}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30.1, y: -0.19, z: 0}
+  m_LocalPosition: {x: -30.22, y: -0.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10239,6 +10241,10 @@ PrefabInstance:
       propertyPath: _camera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 5236146956701016610, guid: 6c47f4c898b12e943957f0205c40313f, type: 3}
+      propertyPath: _poolSize
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6385492026105941563, guid: 6c47f4c898b12e943957f0205c40313f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -60.3

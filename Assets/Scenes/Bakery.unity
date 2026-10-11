@@ -2367,7 +2367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomerPool
   normalCustomerPrefab: {fileID: 8665294914534333701, guid: 14c5980911403cf40bce6a93959537e3, type: 3}
   vipCustomerPrefab: {fileID: 1766588043563306746, guid: 07e5090c007d3d14c96994849de9a7f6, type: 3}
-  normalPoolSize: 5
+  normalPoolSize: 4
   vipPoolSize: 2
 --- !u!114 &544841730
 MonoBehaviour:
@@ -2382,15 +2382,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RecipeManager
   recipes:
-  - foodType: 3
+  - foodType: 0
     cookingMethod: 0
     cookingTime: 5
-    ingredients: 
-  - foodType: 2
+    ingredients: 000000000000000000000000i
+  - foodType: 1
     cookingMethod: 1
     cookingTime: 10
     ingredients: 
-  - foodType: 0
+  - foodType: 2
     cookingMethod: 0
     cookingTime: 10
     ingredients: 

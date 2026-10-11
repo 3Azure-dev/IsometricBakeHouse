@@ -132,8 +132,8 @@ MonoBehaviour:
   customerType: 0
   moveSpeed: 5
   timer: 0
-  thinkingTime: 3
-  eatingTime: 5
+  thinkingTime: 5
+  eatingTime: 12
 --- !u!54 &4693967760740117093
 Rigidbody:
   m_ObjectHideFlags: 0

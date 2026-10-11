@@ -22,5 +22,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c2cac85afad5de249b80048fc6526883, type: 2}
   autoAppliedIngredient: Salt
   requiredEquipment: {fileID: 11400000, guid: 68aa76871f3208c4b9c11c7533af3a23, type: 2}
-  cookTime: 10
-  coinReward: 45
+  cookTime: 8
+  coinReward: 30

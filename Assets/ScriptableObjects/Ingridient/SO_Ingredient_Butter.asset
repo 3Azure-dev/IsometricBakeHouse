@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngredientData
   ingredientName: Butter
   icon: {fileID: 0}
-  fleeSpeed: 6
+  fleeSpeed: 4
   jumpForce: 8
   gravityScale: 1
   detectRange: 4
