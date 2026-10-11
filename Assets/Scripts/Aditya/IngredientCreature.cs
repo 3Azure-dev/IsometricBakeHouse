@@ -1,10 +1,15 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class IngredientCreature1 : MonoBehaviour
 {
     public enum State { Idle, Fleeing, Stunned, Caught }
+
+    // the level tracker listens to these
+    public static event Action<IngredientCreature1> CreatureCaught;
+    public static event Action<IngredientCreature1> CreatureEscaped;
 
     [Header("Data - all game feel numbers live in this asset")]
     [SerializeField] protected IngredientData _data;
@@ -17,16 +22,21 @@ public class IngredientCreature1 : MonoBehaviour
     [SerializeField] private State _state = State.Idle;
 
     protected Rigidbody2D _rb;
+    protected Vector3 _spawnPoint;
+
     protected Collider2D _col;
     protected Transform _player;
     protected float _stunTimer;
 
     public State CurrentState => _state;
 
+    public IngredientData Data => _data;
+
     protected virtual void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<Collider2D>();
+        _spawnPoint = transform.position;
     }
 
     private void Start()
@@ -74,15 +84,43 @@ public class IngredientCreature1 : MonoBehaviour
 
     public void Stun()
     {
-        if (_state == State.Caught) return;   // already caught, ignore
-        _stunTimer = _data.stunDuration;      // zapping again resets the timer
+        if (_state == State.Caught) return;
+
+        if (_state != State.Stunned && BreadSFX.Instance != null)
+        {
+            BreadSFX.Instance.PlayCreatureStunned();
+        }
+
+        _stunTimer = _data.stunDuration;
         ChangeState(State.Stunned);
     }
 
     private void Catch()
     {
         ChangeState(State.Caught);
+
         Inventory1.Instance.Add(_data, _data.ingredientsPerCatch);
+        CreatureCaught?.Invoke(this);
+
+        if (BreadSFX.Instance != null)
+        {
+            BreadSFX.Instance.PlayCreatureCaught();
+        }
+
+        gameObject.SetActive(false);
+    }
+
+    public void ReturnToSpawn()
+    {
+        _rb.linearVelocity = Vector2.zero;
+        transform.position = _spawnPoint;
+    }
+
+    [ContextMenu("Test: Escape")]
+    public void Escape()
+    {
+        if (_state == State.Caught) return;
+        CreatureEscaped?.Invoke(this);
         gameObject.SetActive(false);
     }
 
@@ -97,7 +135,7 @@ public class IngredientCreature1 : MonoBehaviour
 
     protected virtual void UpdateFleeing()
     {
-        if (DistanceToPlayer() > _data.safeRange)
+        if (DistanceToPlayer() > _data.safeRange && IsGrounded())
         {
             ChangeState(State.Idle);
             return;
@@ -142,7 +180,7 @@ public class IngredientCreature1 : MonoBehaviour
         _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);
     }
 
-    private void Jump()
+    protected void Jump()
     {
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _data.jumpForce);
     }
@@ -154,21 +192,21 @@ public class IngredientCreature1 : MonoBehaviour
         return Physics2D.OverlapBox(feet, new Vector2(b.size.x * 0.9f, 0.1f), 0f, _groundLayer);
     }
 
-    private bool WallAhead(float dir)
+    protected bool WallAhead(float dir)
     {
         Bounds b = _col.bounds;
         Vector2 origin = new Vector2(b.center.x, b.min.y + 0.1f); // ray at foot height
         return Physics2D.Raycast(origin, Vector2.right * dir, b.extents.x + _lookAhead, _groundLayer);
     }
 
-    private bool GapAhead(float dir)
+    protected bool GapAhead(float dir)
     {
         Bounds b = _col.bounds;
         Vector2 origin = new Vector2(b.center.x + dir * (b.extents.x + _lookAhead), b.min.y + 0.1f);
         return !Physics2D.Raycast(origin, Vector2.down, 1f, _groundLayer); // nothing below = gap
     }
 
-    private bool CeilingAhead(float dir)
+    protected bool CeilingAhead(float dir)
     {
         Bounds b = _col.bounds;
 

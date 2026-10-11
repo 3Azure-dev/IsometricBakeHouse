@@ -24,6 +24,12 @@ public class PlayerController : MonoBehaviour
     private float _slowMultiplier = 1f; // 1 = normal speed, 0.5 = half speed
     private float _slowTimer;
 
+    private float _blockedDirection; // +1 = can't go right, -1 = can't go left
+    private float _blockTimer;
+
+    private float _stunTimer;
+    public bool IsStunned => _stunTimer > 0f;
+
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -51,7 +57,23 @@ public class PlayerController : MonoBehaviour
             if (_slowTimer <= 0f) _slowMultiplier = 1f;
         }
 
-        _rb.linearVelocity = new Vector2(_moveInput * _moveSpeed * _slowMultiplier, _rb.linearVelocity.y);
+        // while blocked, ignore input in the blocked direction
+        float move = _moveInput;
+        if (_blockTimer > 0f)
+        {
+            _blockTimer -= Time.fixedDeltaTime;
+            if (move != 0f && Mathf.Sign(move) == _blockedDirection) move = 0f;
+        }
+
+        // while stunned: no walking, no jumping
+        if (_stunTimer > 0f)
+        {
+            _stunTimer -= Time.fixedDeltaTime;
+            move = 0f;
+            _jumpPressed = false;
+        }
+
+        _rb.linearVelocity = new Vector2(move * _moveSpeed * _slowMultiplier, _rb.linearVelocity.y);
 
         if (_jumpPressed && _isGrounded)
             _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _jumpForce);
@@ -80,6 +102,20 @@ public class PlayerController : MonoBehaviour
     {
         _slowMultiplier = multiplier;
         _slowTimer = duration;
+    }
+
+    // Anything can call this to stop the player walking one way for a short time
+    public void BlockDirection(float direction, float duration)
+    {
+        _blockedDirection = Mathf.Sign(direction);
+        _blockTimer = duration;
+    }
+
+    // Anything can call this to freeze the player for a short time
+    public void Stun(float duration)
+    {
+        _stunTimer = duration;
+        Debug.Log($"Player stunned for {duration} sec");
     }
 
     void OnDrawGizmosSelected()
