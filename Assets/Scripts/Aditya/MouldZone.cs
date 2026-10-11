@@ -16,6 +16,8 @@ public class MouldZone : MonoBehaviour
     private bool _playerInside;
     private bool _used;
 
+    private bool _mouldWaiting; // mould is placed, creatures come when the player leaves
+
     private void Awake()
     {
         _nextMouldTime = 0f;
@@ -41,7 +43,16 @@ public class MouldZone : MonoBehaviour
     private void PlaceMould()
     {
         _used = true;
+        _mouldWaiting = true;
         _nextMouldTime = Time.time + _settings.cooldown;
+
+        MouldPlaced?.Invoke(this);
+        Debug.Log($"{name}: mould placed, creatures come when the player leaves the zone");
+    }
+
+    private void SpawnCreatures()
+    {
+        _mouldWaiting = false;
 
         // every child of this object is a hole
         foreach (Transform hole in transform)
@@ -51,8 +62,7 @@ public class MouldZone : MonoBehaviour
             CreatureSpawned?.Invoke(creature);
         }
 
-        MouldPlaced?.Invoke(this);
-        Debug.Log($"{name}: mould placed, {transform.childCount} creatures out");
+        Debug.Log($"{name}: {transform.childCount} creatures out");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -62,7 +72,10 @@ public class MouldZone : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) _playerInside = false;
+        if (!other.CompareTag("Player")) return;
+
+        _playerInside = false;
+        if (_mouldWaiting) SpawnCreatures(); // the player left, so the creatures come out
     }
 
     private void OnDrawGizmos()

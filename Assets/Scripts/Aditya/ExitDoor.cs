@@ -9,6 +9,30 @@ public class ExitDoor1 : MonoBehaviour
     private bool playerInRange;
     private bool levelCompleted;
 
+    private bool unlocked;
+
+    [SerializeField] private Color lockedColor = Color.gray;
+    [SerializeField] private Color unlockedColor = Color.green;
+    private SpriteRenderer sr;
+
+    private void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();
+        if (sr != null) sr.color = lockedColor;
+    }
+
+    private void OnEnable()  => GrandfatherDunk.HuntFinished += Unlock;
+    private void OnDisable() => GrandfatherDunk.HuntFinished -= Unlock;
+
+    private void Unlock()
+    {
+        unlocked = true;
+        if (sr != null) sr.color = unlockedColor;
+        Debug.Log("Exit door unlocked");
+
+        if (playerInRange && ePrompt != null)
+            ePrompt.SetActive(true);
+    }
     private void Start()
     {
         if (ePrompt != null)
@@ -21,7 +45,7 @@ public class ExitDoor1 : MonoBehaviour
         {
             playerInRange = true;
 
-            if (ePrompt != null)
+            if (unlocked && ePrompt != null)
                 ePrompt.SetActive(true);
         }
     }
@@ -39,7 +63,7 @@ public class ExitDoor1 : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRange &&
+        if (unlocked && playerInRange &&
             !levelCompleted &&
             Keyboard.current != null &&
             Keyboard.current.eKey.wasPressedThisFrame)
