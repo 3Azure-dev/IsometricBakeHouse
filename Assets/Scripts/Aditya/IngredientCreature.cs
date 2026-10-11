@@ -22,6 +22,8 @@ public class IngredientCreature1 : MonoBehaviour
     [SerializeField] private State _state = State.Idle;
 
     protected Rigidbody2D _rb;
+    protected Vector3 _spawnPoint;
+
     protected Collider2D _col;
     protected Transform _player;
     protected float _stunTimer;
@@ -32,6 +34,7 @@ public class IngredientCreature1 : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<Collider2D>();
+        _spawnPoint = transform.position;
     }
 
     private void Start()
@@ -103,6 +106,12 @@ public class IngredientCreature1 : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+    }
+
+    public void ReturnToSpawn()
+    {
+        _rb.linearVelocity = Vector2.zero;
+        transform.position = _spawnPoint;
     }
 
     [ContextMenu("Test: Escape")]

@@ -266,7 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 36716943}
   - component: {fileID: 36716942}
-  - component: {fileID: 36716941}
+  - component: {fileID: 36716944}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -274,18 +274,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &36716941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 36716940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c522b419455957d45b4585937e778f8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EscapeZone
 --- !u!61 &36716942
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -347,6 +335,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &36716944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36716940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1701c1d790abfa04e8662dd82fd06352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RespawnPit
 --- !u!1 &67214853
 GameObject:
   m_ObjectHideFlags: 0
