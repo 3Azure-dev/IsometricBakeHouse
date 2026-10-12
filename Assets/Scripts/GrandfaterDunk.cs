@@ -26,7 +26,8 @@ public class GrandfatherDunk : MonoBehaviour
     [SerializeField] private float _arcHeight = 1.5f;  // how much the throw bends
 
     [Header("Testing")]
-    [SerializeField] private bool _alwaysGrandfatherDay = true; // until the day timer exists
+    [UnityEngine.Serialization.FormerlySerializedAs("_alwaysGrandfatherDay")]
+    [SerializeField] private bool _alwaysCome = false; // testing: ignore the chance
 
     [SerializeField] private bool _testLoop = false; // dunk restarts after every throw
 
@@ -77,8 +78,11 @@ public class GrandfatherDunk : MonoBehaviour
 
     private void OnLevelEmpty(int caught)
     {
-        // no dunk today: the hunt is over right away
-        if (caught < 1 || !_alwaysGrandfatherDay)
+        // roll the chance: Random.value is a number from 0 to 1
+        bool comes = _alwaysCome || UnityEngine.Random.value < _data.grandfatherChance;
+
+        // no catch or no Grandfather today: the hunt is over right away
+        if (caught < 1 || !comes)
         {
             HuntFinished?.Invoke();
             return;
@@ -136,13 +140,17 @@ public class GrandfatherDunk : MonoBehaviour
         if (other.CompareTag("Player")) StartAiming();
     }
 
-    // Coroutine: waits, makes the aim faster, repeats
+    // Coroutine: normal speed at first, then speeds up smoothly every frame
     private IEnumerator SpeedUp()
     {
+        yield return new WaitForSeconds(_data.speedUpDelay);
+
         while (_state == State.Aiming)
         {
-            yield return new WaitForSeconds(_data.speedUpEvery);
-            _speed = Mathf.Min(_speed * (1f + _data.speedUpAmount), _data.maxSpeed);
+            // +7.5% per second, spread over every frame so there are no jumps
+            _speed *= Mathf.Pow(1f + _data.speedUpPerSecond, Time.deltaTime);
+            _speed = Mathf.Min(_speed, _data.maxSpeed);
+            yield return null; // wait one frame
         }
     }
 
