@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StoveController : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class StoveController : MonoBehaviour
     private float cookingTimer;
 
     private Recipe currentRecipe;
+    [Header("Cooking Progress UI")]
+    [SerializeField] private GameObject cookingProgressCanvas;
+    [SerializeField] private Slider cookingProgressSlider;
 
 
     // --------------------------------------------------
@@ -56,9 +60,29 @@ public class StoveController : MonoBehaviour
         StoveUI.Instance.Open(this);
     }
 
+
     // --------------------------------------------------
     // UPDATE
     // --------------------------------------------------
+
+    // --------------------------------------------------
+    // COOKING PROGRESS UI
+    // --------------------------------------------------
+
+    private void Start()
+    {
+        if (cookingProgressCanvas != null)
+        {
+            cookingProgressCanvas.SetActive(false);
+        }
+
+        if (cookingProgressSlider != null)
+        {
+            cookingProgressSlider.minValue = 0f;
+            cookingProgressSlider.maxValue = 1f;
+            cookingProgressSlider.value = 0f;
+        }
+    }
 
     private void Update()
     {
@@ -68,6 +92,13 @@ public class StoveController : MonoBehaviour
         }
 
         cookingTimer += Time.deltaTime;
+        if (cookingProgressSlider != null &&
+    currentRecipe != null &&
+    currentRecipe.cookingTime > 0f)
+        {
+            cookingProgressSlider.value =
+                Mathf.Clamp01(cookingTimer / currentRecipe.cookingTime);
+        }
 
         if (cookingTimer >= currentRecipe.cookingTime)
         {
@@ -133,6 +164,16 @@ public class StoveController : MonoBehaviour
         cookingTimer = 0f;
 
         isCooking = true;
+        // Show the progress bar
+        if (cookingProgressCanvas != null)
+        {
+            cookingProgressCanvas.SetActive(true);
+        }
+
+        if (cookingProgressSlider != null)
+        {
+            cookingProgressSlider.value = 0f;
+        }
 
         Debug.Log(
             "Stove started cooking " +
@@ -152,6 +193,10 @@ public class StoveController : MonoBehaviour
         cookingTimer = 0f;
 
         foodReady = true;
+        if (cookingProgressCanvas != null)
+        {
+            cookingProgressCanvas.SetActive(false);
+        }
 
         Debug.Log(
             currentFood +
