@@ -48,8 +48,18 @@ public class ButterCreature : IngredientCreature1
         if (_dropTimer > 0f) return;
         _dropTimer = _data.dropInterval;
 
-        Vector2 spot = new Vector2(_col.bounds.center.x, _col.bounds.min.y + 0.25f);
-        ButterTrail trail = Instantiate(_trailPrefab, spot, Quaternion.identity);
+        // spawn at the creature's feet first
+        Vector2 feet = new Vector2(_col.bounds.center.x, _col.bounds.min.y);
+        ButterTrail trail = Instantiate(_trailPrefab, feet, Quaternion.identity);
+
+        // then lift it so its bottom edge sits exactly on the floor, whatever its size
+        Renderer rend = trail.GetComponentInChildren<Renderer>();
+        if (rend != null)
+        {
+            float gap = trail.transform.position.y - rend.bounds.min.y;
+            trail.transform.position += Vector3.up * gap;
+        }
+
         trail.Setup(direction, _data.puddleLifetime);
     }
 }
