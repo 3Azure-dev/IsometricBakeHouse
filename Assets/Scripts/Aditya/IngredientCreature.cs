@@ -17,6 +17,8 @@ public class IngredientCreature1 : MonoBehaviour
     [Header("Technical")]
     [SerializeField] protected LayerMask _groundLayer;
     [SerializeField] private float _lookAhead = 0.3f;
+    [Tooltip("How deep below the feet a creature looks for an escape hole")]
+    [SerializeField] private float _holeProbeDepth = 6f;
 
     [Header("Debug - read only")]
     [SerializeField] private State _state = State.Idle;
@@ -64,6 +66,8 @@ public class IngredientCreature1 : MonoBehaviour
             case State.Stunned: UpdateStunned(); break;
             case State.Caught:  break;
         }
+
+        PullIntoHole(); // runs last, so it wins over each creature's own movement
     }
 
     private void Update()
@@ -203,7 +207,44 @@ public class IngredientCreature1 : MonoBehaviour
     {
         Bounds b = _col.bounds;
         Vector2 origin = new Vector2(b.center.x + dir * (b.extents.x + _lookAhead), b.min.y + 0.1f);
-        return !Physics2D.Raycast(origin, Vector2.down, 1f, _groundLayer); // nothing below = gap
+        if (Physics2D.Raycast(origin, Vector2.down, 1f, _groundLayer)) return false; // ground below = no gap
+
+        // an escape hole is not treated as a gap, so every creature (Sugar, Butter, Egg...)
+        // keeps running and drops into it instead of jumping over
+        return !EscapeHoleAhead(dir);
+    }
+
+    // Is the gap ahead an escape hole? (an EscapeZone with Is Hole ticked)
+    protected bool EscapeHoleAhead(float dir)
+    {
+        Bounds b = _col.bounds;
+        return EscapeHoleAt(b.center.x + dir * (b.extents.x + _lookAhead));
+    }
+
+    // Is there an escape hole straight under this x position?
+    protected bool EscapeHoleAt(float x)
+    {
+        Bounds b = _col.bounds;
+        // look straight down, up to _holeProbeDepth below the feet
+        Vector2 center = new Vector2(x, b.min.y - _holeProbeDepth * 0.5f);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, new Vector2(0.5f, _holeProbeDepth), 0f);
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.TryGetComponent(out EscapeZone zone) && zone.IsHole)
+                return true;
+        }
+        return false;
+    }
+
+    // In the air over an escape hole? Drop straight down into it.
+    // Fast creatures (Sugar dash, Butter slide) would otherwise fly over small holes.
+    private void PullIntoHole()
+    {
+        if (_state == State.Caught || IsGrounded()) return;
+        if (!EscapeHoleAt(_col.bounds.center.x)) return;
+
+        _rb.linearVelocity = new Vector2(0f, Mathf.Min(_rb.linearVelocity.y, 0f));
     }
 
     protected bool CeilingAhead(float dir)
