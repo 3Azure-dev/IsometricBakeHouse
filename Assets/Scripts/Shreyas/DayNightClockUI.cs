@@ -6,7 +6,9 @@ public class DayNightClockUI : MonoBehaviour
 {
     [Header("Clock UI")]
     [SerializeField] private TMP_Text dayNumberText;
-    [SerializeField] private TMP_Text dayNightIconText;
+    [SerializeField] private Image dayNightIconImage;
+    [SerializeField] private Sprite sunSprite;
+    [SerializeField] private Sprite moonSprite;
     [SerializeField] private TMP_Text timeRemainingText;
     [SerializeField] private Image timeBarFill;
 
@@ -66,18 +68,12 @@ public class DayNightClockUI : MonoBehaviour
 
     private void UpdateClockUI()
     {
-        // Update the day number.
-        if (dayNumberText != null)
+        if (dayNightIconImage != null)
         {
-            dayNumberText.text = "Day " + currentDay;
+            dayNightIconImage.sprite = isDaytime
+                ? sunSprite
+                : moonSprite;
         }
-
-        // Swap between the sun and moon.
-        if (dayNightIconText != null)
-        {
-            dayNightIconText.text = isDaytime ? "☀" : "☾";
-        }
-
         // Update the countdown.
         if (timeRemainingText != null)
         {
