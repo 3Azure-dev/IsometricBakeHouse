@@ -60,6 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7067ed764a81f34b8f8b9fc8c25045d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  _data: {fileID: 0}
   _boltPrefab: {fileID: 2241123234446948383, guid: f285c99214080154d83d12dd9f796d48, type: 3}
   _firePoint: {fileID: 7265170770356765076}
   _poolSize: 20
@@ -76,6 +77,7 @@ GameObject:
   - component: {fileID: 5465457859328169709}
   - component: {fileID: 5530345717626241415}
   - component: {fileID: 1354442169684424048}
+  - component: {fileID: -5655880496727576500}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -241,6 +243,18 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!114 &-5655880496727576500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6133076930700731423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bd1eb6cc0287ed438bc50d543f920a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawn
 --- !u!1 &6862275825577260217
 GameObject:
   m_ObjectHideFlags: 0
