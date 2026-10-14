@@ -405,6 +405,16 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
+        // Award coins after food is successfully served.
+        if (Wallet.Instance != null)
+        {
+            Wallet.Instance.AddCoins(10);
+        }
+        else
+        {
+            Debug.LogError("Wallet.Instance was not found!");
+        }
+
         Debug.Log(
             name +
             " received " +
