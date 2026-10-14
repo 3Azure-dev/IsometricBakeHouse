@@ -3,29 +3,43 @@ using UnityEngine.AI;
 
 public class CustomerController : MonoBehaviour
 {
-    private BakeryOrder myOrder;
+    [Header("Settings (drag SO_CustomerSettings here)")]
+    [SerializeField] private CustomerSettings settings;
 
+    [SerializeField]
+    private ThinkingBubble thinkingBubble;
+
+    private BakeryOrder myOrder;
     private NavMeshAgent agent;
 
     public CustomerType customerType;
-
     public float moveSpeed = 5f;
 
     private Transform mySeat;
-
     private CustomerState state;
 
     public float timer;
 
-    public float thinkingTime = 5f;
-
-    public float eatingTime = 5f;
+    // Picked randomly between thinkingTimeMin and thinkingTimeMax each time a customer sits down
+    private float currentThinkingTime;
 
     // The ONE food this customer wants
     private FoodType chosenFood;
 
-    [SerializeField]
-    private ThinkingBubble thinkingBubble;
+    // The spawner uses this to count customers who are still walking in
+    public bool IsEnteringBakery
+    {
+        get { return state == CustomerState.GoingToSeat; }
+    }
+
+    private void Awake()
+    {
+        if (settings == null)
+        {
+            Debug.LogError(name + " has no CustomerSettings assigned. Drag SO_CustomerSettings into the prefab.");
+        }
+    }
+
     // --------------------------------------------------
     // START CUSTOMER
     // --------------------------------------------------
@@ -47,27 +61,17 @@ public class CustomerController : MonoBehaviour
 
         if (mySeat == null)
         {
-            Debug.Log(
-                name +
-                " could not find a free seat. Returning to exit."
-            );
+            Debug.Log(name + " could not find a free seat. Returning to exit.");
 
-            state =
-                CustomerState.ReturningBecauseNoSeat;
+            state = CustomerState.ReturningBecauseNoSeat;
 
             return;
         }
 
-        state =
-            CustomerState.GoingToSeat;
+        state = CustomerState.GoingToSeat;
 
-        Debug.Log(
-            name +
-            " spawned as " +
-            customerType
-        );
+        Debug.Log(name + " spawned as " + customerType);
     }
-
 
     // --------------------------------------------------
     // UPDATE
@@ -75,6 +79,12 @@ public class CustomerController : MonoBehaviour
 
     private void Update()
     {
+        // No settings = setup mistake (error already shown in Awake)
+        if (settings == null)
+        {
+            return;
+        }
+
         switch (state)
         {
             case CustomerState.GoingToSeat:
@@ -85,6 +95,12 @@ public class CustomerController : MonoBehaviour
 
                     timer = 0f;
 
+                    // Random time between the min and max from the settings asset
+                    currentThinkingTime = Random.Range(
+                        settings.thinkingTimeMin,
+                        settings.thinkingTimeMax
+                    );
+
                     CreateMyOrder();
 
                     if (thinkingBubble != null)
@@ -92,7 +108,7 @@ public class CustomerController : MonoBehaviour
                         thinkingBubble.Show(GetOrderText());
                     }
 
-                    Debug.Log(name + " is sitting and thinking.");
+                    Debug.Log(name + " is sitting and thinking for " + currentThinkingTime + " sec.");
                 }
 
                 break;
@@ -101,85 +117,75 @@ public class CustomerController : MonoBehaviour
 
                 timer += Time.deltaTime;
 
-                if (timer >= thinkingTime)
+                if (timer >= currentThinkingTime)
                 {
                     state = CustomerState.WaitingForPlayer;
 
                     timer = 0f;
 
-                    Debug.Log(
-                        name + " finished thinking and is waiting for the player."
-                    );
+                    Debug.Log(name + " finished thinking and is waiting for the player.");
                 }
 
                 break;
 
-
             case CustomerState.WaitingForPlayer:
 
-                break;
+                // NEW: customer gets tired of waiting for the player
+                timer += Time.deltaTime;
 
+                if (timer >= settings.orderPatience)
+                {
+                    if (thinkingBubble != null)
+                    {
+                        thinkingBubble.Hide();
+                    }
+
+                    state = CustomerState.Leaving;
+
+                    Debug.Log(name + " ran out of patience and is leaving.");
+                }
+
+                break;
 
             case CustomerState.Ordering:
 
                 break;
 
-
             case CustomerState.WaitingForFood:
 
                 break;
-
 
             case CustomerState.Eating:
 
                 timer += Time.deltaTime;
 
-                if (timer >= eatingTime)
+                if (timer >= settings.eatingTime)
                 {
-                    state =
-                        CustomerState.Leaving;
+                    state = CustomerState.Leaving;
 
-                    Debug.Log(
-                        name +
-                        " finished eating and is leaving."
-                    );
+                    Debug.Log(name + " finished eating and is leaving.");
                 }
 
                 break;
 
-
             case CustomerState.Leaving:
 
-                if (MoveTo(
-                    CustomerManager.Instance
-                        .GetExitPoint()
-                        .position))
+                if (MoveTo(CustomerManager.Instance.GetExitPoint().position))
                 {
-                    CustomerManager.Instance
-                        .ReleaseSeat(mySeat);
+                    CustomerManager.Instance.ReleaseSeat(mySeat);
 
-                    Debug.Log(
-                        name +
-                        " reached the exit."
-                    );
+                    Debug.Log(name + " reached the exit.");
 
                     ReturnToPool();
                 }
 
                 break;
 
-
             case CustomerState.ReturningBecauseNoSeat:
 
-                if (MoveTo(
-                    CustomerManager.Instance
-                        .GetExitPoint()
-                        .position))
+                if (MoveTo(CustomerManager.Instance.GetExitPoint().position))
                 {
-                    Debug.Log(
-                        name +
-                        " returned because no seats were available."
-                    );
+                    Debug.Log(name + " returned because no seats were available.");
 
                     ReturnToPool();
                 }
@@ -188,17 +194,14 @@ public class CustomerController : MonoBehaviour
         }
     }
 
-
     // --------------------------------------------------
     // FIND SEAT
     // --------------------------------------------------
 
     private void FindSeat()
     {
-        mySeat =
-            CustomerManager.Instance.GetFreeSeat();
+        mySeat = CustomerManager.Instance.GetFreeSeat();
     }
-
 
     // --------------------------------------------------
     // PLAYER INTERACTION
@@ -206,11 +209,7 @@ public class CustomerController : MonoBehaviour
 
     public void InteractWithPlayer()
     {
-        Debug.Log(
-            name +
-            " interacted with player. Current state: " +
-            state
-        );
+        Debug.Log(name + " interacted with player. Current state: " + state);
 
         if (state == CustomerState.WaitingForPlayer)
         {
@@ -226,12 +225,8 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
-        Debug.Log(
-            name +
-            " cannot interact right now."
-        );
+        Debug.Log(name + " cannot interact right now.");
     }
-
 
     // --------------------------------------------------
     // GIVE ORDER
@@ -239,10 +234,8 @@ public class CustomerController : MonoBehaviour
 
     public bool CanGiveOrder()
     {
-        return state ==
-            CustomerState.WaitingForPlayer;
+        return state == CustomerState.WaitingForPlayer;
     }
-
 
     public void PlayerTakesOrder()
     {
@@ -251,8 +244,7 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
-        state =
-            CustomerState.Ordering;
+        state = CustomerState.Ordering;
 
         if (OrderBoardUI.Instance != null)
         {
@@ -260,17 +252,11 @@ public class CustomerController : MonoBehaviour
         }
         else
         {
-            Debug.LogError(
-                "OrderBoardUI.Instance was not found."
-            );
+            Debug.LogError("OrderBoardUI.Instance was not found.");
         }
 
-        Debug.Log(
-            name +
-            " is giving the player the order."
-        );
+        Debug.Log(name + " is giving the player the order.");
     }
-
 
     // --------------------------------------------------
     // ACCEPT ORDER
@@ -278,53 +264,34 @@ public class CustomerController : MonoBehaviour
 
     public void OrderAccepted()
     {
-
-        if (thinkingBubble != null)
-        {
-            thinkingBubble.Hide();
-        }
-
         if (state != CustomerState.Ordering)
         {
-            Debug.Log(
-                name +
-                " cannot accept order. Current state: " +
-                state
-            );
+            Debug.Log(name + " cannot accept order. Current state: " + state);
 
             return;
         }
 
         if (BakeryOrderManager.Instance == null)
         {
-            Debug.LogError(
-                "BakeryOrderManager.Instance was not found."
-            );
+            Debug.LogError("BakeryOrderManager.Instance was not found.");
 
             return;
         }
 
-        myOrder =
-            BakeryOrderManager.Instance.CreateOrder(
-                this,
-                chosenFood
-            );
+        // Hide the bubble only after we know the order is really accepted
+        if (thinkingBubble != null)
+        {
+            thinkingBubble.Hide();
+        }
 
-        state =
-            CustomerState.WaitingForFood;
+        myOrder = BakeryOrderManager.Instance.CreateOrder(this, chosenFood);
 
-        Debug.Log(
-            name +
-            "'s order was accepted."
-        );
+        state = CustomerState.WaitingForFood;
 
-        Debug.Log(
-            name +
-            " is waiting for " +
-            chosenFood
-        );
+        Debug.Log(name + "'s order was accepted.");
+
+        Debug.Log(name + " is waiting for " + chosenFood);
     }
-
 
     // --------------------------------------------------
     // REJECT ORDER
@@ -337,15 +304,15 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
-        state =
-            CustomerState.Leaving;
+        if (thinkingBubble != null)
+        {
+            thinkingBubble.Hide();
+        }
 
-        Debug.Log(
-            name +
-            "'s order was rejected."
-        );
+        state = CustomerState.Leaving;
+
+        Debug.Log(name + "'s order was rejected.");
     }
-
 
     // --------------------------------------------------
     // RECEIVE FOOD
@@ -353,59 +320,40 @@ public class CustomerController : MonoBehaviour
 
     public void ReceiveFood()
     {
-        Debug.Log(
-            name +
-            " is trying to receive food."
-        );
+        Debug.Log(name + " is trying to receive food.");
 
         if (state != CustomerState.WaitingForFood)
         {
-            Debug.Log(
-                name +
-                " is not waiting for food."
-            );
+            Debug.Log(name + " is not waiting for food.");
 
             return;
         }
 
         if (PlayerFoodInventory.Instance == null)
         {
-            Debug.LogError(
-                "PlayerFoodInventory.Instance was not found."
-            );
+            Debug.LogError("PlayerFoodInventory.Instance was not found.");
 
             return;
         }
 
-        if (!PlayerFoodInventory.Instance.HasFood(
-            chosenFood))
+        if (!PlayerFoodInventory.Instance.HasFood(chosenFood))
         {
-            Debug.Log(
-                name +
-                " needs " +
-                chosenFood +
-                ", but the player is not carrying it."
-            );
+            Debug.Log(name + " needs " + chosenFood + ", but the player is not carrying it.");
 
             return;
         }
 
-        bool removed =
-            PlayerFoodInventory.Instance
-                .RemoveFood(chosenFood);
+        bool removed = PlayerFoodInventory.Instance.RemoveFood(chosenFood);
 
         if (!removed)
         {
-            Debug.LogError(
-                "Could not remove " +
-                chosenFood +
-                " from player inventory."
-            );
+            Debug.LogError("Could not remove " + chosenFood + " from player inventory.");
 
             return;
         }
 
         // Award coins after food is successfully served.
+        // (Part 2 will replace this 10 with the Coin Reward from the recipe asset.)
         if (Wallet.Instance != null)
         {
             Wallet.Instance.AddCoins(10);
@@ -415,23 +363,14 @@ public class CustomerController : MonoBehaviour
             Debug.LogError("Wallet.Instance was not found!");
         }
 
-        Debug.Log(
-            name +
-            " received " +
-            chosenFood
-        );
+        Debug.Log(name + " received " + chosenFood);
 
-        state =
-            CustomerState.Eating;
+        state = CustomerState.Eating;
 
         timer = 0f;
 
-        Debug.Log(
-            name +
-            " is now eating."
-        );
+        Debug.Log(name + " is now eating.");
     }
-
 
     // --------------------------------------------------
     // CREATE ORDER
@@ -439,27 +378,15 @@ public class CustomerController : MonoBehaviour
 
     private void CreateMyOrder()
     {
-        int foodCount =
-            System.Enum.GetValues(
-                typeof(FoodType)
-            ).Length;
+        int foodCount = System.Enum.GetValues(typeof(FoodType)).Length;
 
-        chosenFood =
-            (FoodType)Random.Range(
-                0,
-                foodCount
-            );
+        chosenFood = (FoodType)Random.Range(0, foodCount);
 
-        Debug.Log(
-            name +
-            " wants " +
-            chosenFood
-        );
+        Debug.Log(name + " wants " + chosenFood);
     }
 
-
     // --------------------------------------------------
-    // GET ORDER TEXT
+    // GET ORDER TEXT / FOOD
     // --------------------------------------------------
 
     public string GetOrderText()
@@ -467,30 +394,20 @@ public class CustomerController : MonoBehaviour
         return chosenFood.ToString();
     }
 
-
-    // --------------------------------------------------
-    // GET ORDER FOOD
-    // --------------------------------------------------
-
     public FoodType GetChosenFood()
     {
         return chosenFood;
     }
 
-
     // --------------------------------------------------
     // NAVIGATION
     // --------------------------------------------------
 
-    private bool MoveTo(
-        Vector3 targetPosition)
+    private bool MoveTo(Vector3 targetPosition)
     {
         if (agent == null)
         {
-            Debug.LogError(
-                name +
-                " does not have a NavMeshAgent."
-            );
+            Debug.LogError(name + " does not have a NavMeshAgent.");
 
             return false;
         }
@@ -502,14 +419,11 @@ public class CustomerController : MonoBehaviour
 
         if (!agent.hasPath)
         {
-            agent.SetDestination(
-                targetPosition
-            );
+            agent.SetDestination(targetPosition);
         }
 
         if (!agent.pathPending &&
-            agent.remainingDistance <=
-            agent.stoppingDistance)
+            agent.remainingDistance <= agent.stoppingDistance)
         {
             agent.ResetPath();
 
@@ -519,14 +433,12 @@ public class CustomerController : MonoBehaviour
         return false;
     }
 
-
     // --------------------------------------------------
     // RESET CUSTOMER
     // --------------------------------------------------
 
     private void ResetCustomer()
     {
-
         if (thinkingBubble != null)
         {
             thinkingBubble.Hide();
@@ -538,16 +450,13 @@ public class CustomerController : MonoBehaviour
 
         timer = 0f;
 
-        chosenFood =
-            FoodType.Bread;
+        chosenFood = FoodType.Bread;
 
-        state =
-            CustomerState.GoingToSeat;
+        state = CustomerState.GoingToSeat;
 
         if (agent == null)
         {
-            agent =
-                GetComponent<NavMeshAgent>();
+            agent = GetComponent<NavMeshAgent>();
         }
 
         if (agent != null)
@@ -555,7 +464,6 @@ public class CustomerController : MonoBehaviour
             agent.ResetPath();
         }
     }
-
 
     // --------------------------------------------------
     // RETURN TO POOL
@@ -565,16 +473,11 @@ public class CustomerController : MonoBehaviour
     {
         if (CustomerPool.Instance == null)
         {
-            Debug.LogError(
-                "CustomerPool.Instance was not found."
-            );
+            Debug.LogError("CustomerPool.Instance was not found.");
 
             return;
         }
 
-        CustomerPool.Instance.ReturnCustomer(
-            gameObject,
-            customerType
-        );
+        CustomerPool.Instance.ReturnCustomer(gameObject, customerType);
     }
 }

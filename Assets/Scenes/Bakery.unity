@@ -3010,6 +3010,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 257547d1d23831a4ba42517d0488b3d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoveController
+  cookingProgressCanvas: {fileID: 0}
+  cookingProgressSlider: {fileID: 0}
 --- !u!1 &344326207
 GameObject:
   m_ObjectHideFlags: 0
@@ -4493,12 +4495,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dce3170baaffe646b7690910b04560d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomerManager
+  settings: {fileID: 11400000, guid: 008604b27263f244ebe90a5e72e29dc3, type: 2}
   counter: {fileID: 251703565}
+  exitPoint: {fileID: 333380241}
+  tables: []
   seats:
   - {fileID: 1725506042}
   - {fileID: 1784189478}
   - {fileID: 1034775558}
-  exitPoint: {fileID: 333380241}
 --- !u!4 &544841726
 Transform:
   m_ObjectHideFlags: 0
@@ -4538,9 +4542,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5aec43fe7a98e449452d1fd5bc1090, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomerSpawner
+  settings: {fileID: 11400000, guid: 008604b27263f244ebe90a5e72e29dc3, type: 2}
   spawnPoint: {fileID: 333380241}
-  minimumSpawnTime: 5
-  maximumSpawnTime: 10
   vipChance: 10
 --- !u!114 &544841729
 MonoBehaviour:

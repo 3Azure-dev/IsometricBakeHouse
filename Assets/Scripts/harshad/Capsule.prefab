@@ -316,12 +316,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76525aa43bad2343a3c98811ae3d048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomerController
+  settings: {fileID: 11400000, guid: 008604b27263f244ebe90a5e72e29dc3, type: 2}
+  thinkingBubble: {fileID: 2640969945548522860}
   customerType: 0
   moveSpeed: 5
   timer: 0
-  thinkingTime: 5
-  eatingTime: 5
-  thinkingBubble: {fileID: 2640969945548522860}
 --- !u!1 &3993251855626764961
 GameObject:
   m_ObjectHideFlags: 0

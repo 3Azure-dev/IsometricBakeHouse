@@ -2,54 +2,66 @@ using UnityEngine;
 
 public class CustomerSpawner : MonoBehaviour
 {
+    [Header("Settings (drag SO_CustomerSettings here)")]
+    [SerializeField] private CustomerSettings settings;
+
     [Header("Spawn")]
     [SerializeField] private Transform spawnPoint;
-
-    [Header("Timing")]
-    [SerializeField] private float minimumSpawnTime = 5f;
-    [SerializeField] private float maximumSpawnTime = 10f;
 
     [Header("VIP")]
     [Range(0f, 100f)]
     [SerializeField] private float vipChance = 10f;
 
     private float spawnTimer;
-    private float nextSpawnTime;
-
-    private void Start()
-    {
-        SetNextSpawnTime();
-    }
 
     private void Update()
     {
+        if (settings == null)
+        {
+            return;
+        }
+
         spawnTimer += Time.deltaTime;
 
-        if (spawnTimer >= nextSpawnTime)
+        // Wait for the spawn delay from the settings asset
+        if (spawnTimer >= settings.doorSpawnDelay)
         {
-            SpawnCustomer();
+            // Only spawn if the door is not already full.
+            // If it is full, the timer keeps running, so the next customer
+            // arrives as soon as there is room.
+            if (CountCustomersAtDoor() < settings.maxCustomersAtDoor)
+            {
+                SpawnCustomer();
 
-            spawnTimer = 0f;
-
-            SetNextSpawnTime();
+                spawnTimer = 0f;
+            }
         }
     }
 
-    private void SetNextSpawnTime()
+    // Counts customers who are currently walking in toward a seat
+    private int CountCustomersAtDoor()
     {
-        nextSpawnTime =
-            Random.Range(
-                minimumSpawnTime,
-                maximumSpawnTime
-            );
+        CustomerController[] customers =
+            FindObjectsByType<CustomerController>(FindObjectsSortMode.None);
+
+        int count = 0;
+
+        foreach (CustomerController customer in customers)
+        {
+            if (customer.IsEnteringBakery)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private void SpawnCustomer()
     {
         CustomerType type;
 
-        float randomNumber =
-            Random.Range(0f, 100f);
+        float randomNumber = Random.Range(0f, 100f);
 
         if (randomNumber <= vipChance)
         {
@@ -60,20 +72,16 @@ public class CustomerSpawner : MonoBehaviour
             type = CustomerType.Normal;
         }
 
-        GameObject customer =
-            CustomerPool.Instance.GetCustomer(type);
+        GameObject customer = CustomerPool.Instance.GetCustomer(type);
 
         if (customer == null)
             return;
 
-        customer.transform.position =
-            spawnPoint.position;
+        customer.transform.position = spawnPoint.position;
 
-        customer.transform.rotation =
-            spawnPoint.rotation;
+        customer.transform.rotation = spawnPoint.rotation;
 
-        CustomerController controller =
-            customer.GetComponent<CustomerController>();
+        CustomerController controller = customer.GetComponent<CustomerController>();
 
         controller.StartCustomer(type);
     }
