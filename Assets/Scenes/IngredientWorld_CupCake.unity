@@ -14865,7 +14865,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682608149860734389, guid: 4d0ed4115e450d34cb00de0cd50436fd, type: 3}
       propertyPath: _alwaysCome
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8682608149860734389, guid: 4d0ed4115e450d34cb00de0cd50436fd, type: 3}
       propertyPath: _alwaysGrandfatherDay
