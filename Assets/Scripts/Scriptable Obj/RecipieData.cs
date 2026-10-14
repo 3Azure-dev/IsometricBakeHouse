@@ -6,6 +6,7 @@ public class RecipeData : ScriptableObject
     [Header("Info")]
     public string recipeName;
     public Sprite icon;
+    public FoodType foodType;
 
     [Header("Unlock")]
     public int unlockLevel = 1;

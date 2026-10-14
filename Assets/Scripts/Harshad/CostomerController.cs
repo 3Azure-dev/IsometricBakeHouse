@@ -6,6 +6,9 @@ public class CustomerController : MonoBehaviour
     [Header("Settings (drag SO_CustomerSettings here)")]
     [SerializeField] private CustomerSettings settings;
 
+    [Header("Recipes (drag SO_RecipeDatabase here)")]
+    [SerializeField] private RecipeDatabase recipeDatabase;
+
     [SerializeField]
     private ThinkingBubble thinkingBubble;
 
@@ -320,26 +323,42 @@ public class CustomerController : MonoBehaviour
 
     public void ReceiveFood()
     {
-        Debug.Log(name + " is trying to receive food.");
-
         if (state != CustomerState.WaitingForFood)
         {
-            Debug.Log(name + " is not waiting for food.");
-
             return;
         }
 
         if (PlayerFoodInventory.Instance == null)
         {
             Debug.LogError("PlayerFoodInventory.Instance was not found.");
-
             return;
         }
 
+        // Nothing happens if the player is not holding the ordered dish
         if (!PlayerFoodInventory.Instance.HasFood(chosenFood))
         {
             Debug.Log(name + " needs " + chosenFood + ", but the player is not carrying it.");
+            return;
+        }
 
+        // Look up the reward BEFORE taking the dish, so a setup mistake
+        // does not eat the player's food for nothing
+        RecipeData recipe = null;
+
+        if (recipeDatabase != null)
+        {
+            recipe = recipeDatabase.GetRecipe(chosenFood);
+        }
+
+        if (recipe == null)
+        {
+            Debug.LogError("No recipe found for " + chosenFood + ". Check SO_RecipeDatabase and the Food Type on the recipe asset.");
+            return;
+        }
+
+        if (Wallet.Instance == null)
+        {
+            Debug.LogError("Wallet.Instance was not found!");
             return;
         }
 
@@ -348,39 +367,33 @@ public class CustomerController : MonoBehaviour
         if (!removed)
         {
             Debug.LogError("Could not remove " + chosenFood + " from player inventory.");
-
             return;
         }
 
-        // Award coins after food is successfully served.
-        // (Part 2 will replace this 10 with the Coin Reward from the recipe asset.)
-        if (Wallet.Instance != null)
-        {
-            Wallet.Instance.AddCoins(10);
-        }
-        else
-        {
-            Debug.LogError("Wallet.Instance was not found!");
-        }
+        // The coin amount now comes from the recipe asset
+        Wallet.Instance.AddCoins(recipe.coinReward);
 
-        Debug.Log(name + " received " + chosenFood);
+        Debug.Log(name + " received " + chosenFood + " and paid " + recipe.coinReward + " coins.");
 
         state = CustomerState.Eating;
 
         timer = 0f;
-
-        Debug.Log(name + " is now eating.");
     }
-
-    // --------------------------------------------------
-    // CREATE ORDER
     // --------------------------------------------------
 
     private void CreateMyOrder()
     {
-        int foodCount = System.Enum.GetValues(typeof(FoodType)).Length;
+        FoodType food;
 
-        chosenFood = (FoodType)Random.Range(0, foodCount);
+        if (recipeDatabase != null && recipeDatabase.TryGetRandomFood(out food))
+        {
+            chosenFood = food;
+        }
+        else
+        {
+            Debug.LogWarning(name + ": no recipes in SO_RecipeDatabase. Defaulting to Bread.");
+            chosenFood = FoodType.Bread;
+        }
 
         Debug.Log(name + " wants " + chosenFood);
     }
