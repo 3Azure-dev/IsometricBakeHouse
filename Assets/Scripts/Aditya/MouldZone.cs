@@ -8,6 +8,7 @@ public class MouldZone : MonoBehaviour
     // other scripts listen to these (sounds now, level tracker later)
     public static event Action<MouldZone> MouldPlaced;
     public static event Action<IngredientCreature1> CreatureSpawned;
+    public static event Action<MouldZone> PlayerEntered; // PlayerRespawn saves a checkpoint here
 
     [SerializeField] private MouldSettings _settings;
     [SerializeField] private IngredientCreature1[] _creaturePrefabs;
@@ -68,7 +69,10 @@ public class MouldZone : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) _playerInside = true;
+        if (!other.CompareTag("Player")) return;
+
+        _playerInside = true;
+        PlayerEntered?.Invoke(this);
     }
 
     private void OnTriggerExit2D(Collider2D other)

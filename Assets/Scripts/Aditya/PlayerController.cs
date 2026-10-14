@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private float _blockTimer;
 
     private float _stunTimer;
+    private float _noJumpTimer; // jam: can't jump while this counts down
     public bool IsStunned => _stunTimer > 0f;
 
     void Awake()
@@ -73,6 +74,13 @@ public class PlayerController : MonoBehaviour
             _jumpPressed = false;
         }
 
+        // while stuck in jam: no jumping
+        if (_noJumpTimer > 0f)
+        {
+            _noJumpTimer -= Time.fixedDeltaTime;
+            _jumpPressed = false;
+        }
+
         _rb.linearVelocity = new Vector2(move * _moveSpeed * _slowMultiplier, _rb.linearVelocity.y);
 
         if (_jumpPressed && _isGrounded)
@@ -109,6 +117,12 @@ public class PlayerController : MonoBehaviour
     {
         _blockedDirection = Mathf.Sign(direction);
         _blockTimer = duration;
+    }
+
+    // Anything can call this to stop the player jumping for a short time
+    public void BlockJump(float duration)
+    {
+        _noJumpTimer = duration;
     }
 
     // Anything can call this to freeze the player for a short time

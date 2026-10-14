@@ -2,6 +2,7 @@ using UnityEngine;
 
 // A creature that falls in a gap is not escaped.
 // It goes back to the hole it spawned from.
+// The player goes back to just before the latest zone he entered.
 [RequireComponent(typeof(Collider2D))]
 public class RespawnPit : MonoBehaviour
 {
@@ -14,5 +15,7 @@ public class RespawnPit : MonoBehaviour
     {
         if (other.TryGetComponent(out IngredientCreature1 creature))
             creature.ReturnToSpawn();
+        else if (other.TryGetComponent(out PlayerRespawn player))
+            player.Respawn();
     }
 }
