@@ -30,6 +30,13 @@ public class MouldZone : MonoBehaviour
 
     private void Update()
     {
+        // Reset the used state when the cooldown finishes.
+        if (_used && Time.time >= _nextMouldTime)
+        {
+            _used = false;
+            Debug.Log($"{name}: mould is ready again!");
+        }
+
         if (!_playerInside || _used) return;
         if (!Keyboard.current.qKey.wasPressedThisFrame) return;
 

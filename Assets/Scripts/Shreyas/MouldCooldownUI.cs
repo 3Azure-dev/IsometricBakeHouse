@@ -4,23 +4,47 @@ using UnityEngine.UI;
 
 public class MouldCooldownUI : MonoBehaviour
 {
+    [Header("Cooldown Icon")]
+    [SerializeField] private Image darkIcon;
     [SerializeField] private Image cooldownFill;
+
+    [Header("Icon Colours")]
+    [SerializeField]
+    private Color darkColor =
+        new Color(0.25f, 0.25f, 0.25f, 1f);
+
+    [SerializeField] private Color readyColor = Color.white;
 
     private Coroutine cooldownRoutine;
 
-    private void OnEnable()
+    private void Awake()
     {
-        MouldZone.MouldPlaced += OnMouldPlaced;
-
+        // Configure the circular fill.
         if (cooldownFill != null)
         {
+            cooldownFill.type = Image.Type.Filled;
+            cooldownFill.fillMethod = Image.FillMethod.Radial360;
+            cooldownFill.fillOrigin = (int)Image.Origin360.Top;
+            cooldownFill.fillClockwise = true;
             cooldownFill.fillAmount = 1f;
+            cooldownFill.color = readyColor;
         }
+
+        // Keep the dark icon behind the coloured fill.
+        if (darkIcon != null)
+        {
+            darkIcon.color = darkColor;
+        }
+    }
+
+    private void OnEnable()
+    {
+        MouldZone.MouldPlaced += HandleMouldPlaced;
     }
 
     private void OnDisable()
     {
-        MouldZone.MouldPlaced -= OnMouldPlaced;
+        MouldZone.MouldPlaced -= HandleMouldPlaced;
 
         if (cooldownRoutine != null)
         {
@@ -29,12 +53,15 @@ public class MouldCooldownUI : MonoBehaviour
         }
     }
 
-    private void OnMouldPlaced(MouldZone zone)
+    private void HandleMouldPlaced(MouldZone zone)
     {
-        if (cooldownFill == null || zone == null)
+        if (zone == null)
+            return;
+
+        if (cooldownFill == null)
         {
-            Debug.LogWarning(
-                "MouldCooldownUI: Cooldown Fill or MouldZone is missing."
+            Debug.LogError(
+                "MouldCooldownUI: Cooldown Fill is not assigned!"
             );
             return;
         }
@@ -44,14 +71,17 @@ public class MouldCooldownUI : MonoBehaviour
             StopCoroutine(cooldownRoutine);
         }
 
+        // Dark icon remains visible while the fill is empty.
         cooldownFill.fillAmount = 0f;
 
         cooldownRoutine = StartCoroutine(
-            FillCooldown(zone.CooldownDuration)
+            RunCooldown(zone.CooldownDuration)
         );
+
+        Debug.Log("Mould cooldown indicator started.");
     }
 
-    private IEnumerator FillCooldown(float duration)
+    private IEnumerator RunCooldown(float duration)
     {
         if (duration <= 0f)
         {
@@ -74,5 +104,7 @@ public class MouldCooldownUI : MonoBehaviour
 
         cooldownFill.fillAmount = 1f;
         cooldownRoutine = null;
+
+        Debug.Log("Mould cooldown indicator is ready.");
     }
 }
