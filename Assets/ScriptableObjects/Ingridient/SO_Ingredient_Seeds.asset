@@ -25,3 +25,7 @@ MonoBehaviour:
   hoverHeight: 3
   bobAmount: 0.3
   bobSpeed: 2
+  dropInterval: 0.8
+  slowMultiplier: 0.5
+  slowDuration: 1
+  puddleLifetime: 3

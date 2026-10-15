@@ -8,11 +8,23 @@ public class MouldZone : MonoBehaviour
     // other scripts listen to these (sounds now, level tracker later)
     public static event Action<MouldZone> MouldPlaced;
     public static event Action<IngredientCreature1> CreatureSpawned;
+    public static event Action<MouldZone> PlayerEntered; // PlayerRespawn saves a checkpoint here
 
     [SerializeField] private MouldSettings _settings;
     [SerializeField] private IngredientCreature1[] _creaturePrefabs;
 
     private static float _nextMouldTime; // one cooldown shared by all zones
+
+    private static ulong _cooldownSceneHandle = ulong.MaxValue;
+
+    [RuntimeInitializeOnLoadMethod(
+        RuntimeInitializeLoadType.SubsystemRegistration)]
+   
+    private static void ResetMouldCooldownStatics()
+    {
+        _nextMouldTime = 0f;
+        _cooldownSceneHandle = ulong.MaxValue;
+    }
     public float CooldownDuration => _settings != null ? _settings.cooldown : 0f;
     private bool _playerInside;
     private bool _used;
@@ -21,26 +33,52 @@ public class MouldZone : MonoBehaviour
 
     private void Awake()
     {
-        _nextMouldTime = 0f;
+        // Reset the shared cooldown once for each loaded scene,
+        // not once for every mould zone.
+        ulong currentSceneHandle = gameObject.scene.handle.GetRawData();
+
+        if (_cooldownSceneHandle != currentSceneHandle)
+        {
+            _nextMouldTime = 0f;
+            _cooldownSceneHandle = currentSceneHandle;
+        }
+
         CircleCollider2D zone = GetComponent<CircleCollider2D>();
         zone.isTrigger = true;
-        zone.radius = _settings.zoneRadius;
-    }
 
+        if (_settings != null)
+        {
+            zone.radius = _settings.zoneRadius;
+        }
+    }
     private void Update()
     {
-        if (!_playerInside || _used) return;
-        if (!Keyboard.current.qKey.wasPressedThisFrame) return;
+        // A used mould zone stays disabled for this level.
+        if (_used)
+            return;
 
+        // The player must be inside the zone.
+        if (!_playerInside)
+            return;
+
+        // Check that the keyboard is available.
+        if (Keyboard.current == null)
+            return;
+
+        // Q must be pressed to place mould.
+        if (!Keyboard.current.qKey.wasPressedThisFrame)
+            return;
+
+        // The cooldown is shared across all mould zones.
         if (Time.time < _nextMouldTime)
         {
-            Debug.Log("Mould is on cooldown");
+            Debug.Log($"{name}: mould is on cooldown.");
             return;
         }
 
+        // Place mould in this unused zone.
         PlaceMould();
     }
-
     private void PlaceMould()
     {
         _used = true;
@@ -68,7 +106,10 @@ public class MouldZone : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) _playerInside = true;
+        if (!other.CompareTag("Player")) return;
+
+        _playerInside = true;
+        PlayerEntered?.Invoke(this);
     }
 
     private void OnTriggerExit2D(Collider2D other)

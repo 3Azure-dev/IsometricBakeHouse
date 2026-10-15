@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ba8a201c9e6e347acc620aebba90fb, type: 3}
   m_Name: SO_WandData
   m_EditorClassIdentifier: Assembly-CSharp::WandData
-  cooldown: 1
+  cooldown: 2
