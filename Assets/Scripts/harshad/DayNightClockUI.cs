@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class DayNightClockUI : MonoBehaviour
+public class DayNightClockLabel : MonoBehaviour
 {
     [SerializeField] private TMP_Text label;
 
