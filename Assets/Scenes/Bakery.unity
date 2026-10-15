@@ -3010,6 +3010,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 257547d1d23831a4ba42517d0488b3d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoveController
+  recipeDatabase: {fileID: 0}
   cookingProgressCanvas: {fileID: 0}
   cookingProgressSlider: {fileID: 0}
 --- !u!1 &344326207
@@ -4544,7 +4545,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomerSpawner
   settings: {fileID: 11400000, guid: 008604b27263f244ebe90a5e72e29dc3, type: 2}
   spawnPoint: {fileID: 333380241}
-  vipChance: 10
 --- !u!114 &544841729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4558,7 +4558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomerPool
   normalCustomerPrefab: {fileID: 3103791243083777623, guid: 14c5980911403cf40bce6a93959537e3, type: 3}
-  vipCustomerPrefab: {fileID: 4698641640754348606, guid: 5300e34a1cd4c534b8853561fdc9e2f2, type: 3}
+  vipCustomerPrefab: {fileID: 4819274423209534283, guid: b18a86e565e6ed84b95171f3e7868e58, type: 3}
   normalPoolSize: 5
   vipPoolSize: 2
 --- !u!114 &544841730
@@ -5579,6 +5579,52 @@ RectTransform:
   m_AnchoredPosition: {x: 5.7647, y: -82.3}
   m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &732860295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 732860297}
+  - component: {fileID: 732860296}
+  m_Layer: 0
+  m_Name: DayNightClock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &732860296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732860295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0735e627c086e984681a1080ea1bf37e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DayNightClock
+  settings: {fileID: 11400000, guid: 6ddc3fb5af83cd144b1adcefb50fc770, type: 2}
+  huntScenePrefix: IngredientWorld
+--- !u!4 &732860297
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732860295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14.72077, y: 1, z: -5.63374}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &831005109
 GameObject:
   m_ObjectHideFlags: 0
@@ -8343,6 +8389,7 @@ MonoBehaviour:
   orderText: {fileID: 446671694}
   acceptButton: {fileID: 1310616974}
   rejectButton: {fileID: 2018461651}
+  orderTimer: {fileID: 0}
 --- !u!1 &1165719698
 GameObject:
   m_ObjectHideFlags: 0
@@ -15910,3 +15957,4 @@ SceneRoots:
   - {fileID: 251703565}
   - {fileID: 1005515007}
   - {fileID: 2037686752}
+  - {fileID: 732860297}

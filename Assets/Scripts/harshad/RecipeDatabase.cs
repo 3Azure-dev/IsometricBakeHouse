@@ -35,6 +35,8 @@ public class RecipeDatabase : ScriptableObject
             }
         }
 
+        Debug.Log("RecipeDatabase: " + available.Count + " dishes available: " + string.Join(", ", available));
+
         if (available.Count == 0)
         {
             food = FoodType.Bread;

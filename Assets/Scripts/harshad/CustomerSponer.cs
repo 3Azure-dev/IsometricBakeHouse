@@ -8,15 +8,88 @@ public class CustomerSpawner : MonoBehaviour
     [Header("Spawn")]
     [SerializeField] private Transform spawnPoint;
 
-    [Header("VIP")]
-    [Range(0f, 100f)]
-    [SerializeField] private float vipChance = 10f;
+    private DayNightClock clock;
+
+    // Customers only come in the Day Phase
+    private bool dayIsOpen = true;
 
     private float spawnTimer;
+
+    // --------------------------------------------------
+    // LISTEN TO THE CLOCK
+    // --------------------------------------------------
+
+    private void Start()
+    {
+        clock = DayNightClock.Instance;
+
+        if (clock == null)
+        {
+            Debug.LogWarning("CustomerSpawner: no DayNightClock found. Customers will come all the time.");
+            return;
+        }
+
+        // If we arrive in the middle of a night (back from a hunt), do not spawn
+        dayIsOpen = clock.IsDay;
+
+        clock.DayEnded += OnDayEnded;
+        clock.NightEnded += OnNightEnded;
+    }
+
+    // The clock outlives this scene, so unsubscribe when the spawner is destroyed
+    private void OnDestroy()
+    {
+        if (clock != null)
+        {
+            clock.DayEnded -= OnDayEnded;
+            clock.NightEnded -= OnNightEnded;
+        }
+    }
+
+    private void OnDayEnded()
+    {
+        dayIsOpen = false;
+
+        SendDoorCustomersHome();
+
+        Debug.Log("CustomerSpawner: day ended, no new customers.");
+    }
+
+    private void OnNightEnded()
+    {
+        dayIsOpen = true;
+
+        spawnTimer = 0f;
+
+        Debug.Log("CustomerSpawner: a new day began, customers are coming again.");
+    }
+
+    // Customers who have not sat down yet (the door queue) walk away.
+    // Customers who are already eating are left alone: they finish and pay as normal.
+    private void SendDoorCustomersHome()
+    {
+        CustomerController[] customers =
+            FindObjectsByType<CustomerController>(FindObjectsSortMode.None);
+
+        foreach (CustomerController customer in customers)
+        {
+            customer.LeaveBecauseDayEnded();
+        }
+    }
+
+    // --------------------------------------------------
+    // SPAWNING
+    // --------------------------------------------------
 
     private void Update()
     {
         if (settings == null)
+        {
+            return;
+        }
+
+        // Night: nobody comes
+        if (!dayIsOpen)
         {
             return;
         }
@@ -26,9 +99,7 @@ public class CustomerSpawner : MonoBehaviour
         // Wait for the spawn delay from the settings asset
         if (spawnTimer >= settings.doorSpawnDelay)
         {
-            // Only spawn if the door is not already full.
-            // If it is full, the timer keeps running, so the next customer
-            // arrives as soon as there is room.
+            // Only spawn if the door is not already full
             if (CountCustomersAtDoor() < settings.maxCustomersAtDoor)
             {
                 SpawnCustomer();
@@ -61,9 +132,10 @@ public class CustomerSpawner : MonoBehaviour
     {
         CustomerType type;
 
+        // VIP chance comes from SO_CustomerSettings (percent)
         float randomNumber = Random.Range(0f, 100f);
 
-        if (randomNumber <= vipChance)
+        if (randomNumber <= settings.vipChancePercent)
         {
             type = CustomerType.VIP;
         }

@@ -16,7 +16,7 @@ public class CustomerSettings : ScriptableObject
     [Tooltip("How long (seconds) a customer waits for the player to take their order.")]
     public float orderPatience = 20f;
 
-    [Tooltip("Total time (seconds) the order timer runs.")]
+    [Tooltip("Order timer (seconds) for a NORMAL customer. Starts when the player takes the order.")]
     public float orderTimer = 180f;
 
     [Header("Eating")]
@@ -33,4 +33,19 @@ public class CustomerSettings : ScriptableObject
     [Header("Seating")]
     [Tooltip("How many seats each table has.")]
     public int seatsPerTable = 2;
+
+    [Header("VIP Customers")]
+    [Tooltip("Order timer (seconds) for a VIP customer.")]
+    public float vipOrderTimer = 240f;
+
+    [Tooltip("VIP pays the dish price times this number.")]
+    public int vipCoinMultiplier = 2;
+
+    [Tooltip("Diamonds a VIP gives when served correctly. (Not paid out yet: the Wallet has no diamonds.)")]
+    public int vipDiamondReward = 20;
+
+    [Range(0f, 100f)]
+    [Tooltip("Chance (percent) that a new customer is a VIP. The GDD says about 1 VIP per 3 in-game days, " +
+             "which is about 4% with 8 customers a day. Replace this once the day counter exists.")]
+    public float vipChancePercent = 4f;
 }

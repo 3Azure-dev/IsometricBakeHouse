@@ -3,25 +3,21 @@ using UnityEngine.AI;
 
 public class CustomerController : MonoBehaviour
 {
-    [Header("Settings (drag SO_CustomerSettings here)")]
+    [Header("Data assets (drag them into the prefab)")]
     [SerializeField] private CustomerSettings settings;
-
-    [Header("Recipes (drag SO_RecipeDatabase here)")]
     [SerializeField] private RecipeDatabase recipeDatabase;
 
-    [SerializeField]
-    private ThinkingBubble thinkingBubble;
-
-    private BakeryOrder myOrder;
-    private NavMeshAgent agent;
+    [Header("UI")]
+    [SerializeField] private ThinkingBubble thinkingBubble;
 
     public CustomerType customerType;
     public float moveSpeed = 5f;
+    public float timer;
 
+    private BakeryOrder myOrder;
+    private NavMeshAgent agent;
     private Transform mySeat;
     private CustomerState state;
-
-    public float timer;
 
     // Picked randomly between thinkingTimeMin and thinkingTimeMax each time a customer sits down
     private float currentThinkingTime;
@@ -29,10 +25,37 @@ public class CustomerController : MonoBehaviour
     // The ONE food this customer wants
     private FoodType chosenFood;
 
+    // --------------------------------------------------
+    // INFO OTHER SCRIPTS CAN ASK FOR
+    // --------------------------------------------------
+
+    public bool IsVIP
+    {
+        get { return customerType == CustomerType.VIP; }
+    }
+
     // The spawner uses this to count customers who are still walking in
     public bool IsEnteringBakery
     {
         get { return state == CustomerState.GoingToSeat; }
+    }
+
+    // True once the order has really been accepted (the board uses this to start the timer)
+    public bool IsWaitingForFood
+    {
+        get { return state == CustomerState.WaitingForFood; }
+    }
+
+    // How many seconds the order timer should run for this customer
+    // (180 for Normal, 240 for VIP, both from SO_CustomerSettings)
+    public float GetOrderTimerSeconds()
+    {
+        if (settings == null)
+        {
+            return 0f;
+        }
+
+        return IsVIP ? settings.vipOrderTimer : settings.orderTimer;
     }
 
     private void Awake()
@@ -133,7 +156,7 @@ public class CustomerController : MonoBehaviour
 
             case CustomerState.WaitingForPlayer:
 
-                // NEW: customer gets tired of waiting for the player
+                // Patience timer: the customer walks out if the order is not taken in time
                 timer += Time.deltaTime;
 
                 if (timer >= settings.orderPatience)
@@ -240,6 +263,27 @@ public class CustomerController : MonoBehaviour
         return state == CustomerState.WaitingForPlayer;
     }
 
+    // Called by the spawner when the day ends. Customers who have not sat down yet
+    // (still walking in = the door queue) give up and walk back out.
+    public void LeaveBecauseDayEnded()
+    {
+        if (state != CustomerState.GoingToSeat)
+        {
+            return;
+        }
+
+        // Forget the path to the seat. Without this the agent would keep walking to the
+        // seat, and the "Leaving" state would end the walk at the seat instead of the exit.
+        if (agent != null)
+        {
+            agent.ResetPath();
+        }
+
+        state = CustomerState.Leaving;
+
+        Debug.Log(name + " was sent home because the day ended.");
+    }
+
     public void PlayerTakesOrder()
     {
         if (!CanGiveOrder())
@@ -291,9 +335,10 @@ public class CustomerController : MonoBehaviour
 
         state = CustomerState.WaitingForFood;
 
-        Debug.Log(name + "'s order was accepted.");
+        // NEXT (SCRUM-295): this is the moment the order timer should start,
+        // using GetOrderTimerSeconds() so VIPs get 240 and Normal customers get 180.
 
-        Debug.Log(name + " is waiting for " + chosenFood);
+        Debug.Log(name + "'s order was accepted. Waiting for " + chosenFood);
     }
 
     // --------------------------------------------------
@@ -318,13 +363,19 @@ public class CustomerController : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // RECEIVE FOOD
+    // RECEIVE FOOD (serve the dish and get paid)
     // --------------------------------------------------
 
     public void ReceiveFood()
     {
         if (state != CustomerState.WaitingForFood)
         {
+            return;
+        }
+
+        if (settings == null)
+        {
+            Debug.LogError(name + " has no CustomerSettings assigned.");
             return;
         }
 
@@ -370,15 +421,28 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
-        // The coin amount now comes from the recipe asset
-        Wallet.Instance.AddCoins(recipe.coinReward);
+        // Coins come from the recipe asset. A VIP pays a multiple of the dish price (2x in the GDD).
+        int coins = recipe.coinReward;
 
-        Debug.Log(name + " received " + chosenFood + " and paid " + recipe.coinReward + " coins.");
+        if (IsVIP)
+        {
+            coins *= settings.vipCoinMultiplier;
+        }
+
+        Wallet.Instance.AddCoins(coins);
+
+        // TODO (diamonds): a VIP should also give settings.vipDiamondReward diamonds.
+        // The Wallet only has coins right now. Once it has an AddDiamonds method, call it here.
+
+        Debug.Log(name + " (" + customerType + ") received " + chosenFood + " and paid " + coins + " coins.");
 
         state = CustomerState.Eating;
 
         timer = 0f;
     }
+
+    // --------------------------------------------------
+    // CREATE ORDER (only dishes that have a recipe)
     // --------------------------------------------------
 
     private void CreateMyOrder()

@@ -1,4 +1,3 @@
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +14,9 @@ public class OrderBoardUI : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button acceptButton;
     [SerializeField] private Button rejectButton;
+
+    [Header("Order Timer (drag the OrderTimer object here)")]
+    [SerializeField] private OrderTimer orderTimer;
 
     private CustomerController currentCustomer;
 
@@ -74,10 +76,21 @@ public class OrderBoardUI : MonoBehaviour
             return;
         }
 
-        currentCustomer.OrderAccepted();
+        // Keep our own copy, because currentCustomer is cleared at the end
+        CustomerController customer = currentCustomer;
+
+        customer.OrderAccepted();
+
+        // The order timer starts NOW, when the order is taken.
+        // 180 sec for a Normal customer, 240 sec for a VIP (from SO_CustomerSettings).
+        // We check IsWaitingForFood so the timer only starts if the order was really accepted.
+        if (orderTimer != null && customer.IsWaitingForFood)
+        {
+            orderTimer.StartTimer(customer.GetOrderTimerSeconds());
+        }
 
         Debug.Log(
-            currentCustomer.name +
+            customer.name +
             "'s order was accepted."
         );
 
