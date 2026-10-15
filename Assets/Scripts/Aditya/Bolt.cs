@@ -14,6 +14,9 @@ public class Bolt1 : MonoBehaviour
     private IObjectPool<Bolt1> _pool;
     private bool _released;
 
+    private Vector2 _startPos;              // where this shot started
+    private float _range = Mathf.Infinity;  // max distance, set by the wand (SO_Wand)
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -27,8 +30,11 @@ public class Bolt1 : MonoBehaviour
         _pool = pool;
     }
 
-    public void Launch(Vector2 position, Vector2 direction)
+    public void Launch(Vector2 position, Vector2 direction, float range = Mathf.Infinity)
     {
+        _startPos = position;
+        _range = range;
+
         transform.position = position;
         _rb.position = position;
 
@@ -43,6 +49,13 @@ public class Bolt1 : MonoBehaviour
 
     private void Update()
     {
+        // flew its full range: gone
+        if (((Vector2)transform.position - _startPos).sqrMagnitude > _range * _range)
+        {
+            Despawn();
+            return;
+        }
+
         // 0 to 1 = on screen.
         // A little past that = off screen.
         Vector3 vp = _cam.WorldToViewportPoint(transform.position);
