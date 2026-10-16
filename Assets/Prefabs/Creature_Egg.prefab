@@ -49,11 +49,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258cba032cd8d62428fd1b448c2e51b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EggCreature
-  _data: {fileID: 11400000, guid: f0331a998412f1542b42b1562f571898, type: 2}
+  _data: {fileID: 11400000, guid: 2107e02abd71f5541939fde06ea7a62c, type: 2}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
   _lookAhead: 0.3
+  _holeProbeDepth: 6
   _state: 0
   _shellPrefab: {fileID: 8012802590155420348, guid: 283d9c9e78439714da2d2596cad34691, type: 3}
   _throwInterval: 1.2

@@ -102,6 +102,11 @@ public class IngredientCreature1 : MonoBehaviour
     private void Catch()
     {
         ChangeState(State.Caught);
+        Debug.Log(
+    $"CAUGHT: Creature={name}, " +
+    $"DataAsset={_data.name}, " +
+    $"Ingredient={_data.ingredientName}"
+);
 
         Inventory1.Instance.Add(_data, _data.ingredientsPerCatch);
         CreatureCaught?.Invoke(this);
