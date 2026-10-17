@@ -8021,12 +8021,28 @@ PrefabInstance:
       value: IngreidentCountsRow
       objectReference: {fileID: 0}
     - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 209
+      value: 35.599976
       objectReference: {fileID: 0}
     - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -229.1
+      value: 16.600006
       objectReference: {fileID: 0}
     - target: {fileID: 7723746079459703015, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_Pivot.x
