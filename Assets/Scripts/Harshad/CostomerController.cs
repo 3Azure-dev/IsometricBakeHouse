@@ -19,6 +19,9 @@ public class CustomerController : MonoBehaviour
     private Transform mySeat;
     private CustomerState state;
 
+    // My place in the door line (set by the CustomerManager)
+    private Vector3 doorTarget;
+
     // Picked randomly between thinkingTimeMin and thinkingTimeMax each time a customer sits down
     private float currentThinkingTime;
 
@@ -34,18 +37,17 @@ public class CustomerController : MonoBehaviour
         get { return customerType == CustomerType.VIP; }
     }
 
-    // The spawner uses this to count customers who are still walking in
-    public bool IsEnteringBakery
-    {
-        get { return state == CustomerState.GoingToSeat; }
-    }
-
-    // True once the order has really been accepted (the board uses this to start the timer)
+    // True once the order has really been accepted (the order board uses this to start the timer)
     public bool IsWaitingForFood
     {
         get { return state == CustomerState.WaitingForFood; }
     }
 
+    // True when pressing E on this customer would do something (take the order or serve the food)
+    public bool CanInteractWithPlayer
+    {
+        get { return state == CustomerState.WaitingForPlayer || state == CustomerState.WaitingForFood; }
+    }
     // How many seconds the order timer should run for this customer
     // (180 for Normal, 240 for VIP, both from SO_CustomerSettings)
     public float GetOrderTimerSeconds()
@@ -83,20 +85,98 @@ public class CustomerController : MonoBehaviour
             agent.Warp(transform.position);
         }
 
-        FindSeat();
-
-        if (mySeat == null)
+        if (CustomerManager.Instance == null)
         {
-            Debug.Log(name + " could not find a free seat. Returning to exit.");
-
-            state = CustomerState.ReturningBecauseNoSeat;
-
+            Debug.LogError("CustomerManager.Instance was not found.");
+            ReturnToPool();
             return;
+        }
+
+        // Get in line at the door. The spawner only spawns when there is room.
+        if (!CustomerManager.Instance.JoinDoorQueue(this))
+        {
+            Debug.LogWarning(name + ": the door is full. Going back to the pool.");
+            ReturnToPool();
+            return;
+        }
+
+        Debug.Log(name + " spawned as " + customerType + " and is walking to the door.");
+    }
+
+    // --------------------------------------------------
+    // CALLED BY THE CUSTOMER MANAGER
+    // --------------------------------------------------
+
+    // "This is your place in the door line" (also used when the line moves forward)
+    public void SetDoorTarget(Vector3 position)
+    {
+        if (state != CustomerState.GoingToDoor && state != CustomerState.WaitingAtDoor)
+        {
+            return;
+        }
+
+        doorTarget = position;
+
+        // Forget the old path so the agent walks to the new place
+        if (agent != null)
+        {
+            agent.ResetPath();
+        }
+
+        state = CustomerState.GoingToDoor;
+    }
+
+    // "A seat at a clear table is free. Walk in and sit."
+    public void GoToSeat(Transform seat)
+    {
+        mySeat = seat;
+
+        if (agent != null)
+        {
+            agent.ResetPath();
         }
 
         state = CustomerState.GoingToSeat;
 
-        Debug.Log(name + " spawned as " + customerType);
+        Debug.Log(name + " leaves the door and walks to a seat.");
+    }
+
+    // The day ended: customers still at the door walk away.
+    // Customers who are already seated or eating are left alone.
+    public void LeaveBecauseDayEnded()
+    {
+        if (state != CustomerState.GoingToDoor && state != CustomerState.WaitingAtDoor)
+        {
+            return;
+        }
+
+        if (agent != null)
+        {
+            agent.ResetPath();
+        }
+
+        state = CustomerState.Leaving;
+
+        Debug.Log(name + " was sent home because the day ended.");
+    }
+
+    // Done eating: leave a dirty plate on the table, free the chair, and walk out
+    private void FinishEating()
+    {
+        if (CustomerManager.Instance != null)
+        {
+            // The plate stays. The table is NOT clear until the player presses E.
+            CustomerManager.Instance.LeaveDirtyPlate(mySeat);
+
+            // The chair itself is free right away
+            CustomerManager.Instance.ReleaseSeat(mySeat);
+        }
+
+        mySeat = null;
+
+        state = CustomerState.Leaving;
+
+        Debug.Log(name + " finished eating, left a dirty plate and is leaving.");
     }
 
     // --------------------------------------------------
@@ -113,6 +193,22 @@ public class CustomerController : MonoBehaviour
 
         switch (state)
         {
+            case CustomerState.GoingToDoor:
+
+                // Walk to my place in the door line
+                if (MoveTo(doorTarget))
+                {
+                    state = CustomerState.WaitingAtDoor;
+                }
+
+                break;
+
+            case CustomerState.WaitingAtDoor:
+
+                // Door customers wait forever (the GDD has no door patience).
+                // The CustomerManager sends us to a seat when one is free at a clear table.
+                break;
+
             case CustomerState.GoingToSeat:
 
                 if (MoveTo(mySeat.position))
@@ -187,9 +283,7 @@ public class CustomerController : MonoBehaviour
 
                 if (timer >= settings.eatingTime)
                 {
-                    state = CustomerState.Leaving;
-
-                    Debug.Log(name + " finished eating and is leaving.");
+                    FinishEating();
                 }
 
                 break;
@@ -198,6 +292,7 @@ public class CustomerController : MonoBehaviour
 
                 if (MoveTo(CustomerManager.Instance.GetExitPoint().position))
                 {
+                    // mySeat is empty for customers who left from the door (that is fine)
                     CustomerManager.Instance.ReleaseSeat(mySeat);
 
                     Debug.Log(name + " reached the exit.");
@@ -206,27 +301,7 @@ public class CustomerController : MonoBehaviour
                 }
 
                 break;
-
-            case CustomerState.ReturningBecauseNoSeat:
-
-                if (MoveTo(CustomerManager.Instance.GetExitPoint().position))
-                {
-                    Debug.Log(name + " returned because no seats were available.");
-
-                    ReturnToPool();
-                }
-
-                break;
         }
-    }
-
-    // --------------------------------------------------
-    // FIND SEAT
-    // --------------------------------------------------
-
-    private void FindSeat()
-    {
-        mySeat = CustomerManager.Instance.GetFreeSeat();
     }
 
     // --------------------------------------------------
@@ -261,27 +336,6 @@ public class CustomerController : MonoBehaviour
     public bool CanGiveOrder()
     {
         return state == CustomerState.WaitingForPlayer;
-    }
-
-    // Called by the spawner when the day ends. Customers who have not sat down yet
-    // (still walking in = the door queue) give up and walk back out.
-    public void LeaveBecauseDayEnded()
-    {
-        if (state != CustomerState.GoingToSeat)
-        {
-            return;
-        }
-
-        // Forget the path to the seat. Without this the agent would keep walking to the
-        // seat, and the "Leaving" state would end the walk at the seat instead of the exit.
-        if (agent != null)
-        {
-            agent.ResetPath();
-        }
-
-        state = CustomerState.Leaving;
-
-        Debug.Log(name + " was sent home because the day ended.");
     }
 
     public void PlayerTakesOrder()
@@ -334,9 +388,6 @@ public class CustomerController : MonoBehaviour
         myOrder = BakeryOrderManager.Instance.CreateOrder(this, chosenFood);
 
         state = CustomerState.WaitingForFood;
-
-        // NEXT (SCRUM-295): this is the moment the order timer should start,
-        // using GetOrderTimerSeconds() so VIPs get 240 and Normal customers get 180.
 
         Debug.Log(name + "'s order was accepted. Waiting for " + chosenFood);
     }
@@ -529,7 +580,7 @@ public class CustomerController : MonoBehaviour
 
         chosenFood = FoodType.Bread;
 
-        state = CustomerState.GoingToSeat;
+        state = CustomerState.GoingToDoor;
 
         if (agent == null)
         {

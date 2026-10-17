@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6f5b21ae69c9e348b3faf5e9694078e, type: 3}
   m_Name: SO_DayNightSettings
   m_EditorClassIdentifier: Assembly-CSharp::DayNightSettings
-  dayLengthSeconds: 10
-  nightLengthSeconds: 5
+  dayLengthSeconds: 50
+  nightLengthSeconds: 30

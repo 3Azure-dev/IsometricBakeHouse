@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CustomerSpawner : MonoBehaviour
@@ -13,10 +14,8 @@ public class CustomerSpawner : MonoBehaviour
     // Customers only come in the Day Phase
     private bool dayIsOpen = true;
 
-    private float spawnTimer;
-
     // --------------------------------------------------
-    // LISTEN TO THE CLOCK
+    // SETUP
     // --------------------------------------------------
 
     private void Start()
@@ -26,14 +25,16 @@ public class CustomerSpawner : MonoBehaviour
         if (clock == null)
         {
             Debug.LogWarning("CustomerSpawner: no DayNightClock found. Customers will come all the time.");
-            return;
+        }
+        else
+        {
+            dayIsOpen = clock.IsDay;
+
+            clock.DayEnded += OnDayEnded;
+            clock.NightEnded += OnNightEnded;
         }
 
-        // If we arrive in the middle of a night (back from a hunt), do not spawn
-        dayIsOpen = clock.IsDay;
-
-        clock.DayEnded += OnDayEnded;
-        clock.NightEnded += OnNightEnded;
+        StartCoroutine(SpawnLoop());
     }
 
     // The clock outlives this scene, so unsubscribe when the spawner is destroyed
@@ -50,7 +51,10 @@ public class CustomerSpawner : MonoBehaviour
     {
         dayIsOpen = false;
 
-        SendDoorCustomersHome();
+        if (CustomerManager.Instance != null)
+        {
+            CustomerManager.Instance.SendDoorQueueHome();
+        }
 
         Debug.Log("CustomerSpawner: day ended, no new customers.");
     }
@@ -59,73 +63,60 @@ public class CustomerSpawner : MonoBehaviour
     {
         dayIsOpen = true;
 
-        spawnTimer = 0f;
-
         Debug.Log("CustomerSpawner: a new day began, customers are coming again.");
     }
 
-    // Customers who have not sat down yet (the door queue) walk away.
-    // Customers who are already eating are left alone: they finish and pay as normal.
-    private void SendDoorCustomersHome()
-    {
-        CustomerController[] customers =
-            FindObjectsByType<CustomerController>(FindObjectsSortMode.None);
-
-        foreach (CustomerController customer in customers)
-        {
-            customer.LeaveBecauseDayEnded();
-        }
-    }
-
     // --------------------------------------------------
-    // SPAWNING
+    // SPAWNING (a coroutine: code that can wait)
     // --------------------------------------------------
 
-    private void Update()
+    private IEnumerator SpawnLoop()
     {
         if (settings == null)
         {
-            return;
+            Debug.LogError("CustomerSpawner has no CustomerSettings assigned.");
+            yield break;
         }
 
-        // Night: nobody comes
-        if (!dayIsOpen)
+        while (true)
         {
-            return;
-        }
+            // 1. Wait until it is day, the shop is open, and a whole batch fits at the door
+            yield return new WaitUntil(CanSpawnBatch);
 
-        spawnTimer += Time.deltaTime;
+            // 2. Wait the spawn delay (5 sec from the settings asset)
+            yield return new WaitForSeconds(settings.doorSpawnDelay);
 
-        // Wait for the spawn delay from the settings asset
-        if (spawnTimer >= settings.doorSpawnDelay)
-        {
-            // Only spawn if the door is not already full
-            if (CountCustomersAtDoor() < settings.maxCustomersAtDoor)
+            // 3. Things may have changed while we waited (the day may have ended), so check again
+            if (CanSpawnBatch())
             {
-                SpawnCustomer();
-
-                spawnTimer = 0f;
+                for (int i = 0; i < settings.customersPerBatch; i++)
+                {
+                    SpawnCustomer();
+                }
             }
         }
     }
 
-    // Counts customers who are currently walking in toward a seat
-    private int CountCustomersAtDoor()
+    private bool CanSpawnBatch()
     {
-        CustomerController[] customers =
-            FindObjectsByType<CustomerController>(FindObjectsSortMode.None);
-
-        int count = 0;
-
-        foreach (CustomerController customer in customers)
+        if (!dayIsOpen || !ShopIsOpen())
         {
-            if (customer.IsEnteringBakery)
-            {
-                count++;
-            }
+            return false;
         }
 
-        return count;
+        if (CustomerManager.Instance == null)
+        {
+            return false;
+        }
+
+        return CustomerManager.Instance.DoorFreeSpots >= settings.customersPerBatch;
+    }
+
+    // PLACEHOLDER until Shreyas's Open/Close sign (SCRUM-281) exists.
+    // Then ask the sign: "is the shop open?" and return that here.
+    private bool ShopIsOpen()
+    {
+        return true;
     }
 
     private void SpawnCustomer()

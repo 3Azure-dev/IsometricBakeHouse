@@ -27,6 +27,9 @@ public class CustomerSettings : ScriptableObject
     [Tooltip("Maximum customers allowed waiting at the door.")]
     public int maxCustomersAtDoor = 4;
 
+    [Tooltip("How many customers come at a time (GDD: 2).")]
+    public int customersPerBatch = 2;
+
     [Tooltip("Seconds between each customer spawning at the door.")]
     public float doorSpawnDelay = 5f;
 

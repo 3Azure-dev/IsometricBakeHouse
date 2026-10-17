@@ -7,5 +7,8 @@ public enum CustomerState
     WaitingForFood,
     Eating,
     Leaving,
-    ReturningBecauseNoSeat
+    ReturningBecauseNoSeat,
+        GoingToDoor,      // walking to my place in the door line
+    WaitingAtDoor,    // waiting at the door (forever)
+
 }

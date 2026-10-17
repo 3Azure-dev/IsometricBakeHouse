@@ -60,29 +60,8 @@ public class PlayerRangeInteraction : MonoBehaviour
         }
     }
 
-    // NEW: returns the object in range that is closest to the player
-    private GameObject GetNearestObject()
-    {
-        GameObject nearest = null;
-        float nearestDistance = float.MaxValue;
-
-        foreach (GameObject candidate in nearbyObjects)
-        {
-            float distance = Vector3.Distance(
-                transform.position,
-                candidate.transform.position
-            );
-
-            if (distance < nearestDistance)
-            {
-                nearestDistance = distance;
-                nearest = candidate;
-            }
-        }
-
-        return nearest;
-    }
-
+    // Goes through the objects in range, closest first.
+    // The first one that can actually use the E press gets it.
     private void InteractWithNearestObject()
     {
         nearbyObjects.RemoveAll(target => target == null);
@@ -92,22 +71,60 @@ public class PlayerRangeInteraction : MonoBehaviour
             return;
         }
 
-        // CHANGED: was nearbyObjects[0]
-        GameObject target = GetNearestObject();
+        // Work on a copy, sorted closest first
+        List<GameObject> candidates = new List<GameObject>(nearbyObjects);
+        candidates.Sort(CompareByDistance);
 
-        if (target == null)
+        foreach (GameObject target in candidates)
         {
-            return;
+            if (target != null && TryInteract(target))
+            {
+                return;
+            }
         }
 
-        // CUSTOMER
+        Debug.Log("Nothing to interact with right now.");
+    }
+
+    private int CompareByDistance(GameObject a, GameObject b)
+    {
+        float distanceA = Vector3.Distance(transform.position, a.transform.position);
+        float distanceB = Vector3.Distance(transform.position, b.transform.position);
+
+        return distanceA.CompareTo(distanceB);
+    }
+
+    // Returns true if the object used the E press, false if it is not ready
+    private bool TryInteract(GameObject target)
+    {
+        // CUSTOMER: only if they are ready (waiting to order, or waiting for food)
         CustomerController customer =
             target.GetComponentInParent<CustomerController>();
 
         if (customer != null)
         {
+            if (!customer.CanInteractWithPlayer)
+            {
+                return false;
+            }
+
             customer.InteractWithPlayer();
-            return;
+            return true;
+        }
+
+        // TABLE: only if it has dirty plates to clear
+        BakeryTable table =
+            target.GetComponentInParent<BakeryTable>();
+
+        if (table != null)
+        {
+            if (!table.HasDirtyPlates)
+            {
+                return false;
+            }
+
+            table.Interact();
+            return true;
         }
 
         // STOVE
@@ -117,7 +134,7 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (stove != null)
         {
             stove.Interact();
-            return;
+            return true;
         }
 
         // TRANSPORT
@@ -127,7 +144,7 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (transport != null)
         {
             transport.Interact();
-            return;
+            return true;
         }
 
         // BUY ITEM DEVICE
@@ -137,7 +154,7 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (buyDevice != null)
         {
             buyDevice.Interact();
-            return;
+            return true;
         }
 
         // INGREDIENT SHELF
@@ -147,7 +164,7 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (shelf != null)
         {
             shelf.Interact();
-            return;
+            return true;
         }
 
         // OVEN
@@ -157,7 +174,7 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (oven != null)
         {
             oven.Interact();
-            return;
+            return true;
         }
 
         // DOOR
@@ -167,6 +184,9 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (door != null)
         {
             door.ToggleDoor();
+            return true;
         }
+
+        return false;
     }
 }

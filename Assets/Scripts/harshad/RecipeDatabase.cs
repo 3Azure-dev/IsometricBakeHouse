@@ -21,21 +21,32 @@ public class RecipeDatabase : ScriptableObject
         return null;
     }
 
-    // NEW: picks a random dish that actually has a recipe.
+    // Picks a random dish that actually has a recipe.
     // Returns false if the database is empty.
     public bool TryGetRandomFood(out FoodType food)
     {
         List<FoodType> available = new List<FoodType>();
 
+        // TEMPORARY debug text: shows each recipe asset and the Food Type it is set to
+        string report = "";
+
         foreach (RecipeData recipe in recipes)
         {
-            if (recipe != null && !available.Contains(recipe.foodType))
+            if (recipe == null)
+            {
+                report += "[EMPTY SLOT]  ";
+                continue;
+            }
+
+            report += recipe.name + " = " + recipe.foodType + "   ";
+
+            if (!available.Contains(recipe.foodType))
             {
                 available.Add(recipe.foodType);
             }
         }
 
-        Debug.Log("RecipeDatabase: " + available.Count + " dishes available: " + string.Join(", ", available));
+        Debug.Log("RecipeDatabase: " + report + "-> " + available.Count + " different dish(es) available");
 
         if (available.Count == 0)
         {
