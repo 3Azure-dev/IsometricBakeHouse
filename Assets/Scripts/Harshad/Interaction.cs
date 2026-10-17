@@ -5,9 +5,10 @@ public class PlayerRangeInteraction : MonoBehaviour
 {
     [SerializeField] private string interactableTag = "Interactable";
 
+    [SerializeField] private StartingStateInitializer startingStateInitializer;
+
     private readonly List<GameObject> nearbyObjects =
         new List<GameObject>();
-
 
     private void Update()
     {
@@ -77,6 +78,32 @@ public class PlayerRangeInteraction : MonoBehaviour
 
         GameObject target =
             nearbyObjects[0];
+
+        // SHELF - grant starting resources on first interaction
+        IngredientInventory shelf =
+            target.GetComponentInParent<IngredientInventory>();
+
+        if (shelf == null)
+        {
+            shelf = target.GetComponentInChildren<IngredientInventory>();
+        }
+
+        if (shelf != null)
+        {
+            if (startingStateInitializer == null)
+            {
+                Debug.LogError(
+                    "StartingStateInitializer is not assigned!",
+                    this
+                );
+            }
+            else
+            {
+                startingStateInitializer.ApplyStartingStateOnce();
+            }
+
+            return;
+        }
 
 
         // CUSTOMER

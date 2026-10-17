@@ -4299,6 +4299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartingStateInitializer
   startingState: {fileID: 11400000, guid: a8e16ac9517ad8c4fbd1e76961ff9002, type: 2}
+  ingredientCountsUI: {fileID: 675405092}
 --- !u!4 &670453561
 Transform:
   m_ObjectHideFlags: 0
@@ -4314,6 +4315,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &675405092 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3429914965038243994, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+  m_PrefabInstance: {fileID: 1437321706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &677821408
 GameObject:
   m_ObjectHideFlags: 0
@@ -5568,6 +5574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRangeInteraction
   interactableTag: Interactable
+  startingStateInitializer: {fileID: 670453560}
 --- !u!135 &1001104581
 SphereCollider:
   m_ObjectHideFlags: 0

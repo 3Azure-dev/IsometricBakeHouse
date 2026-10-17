@@ -3,10 +3,12 @@ using UnityEngine;
 public class StartingStateInitializer : MonoBehaviour
 {
     [SerializeField] private StartingState startingState;
+    [SerializeField] private GameObject ingredientCountsUI;
 
+    // Prevents resources from being granted more than once
+    // during the same Play session.
     private static bool initialized;
 
-    // Reset the guard when a new Play session begins.
     [RuntimeInitializeOnLoadMethod(
         RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetInitialization()
@@ -14,45 +16,47 @@ public class StartingStateInitializer : MonoBehaviour
         initialized = false;
     }
 
-    private void Start()
+    // Called when the player interacts with the Shelf.
+    // Called whenever the player interacts with the Shelf.
+    public void ApplyStartingStateOnce()
     {
-        // Prevent starting resources from being added again
-        // when returning to or reloading a scene.
+        // If the starting resources were already granted,
+        // just show or hide the ingredient counter.
         if (initialized)
+        {
+            ToggleIngredientCountsUI();
             return;
+        }
 
         if (startingState == null)
         {
-            Debug.LogError(
-                "StartingStateInitializer: Starting State asset is missing.");
+            Debug.LogError("StartingState asset is missing!", this);
             return;
         }
 
         if (Inventory1.Instance == null)
         {
-            Debug.LogError(
-                "StartingStateInitializer: Inventory1.Instance was not found.");
+            Debug.LogError("Inventory1.Instance was not found!", this);
             return;
         }
 
         if (Wallet.Instance == null)
         {
-            Debug.LogError(
-                "StartingStateInitializer: Wallet.Instance was not found.");
+            Debug.LogError("Wallet.Instance was not found!", this);
             return;
         }
 
-        // Set the starting coin balance.
+        // Set starting coins.
         Wallet.Instance.SetStartingCoins(
-            startingState.startingCoins);
+            startingState.startingCoins
+        );
 
-        // Add each starting ingredient.
+        // Add starting ingredients.
         foreach (StartingIngredient item in startingState.ingredients)
         {
-            if (item.ingredient == null)
+            if (item == null || item.ingredient == null)
             {
-                Debug.LogWarning(
-                    "Starting State contains an ingredient with no asset assigned.");
+                Debug.LogWarning("An ingredient is not assigned.", this);
                 continue;
             }
 
@@ -61,12 +65,41 @@ public class StartingStateInitializer : MonoBehaviour
 
             Inventory1.Instance.Add(
                 item.ingredient,
-                item.amount);
+                item.amount
+            );
         }
 
-        // Do not initialize again during scene changes.
         initialized = true;
 
-        Debug.Log("Starting state applied successfully.");
+        // Show the counters after the first interaction.
+        if (ingredientCountsUI != null)
+            ingredientCountsUI.SetActive(true);
+
+        Debug.Log("Starting state applied successfully!", this);
+    }
+
+    private void ToggleIngredientCountsUI()
+    {
+        if (ingredientCountsUI == null)
+        {
+            Debug.LogWarning("Ingredient Counts UI is not assigned!", this);
+            return;
+        }
+
+        bool showUI = !ingredientCountsUI.activeSelf;
+
+        ingredientCountsUI.SetActive(showUI);
+
+        Debug.Log(showUI
+            ? "Ingredient counter opened."
+            : "Ingredient counter closed.");
+    }
+
+    private void Awake()
+    {
+        // Keep the counters hidden until the player interacts
+        // with the Shelf.
+        if (ingredientCountsUI != null)
+            ingredientCountsUI.SetActive(false);
     }
 }

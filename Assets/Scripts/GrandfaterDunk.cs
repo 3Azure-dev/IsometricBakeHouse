@@ -47,6 +47,9 @@ public class GrandfatherDunk : MonoBehaviour
     // what the player caught in this level: ingredient -> how many
     private readonly Dictionary<IngredientData, int> _caughtThisLevel = new Dictionary<IngredientData, int>();
 
+    [Header("Dunk UI")]
+    [SerializeField] private DunkAimBarUI _aimBarUI;
+
     private void OnEnable()
     {
         LevelTracker.LevelEmpty += OnLevelEmpty;
@@ -97,6 +100,22 @@ public class GrandfatherDunk : MonoBehaviour
     {
         if (_state == State.Aiming || _state == State.Result) return;
 
+        // Show the aim bar when the real dunk starts.
+        if (_aimBarUI != null)
+        {
+            Debug.Log("GrandfatherDunk: Showing aim bar.");
+
+            _aimBarUI.BeginDunk(
+                _data.hitZoneCenter,
+                _data.hitZoneSize
+            );
+
+            _aimBarUI.SetAimValue(_aim);
+        }
+        else
+        {
+            Debug.LogError("GrandfatherDunk: Aim Bar UI is not assigned!");
+        }
         // the aim starts from the player
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null) _aimPivot.position = player.transform.position;
@@ -126,11 +145,20 @@ public class GrandfatherDunk : MonoBehaviour
         _phase += Time.deltaTime * _speed / _data.swingTime;
         _aim = Mathf.PingPong(_phase, 1f);
 
+        // Send the real aim value to the UI.
+        if (_aimBarUI != null)
+        {
+            _aimBarUI.SetAimValue(_aim);
+        }
+
         float angle = Mathf.Lerp(_minAngle, _maxAngle, _aim);
         _aimPivot.rotation = Quaternion.Euler(0f, 0f, angle);
 
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current != null &&
+            Mouse.current.leftButton.wasPressedThisFrame)
+        {
             Throw();
+        }
     }
 
     // the dunk starts when the player stands in the dunk spot
@@ -156,17 +184,22 @@ public class GrandfatherDunk : MonoBehaviour
 
     private void Throw()
     {
-        _state = State.Result; // one try only
+        _state = State.Result;
 
-        // hit if the aim is inside the hit zone
         float distance = Mathf.Abs(_aim - _data.hitZoneCenter);
         bool hit = distance <= _data.hitZoneSize / 2f;
+
+        // Show the result in the UI.
+        if (_aimBarUI != null)
+        {
+            _aimBarUI.RegisterThrow(hit);
+        }
 
         StartCoroutine(ThrowSack(hit));
     }
 
     // Coroutine: the sack flies in a curve, then the result shows
-// Coroutine: the sack is lobbed up above the pot, then comes down
+    // Coroutine: the sack is lobbed up above the pot, then comes down
     private IEnumerator ThrowSack(bool hit)
     {
         _aimPivot.gameObject.SetActive(false);
