@@ -34,6 +34,14 @@ public class Wallet : MonoBehaviour
         Coins = _startingCoins;
     }
 
+    public void SetStartingCoins(int amount)
+    {
+        Coins = Mathf.Max(0, amount);
+        CoinsChanged?.Invoke(Coins);
+
+        Debug.Log($"Wallet initialized with {Coins} coins.");
+    }
+
     public void AddCoins(int amount)
     {
         if (amount <= 0) return;
