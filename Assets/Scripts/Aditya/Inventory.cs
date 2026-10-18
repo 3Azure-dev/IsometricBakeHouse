@@ -68,6 +68,12 @@ public class Inventory1 : MonoBehaviour
         }
         return true;
     }
+    // A copy of everything the player has hunted (used by the Bakery shelf to move it over)
+    public List<KeyValuePair<IngredientData, int>> GetAllCounts()
+    {
+        return new List<KeyValuePair<IngredientData, int>>(counts);
+    }
+
     public int GetTotalIngredientCount()
     {
         int total = 0;

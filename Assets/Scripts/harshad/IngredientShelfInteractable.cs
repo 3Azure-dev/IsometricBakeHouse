@@ -19,6 +19,10 @@ public class IngredientShelfInteractable : MonoBehaviour
             return;
         }
 
+        // E at the shelf: first put everything the player hunted onto the shelf (SCRUM-142),
+        // then open the shelf window so ingredients can be taken for cooking.
+        shelf.DepositHuntedIngredients();
+
         IngredientShelfUI.Instance.Open(shelf);
     }
 

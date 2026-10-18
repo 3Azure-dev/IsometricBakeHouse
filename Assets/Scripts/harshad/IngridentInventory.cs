@@ -5,8 +5,17 @@ public class IngredientInventory : MonoBehaviour
 {
     public static IngredientInventory Instance { get; private set; }
 
-    private Dictionary<IngredientType, int> ingredients =
+    // STATIC on purpose: the Bakery scene loads again after every hunt, and the ingredients
+    // the player took from the shelf must not disappear when that happens.
+    private static Dictionary<IngredientType, int> ingredients =
         new Dictionary<IngredientType, int>();
+
+    // Makes sure old stock from a previous Play session never leaks in
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStock()
+    {
+        ingredients = new Dictionary<IngredientType, int>();
+    }
 
 
     private void Awake()
