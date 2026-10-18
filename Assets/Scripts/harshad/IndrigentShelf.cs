@@ -57,9 +57,14 @@ public class IngredientShelf : MonoBehaviour
     // DEPOSIT (SCRUM-142): move everything the player hunted onto the shelf
     // --------------------------------------------------
 
+    // A short sentence about the last deposit, for the shelf window's message text
+    public string LastDepositSummary { get; private set; } = "";
+
     // Returns how many ingredients were moved
     public int DepositHuntedIngredients()
     {
+        LastDepositSummary = "";
+
         if (Inventory1.Instance == null)
         {
             Debug.Log("Shelf: nothing hunted yet (no hunt inventory found).");
@@ -67,6 +72,7 @@ public class IngredientShelf : MonoBehaviour
         }
 
         int moved = 0;
+        string summary = "";
 
         foreach (KeyValuePair<IngredientData, int> item in Inventory1.Instance.GetAllCounts())
         {
@@ -97,12 +103,18 @@ public class IngredientShelf : MonoBehaviour
             stock[type] += amount;
             moved += amount;
 
+            summary += (summary.Length > 0 ? ", " : "") + amount + " " + type;
+
             Debug.Log("Shelf: moved " + amount + " " + type + ". The shelf now holds " + stock[type] + " " + type + ".");
         }
 
         if (moved == 0)
         {
             Debug.Log("Shelf: the player has nothing to put on the shelf.");
+        }
+        else
+        {
+            LastDepositSummary = "Put on the shelf: " + summary;
         }
 
         return moved;

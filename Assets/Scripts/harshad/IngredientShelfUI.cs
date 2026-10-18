@@ -120,6 +120,15 @@ public class IngredientShelfUI : MonoBehaviour
         RefreshAmounts();
     }
 
+    // Shows a line in the shelf window's message text (e.g. "Put on the shelf: 3 Flour")
+    public void ShowMessage(string message)
+    {
+        if (messageText != null)
+        {
+            messageText.text = message;
+        }
+    }
+
     public void Close()
     {
         if (shelfPanel != null)

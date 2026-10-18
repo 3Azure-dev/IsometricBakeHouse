@@ -24,6 +24,12 @@ public class IngredientShelfInteractable : MonoBehaviour
         shelf.DepositHuntedIngredients();
 
         IngredientShelfUI.Instance.Open(shelf);
+
+        // Open() clears the message, so show what was put on the shelf AFTER opening
+        if (!string.IsNullOrEmpty(shelf.LastDepositSummary))
+        {
+            IngredientShelfUI.Instance.ShowMessage(shelf.LastDepositSummary);
+        }
     }
 
     private void Awake()
