@@ -19,6 +19,11 @@ public class CustomerSettings : ScriptableObject
     [Tooltip("Order timer (seconds) for a NORMAL customer. Starts when the player takes the order.")]
     public float orderTimer = 180f;
 
+    [Header("Reactions (SCRUM-274)")]
+    [Tooltip("Ticked: serving a dish that was NOT ordered makes the customer disappointed (0 coins) and the dish is used up. " +
+             "Unticked: the customer just ignores the wrong dish.")]
+    public bool wrongDishDisappoints = true;
+
     [Header("Eating")]
     [Tooltip("How long (seconds) a customer eats before leaving.")]
     public float eatingTime = 12f;

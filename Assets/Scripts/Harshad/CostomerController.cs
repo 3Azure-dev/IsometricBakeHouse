@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,6 +28,17 @@ public class CustomerController : MonoBehaviour
 
     // The ONE food this customer wants
     private FoodType chosenFood;
+
+    // Seconds left on MY order timer. It starts when the player accepts the order (SCRUM-295).
+    private float orderTimeLeft;
+
+    // How my order ended: satisfied, disappointed, furious or walked out (SCRUM-274)
+    private CustomerReaction reaction = CustomerReaction.None;
+
+    public CustomerReaction Reaction
+    {
+        get { return reaction; }
+    }
 
     // --------------------------------------------------
     // INFO OTHER SCRIPTS CAN ASK FOR
@@ -160,9 +172,61 @@ public class CustomerController : MonoBehaviour
         Debug.Log(name + " was sent home because the day ended.");
     }
 
+    // Shows how the order ended above the customer (text + colour for now)
+    private void ShowReaction(CustomerReaction newReaction)
+    {
+        reaction = newReaction;
+
+        if (thinkingBubble == null)
+        {
+            return;
+        }
+
+        switch (newReaction)
+        {
+            case CustomerReaction.Satisfied:
+                thinkingBubble.ShowReaction("Satisfied!", new Color(0.2f, 0.8f, 0.3f));
+                break;
+
+            case CustomerReaction.Disappointed:
+                thinkingBubble.ShowReaction("Disappointed", new Color(1f, 0.6f, 0.1f));
+                break;
+
+            case CustomerReaction.Furious:
+                thinkingBubble.ShowReaction("FURIOUS!", new Color(0.9f, 0.15f, 0.15f));
+                break;
+
+            case CustomerReaction.WalkedOut:
+                thinkingBubble.ShowReaction("Walked out", new Color(0.6f, 0.6f, 0.6f));
+                break;
+        }
+    }
+
+    // An order that ended badly (wrong dish or timer ran out): no coins, the customer leaves
+    private void EndOrderUnhappy(CustomerReaction badReaction)
+    {
+        if (BakeryOrderManager.Instance != null)
+        {
+            BakeryOrderManager.Instance.RemoveOrder(myOrder);
+        }
+
+        myOrder = null;
+
+        ShowReaction(badReaction);
+
+        state = CustomerState.Leaving;
+
+        Debug.Log(name + " is " + badReaction + ". 0 coins. Leaving.");
+    }
+
     // Done eating: leave a dirty plate on the table, free the chair, and walk out
     private void FinishEating()
     {
+        if (thinkingBubble != null)
+        {
+            thinkingBubble.Hide();
+        }
+
         if (CustomerManager.Instance != null)
         {
             // The plate stays. The table is NOT clear until the player presses E.
@@ -257,10 +321,7 @@ public class CustomerController : MonoBehaviour
 
                 if (timer >= settings.orderPatience)
                 {
-                    if (thinkingBubble != null)
-                    {
-                        thinkingBubble.Hide();
-                    }
+                    ShowReaction(CustomerReaction.WalkedOut);
 
                     state = CustomerState.Leaving;
 
@@ -274,6 +335,17 @@ public class CustomerController : MonoBehaviour
                 break;
 
             case CustomerState.WaitingForFood:
+
+                // My own order timer (180 sec Normal, 240 sec VIP). Runs out = furious, 0 coins.
+                if (orderTimeLeft > 0f)
+                {
+                    orderTimeLeft -= Time.deltaTime;
+
+                    if (orderTimeLeft <= 0f)
+                    {
+                        EndOrderUnhappy(CustomerReaction.Furious);
+                    }
+                }
 
                 break;
 
@@ -290,7 +362,15 @@ public class CustomerController : MonoBehaviour
 
             case CustomerState.Leaving:
 
-                if (MoveTo(CustomerManager.Instance.GetExitPoint().position))
+                Transform exit = CustomerManager.Instance.GetExitPoint();
+
+                if (exit == null)
+                {
+                    Debug.LogError("CustomerManager has no Exit Point assigned.");
+                    break;
+                }
+
+                if (MoveTo(exit.position))
                 {
                     // mySeat is empty for customers who left from the door (that is fine)
                     CustomerManager.Instance.ReleaseSeat(mySeat);
@@ -387,6 +467,9 @@ public class CustomerController : MonoBehaviour
 
         myOrder = BakeryOrderManager.Instance.CreateOrder(this, chosenFood);
 
+        // The order timer starts NOW (when the player takes the order), not when the bubble showed
+        orderTimeLeft = GetOrderTimerSeconds();
+
         state = CustomerState.WaitingForFood;
 
         Debug.Log(name + "'s order was accepted. Waiting for " + chosenFood);
@@ -436,10 +519,25 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
-        // Nothing happens if the player is not holding the ordered dish
+        // Nothing happens if the player is carrying no food at all
+        if (!PlayerFoodInventory.Instance.IsCarryingFood())
+        {
+            Debug.Log(name + " needs " + chosenFood + ", but the player is not carrying any food.");
+            return;
+        }
+
+        // The player carries food, but not the dish that was ordered = WRONG DISH
         if (!PlayerFoodInventory.Instance.HasFood(chosenFood))
         {
-            Debug.Log(name + " needs " + chosenFood + ", but the player is not carrying it.");
+            if (settings.wrongDishDisappoints)
+            {
+                ServeWrongDish();
+            }
+            else
+            {
+                Debug.Log(name + " needs " + chosenFood + ", but the player is not carrying it.");
+            }
+
             return;
         }
 
@@ -482,14 +580,41 @@ public class CustomerController : MonoBehaviour
 
         Wallet.Instance.AddCoins(coins);
 
-        // TODO (diamonds): a VIP should also give settings.vipDiamondReward diamonds.
-        // The Wallet only has coins right now. Once it has an AddDiamonds method, call it here.
+        // Only a VIP gives diamonds (20 from SO_CustomerSettings), and only when served right
+        if (IsVIP)
+        {
+            Wallet.Instance.AddDiamonds(settings.vipDiamondReward);
+        }
 
         Debug.Log(name + " (" + customerType + ") received " + chosenFood + " and paid " + coins + " coins.");
+
+        // The order is finished, so stop tracking it
+        if (BakeryOrderManager.Instance != null)
+        {
+            BakeryOrderManager.Instance.RemoveOrder(myOrder);
+        }
+
+        myOrder = null;
+
+        ShowReaction(CustomerReaction.Satisfied);
 
         state = CustomerState.Eating;
 
         timer = 0f;
+    }
+
+    // The player served a dish that was not the ordered one: disappointed, 0 coins, 0 diamonds
+    private void ServeWrongDish()
+    {
+        List<FoodType> carried = PlayerFoodInventory.Instance.GetCarriedFoods();
+
+        FoodType wrongDish = carried[0];
+
+        PlayerFoodInventory.Instance.RemoveFood(wrongDish);
+
+        Debug.Log(name + " wanted " + chosenFood + " but got " + wrongDish + ".");
+
+        EndOrderUnhappy(CustomerReaction.Disappointed);
     }
 
     // --------------------------------------------------
@@ -577,6 +702,10 @@ public class CustomerController : MonoBehaviour
         myOrder = null;
 
         timer = 0f;
+
+        orderTimeLeft = 0f;
+
+        reaction = CustomerReaction.None;
 
         chosenFood = FoodType.Bread;
 

@@ -137,6 +137,19 @@ public class BakeryOrderManager : MonoBehaviour
 
 
     // --------------------------------------------------
+    // FINISH ORDER (served, wrong dish, timer ran out): forget it so the list does not grow forever
+    // --------------------------------------------------
+
+    public void RemoveOrder(BakeryOrder order)
+    {
+        if (order != null)
+        {
+            orders.Remove(order);
+        }
+    }
+
+
+    // --------------------------------------------------
     // GET ORDER
     // --------------------------------------------------
 

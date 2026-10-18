@@ -16,6 +16,7 @@ MonoBehaviour:
   thinkingTimeMax: 5
   orderPatience: 20
   orderTimer: 180
+  wrongDishDisappoints: 1
   eatingTime: 12
   maxCustomersAtDoor: 4
   customersPerBatch: 2
