@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
   recipeName: Bread
   icon: {fileID: 0}
+  foodType: 0
   unlockLevel: 1
   blueprintCost: 0
   huntedIngredients:
