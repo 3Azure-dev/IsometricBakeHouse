@@ -9,6 +9,9 @@ public class OvenController : MonoBehaviour
     public bool IsCooking { get; private set; }
     public FoodType CurrentFood { get; private set; }
 
+    // True when the dish is finished and waiting in the oven for the player to press E
+    public bool FoodReady { get; private set; }
+
     public event Action<string> OnStatusChanged;
     public event Action OnCookingStateChanged;
 
@@ -16,6 +19,13 @@ public class OvenController : MonoBehaviour
 
     public void Interact()
     {
+        // Finished dish waiting? E picks it up (same as the Stove)
+        if (FoodReady)
+        {
+            TakeFood();
+            return;
+        }
+
         if (OvenUI.Instance == null)
         {
             Debug.LogError("OvenUI was not found in the scene.");
@@ -33,11 +43,42 @@ public class OvenController : MonoBehaviour
                recipe.cookingMethod == CookingMethod.Oven;
     }
 
+    // The player presses E at the oven and takes the finished dish
+    private void TakeFood()
+    {
+        if (!FoodReady || PlayerFoodInventory.Instance == null)
+        {
+            return;
+        }
+
+        // Only clear the oven if the player really got the dish.
+        // (Before, a full inventory made the dish disappear.)
+        bool taken = PlayerFoodInventory.Instance.TakeFood(CurrentFood);
+
+        if (!taken)
+        {
+            SetStatus("Your food inventory is full. " + CurrentFood + " stays in the oven.");
+            return;
+        }
+
+        FoodReady = false;
+
+        SetStatus("You took the " + CurrentFood + ".");
+
+        OnCookingStateChanged?.Invoke();
+    }
+
     public bool TryStartCooking(FoodType food)
     {
         if (IsCooking)
         {
             SetStatus("The oven is already cooking.");
+            return false;
+        }
+
+        if (FoodReady)
+        {
+            SetStatus("Take the finished " + CurrentFood + " first (press E at the oven).");
             return false;
         }
 
@@ -135,28 +176,15 @@ public class OvenController : MonoBehaviour
 
         yield return new WaitForSeconds(cookingTime);
 
-        if (PlayerFoodInventory.Instance == null)
-        {
-            IsCooking = false;
-            cookingCoroutine = null;
-
-            SetStatus(
-                "Cooking finished, but PlayerFoodInventory is missing."
-            );
-
-            OnCookingStateChanged?.Invoke();
-            yield break;
-        }
-
-        // Uses the same finished-food inventory as the stove.
-        PlayerFoodInventory.Instance.TakeFood(CurrentFood);
-
+        // The dish waits in the oven until the player presses E (same as the Stove).
+        // It is NOT put in the player's inventory automatically any more.
         FoodType finishedFood = CurrentFood;
 
         IsCooking = false;
+        FoodReady = true;
         cookingCoroutine = null;
 
-        SetStatus(finishedFood + " is ready! Collect your food.");
+        SetStatus(finishedFood + " is ready! Press E at the oven to take it.");
 
         OnCookingStateChanged?.Invoke();
     }
