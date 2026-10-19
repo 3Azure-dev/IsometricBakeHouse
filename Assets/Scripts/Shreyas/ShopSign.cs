@@ -1,42 +1,74 @@
+
 using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ShopOpenCloseSign : MonoBehaviour, IInteractable
 {
-    [Header("Shop State")]
+    [Header("Sign")]
+    [SerializeField] private Transform signBoard;
+    [SerializeField] private GameObject openSide;
+    [SerializeField] private GameObject closedSide;
+    [SerializeField] private float flipDuration = 0.4f;
+
     public bool IsOpen { get; private set; } = false;
-
-    [Header("Sign Images")]
-    [SerializeField] private Image signImage;
-    [SerializeField] private Sprite openSprite;
-    [SerializeField] private Sprite closedSprite;
-
     public event Action<bool> OnShopStateChanged;
+
+    private bool isFlipping;
+    private Quaternion closedRotation;
+    private Quaternion openRotation;
 
     private void Awake()
     {
+        if (signBoard == null)
+            signBoard = transform;
+
+        closedRotation = signBoard.localRotation;
+        openRotation = closedRotation * Quaternion.Euler(0f, 180f, 0f);
+
         IsOpen = false;
-        UpdateSign();
+        UpdateSides();
     }
 
     public void Interact()
     {
+        if (isFlipping) return;
+
         IsOpen = !IsOpen;
-
-        UpdateSign();
-
         OnShopStateChanged?.Invoke(IsOpen);
-
-        Debug.Log(IsOpen ? "Shop is now OPEN." : "Shop is now CLOSED.");
+        StartCoroutine(FlipSign());
     }
 
-    private void UpdateSign()
+    private IEnumerator FlipSign()
     {
-        if (signImage != null)
+        isFlipping = true;
+
+        Quaternion startRotation = signBoard.localRotation;
+        Quaternion targetRotation = IsOpen ? openRotation : closedRotation;
+
+        if (openSide != null) openSide.SetActive(false);
+        if (closedSide != null) closedSide.SetActive(false);
+
+        float elapsed = 0f;
+
+        while (elapsed < flipDuration)
         {
-            signImage.sprite = IsOpen ? openSprite : closedSprite;
-            signImage.enabled = true;
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / flipDuration);
+            signBoard.localRotation =
+                Quaternion.Slerp(startRotation, targetRotation, t);
+
+            yield return null;
         }
+
+        signBoard.localRotation = targetRotation;
+        UpdateSides();
+        isFlipping = false;
+    }
+
+    private void UpdateSides()
+    {
+        if (openSide != null) openSide.SetActive(IsOpen);
+        if (closedSide != null) closedSide.SetActive(!IsOpen);
     }
 }
