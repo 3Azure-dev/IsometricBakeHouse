@@ -79,6 +79,19 @@ public class PlayerRangeInteraction : MonoBehaviour
         GameObject target =
             nearbyObjects[0];
 
+        // Handle objects that implement IInteractable.
+        MonoBehaviour[] components =
+            target.GetComponentsInParent<MonoBehaviour>(true);
+
+        foreach (MonoBehaviour component in components)
+        {
+            if (component is IInteractable interactable)
+            {
+                interactable.Interact();
+                return;
+            }
+        }
+
         // SHELF - grant starting resources on first interaction
         IngredientInventory shelf =
             target.GetComponentInParent<IngredientInventory>();
