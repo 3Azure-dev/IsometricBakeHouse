@@ -119,6 +119,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &13263244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 13263246}
+  - component: {fileID: 13263245}
+  m_Layer: 0
+  m_Name: OvenSpawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &13263245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13263244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43a236f0c1305e44b9041b1049dc2068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OvenPurchaseSpawner
+  ovenPrefab: {fileID: 749889038508558203, guid: 232b6871656a4fe4580812def04af242, type: 3}
+  spawnPoint: {fileID: 13263246}
+--- !u!4 &13263246
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13263244}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.55, y: 4.63, z: -8.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &19934725
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -249,6 +295,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c7f0d9791d55ac429db52e6f6c3a775, type: 3}
+--- !u!1 &27242054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 27242056}
+  - component: {fileID: 27242055}
+  m_Layer: 0
+  m_Name: CupCakeSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &27242055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27242054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38b8fdad80cace478d1db66d5f57345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CupcakePurchaseSpawner
+  cupcakePrefab: {fileID: 3647450715712534430, guid: cec44323ccb7f1a4a89bb7870f72a27b, type: 3}
+  spawnPoint: {fileID: 27242056}
+--- !u!4 &27242056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27242054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.16, y: 5.14, z: -9.55}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &31281135
 GameObject:
   m_ObjectHideFlags: 0
@@ -3462,18 +3554,23 @@ MonoBehaviour:
     cookingMethod: 0
     cookingTime: 5
     ingredients: 000000000000000000000000i
+    unlockedByDefault: 1
   - foodType: 1
     cookingMethod: 1
     cookingTime: 10
     ingredients: 
+    unlockedByDefault: 1
   - foodType: 2
     cookingMethod: 0
     cookingTime: 10
     ingredients: 
+    unlockedByDefault: 1
   - foodType: 1
     cookingMethod: 0
     cookingTime: 10
     ingredients: 
+    unlockedByDefault: 1
+  cupcakeRecipeFoodType: 0
 --- !u!1 &570176041
 GameObject:
   m_ObjectHideFlags: 0
@@ -8930,6 +9027,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598420258}
   m_CullTransparentMesh: 1
+--- !u!1 &1628507685
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1628507687}
+  - component: {fileID: 1628507686}
+  m_Layer: 0
+  m_Name: Recipemanager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1628507686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628507685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec60d98069f7d204f94199e2ec0b54df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeManager
+  recipes:
+  - foodType: 0
+    cookingMethod: 0
+    cookingTime: 2
+    ingredients: 00000000i
+    unlockedByDefault: 1
+  - foodType: 1
+    cookingMethod: 0
+    cookingTime: 3
+    ingredients: 03000000i
+    unlockedByDefault: 0
+  cupcakeRecipeFoodType: 1
+--- !u!4 &1628507687
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628507685}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.38266, y: 3.37897, z: -14.66171}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1642778034
 GameObject:
   m_ObjectHideFlags: 0
@@ -9274,10 +9427,46 @@ MonoBehaviour:
   cupcakeRecipeStatusText: {fileID: 0}
   onOvenPurchased:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 13263245}
+        m_TargetAssemblyTypeName: OvenPurchaseSpawner, Assembly-CSharp
+        m_MethodName: SpawnOven
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onCupcakeRecipePurchased:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1628507686}
+        m_TargetAssemblyTypeName: RecipeManager, Assembly-CSharp
+        m_MethodName: UnlockCupcakeRecipe
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 27242055}
+        m_TargetAssemblyTypeName: CupcakePurchaseSpawner, Assembly-CSharp
+        m_MethodName: SpawnCupcake
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1677296668
 GameObject:
   m_ObjectHideFlags: 0
@@ -11558,3 +11747,6 @@ SceneRoots:
   - {fileID: 670453561}
   - {fileID: 1437321706}
   - {fileID: 25480369}
+  - {fileID: 13263246}
+  - {fileID: 1628507687}
+  - {fileID: 27242056}
