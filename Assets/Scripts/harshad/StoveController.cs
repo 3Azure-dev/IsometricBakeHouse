@@ -164,6 +164,12 @@ public class StoveController : MonoBehaviour
         cookingTimer = 0f;
 
         isCooking = true;
+
+        if (BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayCookingStart();
+        }
+
         // Show the progress bar
         if (cookingProgressCanvas != null)
         {
@@ -193,6 +199,12 @@ public class StoveController : MonoBehaviour
         cookingTimer = 0f;
 
         foodReady = true;
+
+        if (BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayCookingDone();
+        }
+
         if (cookingProgressCanvas != null)
         {
             cookingProgressCanvas.SetActive(false);

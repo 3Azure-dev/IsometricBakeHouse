@@ -60,6 +60,12 @@ public class CustomerController : MonoBehaviour
         state =
             CustomerState.GoingToSeat;
 
+        // Play the customer arrival sound.
+        if (BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayCustomerArrives();
+        }
+
         Debug.Log(
             name +
             " spawned as " +
@@ -398,6 +404,12 @@ public class CustomerController : MonoBehaviour
             );
 
             return;
+        }
+
+        // Play the sound after food is successfully served.
+        if (BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayDishServed();
         }
 
         // Award coins after food is successfully served.
