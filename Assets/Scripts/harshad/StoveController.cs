@@ -3,24 +3,70 @@ using UnityEngine.UI;
 
 public class StoveController : MonoBehaviour
 {
-    [Header("Recipes (drag SO_RecipeDatabase here)")]
-    [SerializeField] private RecipeDatabase recipeDatabase;
+    private bool isCooking;
 
+    private bool foodReady;
+
+    private FoodType currentFood;
+
+    private float cookingTimer;
+
+    private Recipe currentRecipe;
     [Header("Cooking Progress UI")]
     [SerializeField] private GameObject cookingProgressCanvas;
     [SerializeField] private Slider cookingProgressSlider;
 
-    private bool isCooking;
-    private bool foodReady;
-
-    private FoodType currentFood;
-    private float cookingTimer;
-
-    // The recipe asset for the dish being cooked (cook time comes from here)
-    private RecipeData currentRecipe;
 
     // --------------------------------------------------
-    // START
+    // PLAYER INTERACTION
+    // --------------------------------------------------
+
+    public void Interact()
+    {
+        if (isCooking)
+        {
+            Debug.Log(
+                "Stove is already cooking."
+            );
+
+            return;
+        }
+
+        if (foodReady)
+        {
+            TakeFood();
+
+            return;
+        }
+
+        if (PlayerFoodInventory.Instance == null)
+        {
+            Debug.LogError(
+                "PlayerFoodInventory was not found."
+            );
+
+            return;
+        }
+
+        if (StoveUI.Instance == null)
+        {
+            Debug.LogError(
+                "StoveUI was not found."
+            );
+
+            return;
+        }
+
+        StoveUI.Instance.Open(this);
+    }
+
+
+    // --------------------------------------------------
+    // UPDATE
+    // --------------------------------------------------
+
+    // --------------------------------------------------
+    // COOKING PROGRESS UI
     // --------------------------------------------------
 
     private void Start()
@@ -38,64 +84,28 @@ public class StoveController : MonoBehaviour
         }
     }
 
-    // --------------------------------------------------
-    // PLAYER INTERACTION
-    // --------------------------------------------------
-
-    public void Interact()
-    {
-        if (isCooking)
-        {
-            Debug.Log("Stove is already cooking.");
-            return;
-        }
-
-        if (foodReady)
-        {
-            TakeFood();
-            return;
-        }
-
-        if (PlayerFoodInventory.Instance == null)
-        {
-            Debug.LogError("PlayerFoodInventory was not found.");
-            return;
-        }
-
-        if (StoveUI.Instance == null)
-        {
-            Debug.LogError("StoveUI was not found.");
-            return;
-        }
-
-        StoveUI.Instance.Open(this);
-    }
-
-    // --------------------------------------------------
-    // UPDATE
-    // --------------------------------------------------
-
     private void Update()
     {
-        if (!isCooking || currentRecipe == null)
+        if (!isCooking)
         {
             return;
         }
 
         cookingTimer += Time.deltaTime;
-
-        float cookTime = currentRecipe.cookTime;
-
-        if (cookingProgressSlider != null && cookTime > 0f)
+        if (cookingProgressSlider != null &&
+    currentRecipe != null &&
+    currentRecipe.cookingTime > 0f)
         {
-            cookingProgressSlider.value = Mathf.Clamp01(cookingTimer / cookTime);
+            cookingProgressSlider.value =
+                Mathf.Clamp01(cookingTimer / currentRecipe.cookingTime);
         }
 
-        if (cookingTimer >= cookTime)
+        if (cookingTimer >= currentRecipe.cookingTime)
         {
             FinishCooking();
         }
     }
+
 
     // --------------------------------------------------
     // START COOKING
@@ -103,30 +113,64 @@ public class StoveController : MonoBehaviour
 
     public void StartCooking(FoodType food)
     {
-        if (isCooking || foodReady)
+        if (isCooking)
         {
             return;
         }
 
-        if (recipeDatabase == null)
+        if (foodReady)
         {
-            Debug.LogError("StoveController has no RecipeDatabase assigned.");
             return;
         }
 
-        RecipeData recipe = recipeDatabase.GetRecipe(food);
+        if (RecipeManager.Instance == null)
+        {
+            Debug.LogError(
+                "RecipeManager was not found."
+            );
+
+            return;
+        }
+
+        Recipe recipe =
+            RecipeManager.Instance.GetRecipe(
+                food
+            );
 
         if (recipe == null)
         {
-            Debug.LogWarning("No recipe found for " + food + ". Check SO_RecipeDatabase and the Food Type on the recipe asset.");
+            Debug.LogWarning(
+                "No recipe found for " +
+                food
+            );
+
+            return;
+        }
+
+        if (recipe.cookingMethod != CookingMethod.Stove)
+        {
+            Debug.LogWarning(
+                food +
+                " cannot be cooked on the stove."
+            );
+
             return;
         }
 
         currentRecipe = recipe;
+
         currentFood = food;
+
         cookingTimer = 0f;
+
         isCooking = true;
 
+        if (BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayCookingStart();
+        }
+
+        // Show the progress bar
         if (cookingProgressCanvas != null)
         {
             cookingProgressCanvas.SetActive(true);
@@ -137,8 +181,12 @@ public class StoveController : MonoBehaviour
             cookingProgressSlider.value = 0f;
         }
 
-        Debug.Log("Stove started cooking " + currentFood + " (" + recipe.cookTime + " sec)");
+        Debug.Log(
+            "Stove started cooking " +
+            currentFood
+        );
     }
+
 
     // --------------------------------------------------
     // FINISH COOKING
@@ -147,16 +195,27 @@ public class StoveController : MonoBehaviour
     private void FinishCooking()
     {
         isCooking = false;
+
         cookingTimer = 0f;
+
         foodReady = true;
+
+        if (BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayCookingDone();
+        }
 
         if (cookingProgressCanvas != null)
         {
             cookingProgressCanvas.SetActive(false);
         }
 
-        Debug.Log(currentFood + " is ready on the stove.");
+        Debug.Log(
+            currentFood +
+            " is ready on the stove."
+        );
     }
+
 
     // --------------------------------------------------
     // TAKE FOOD
@@ -164,24 +223,28 @@ public class StoveController : MonoBehaviour
 
     private void TakeFood()
     {
-        if (!foodReady || PlayerFoodInventory.Instance == null)
+        if (!foodReady)
         {
             return;
         }
 
-        // FIX: only clear the stove if the player really got the dish.
-        // Before, a full inventory made the dish disappear from the stove.
-        bool taken = PlayerFoodInventory.Instance.TakeFood(currentFood);
-
-        if (!taken)
+        if (PlayerFoodInventory.Instance == null)
         {
-            Debug.Log("Inventory full. " + currentFood + " stays on the stove.");
             return;
         }
+
+        PlayerFoodInventory.Instance.TakeFood(
+            currentFood
+        );
 
         foodReady = false;
+
         currentRecipe = null;
 
-        Debug.Log("Player took " + currentFood + " from the stove.");
+        Debug.Log(
+            "Player took " +
+            currentFood +
+            " from the stove."
+        );
     }
 }

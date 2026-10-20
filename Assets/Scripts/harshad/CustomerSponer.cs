@@ -1,132 +1,121 @@
-using System.Collections;
 using UnityEngine;
 
 public class CustomerSpawner : MonoBehaviour
 {
-    [Header("Settings (drag SO_CustomerSettings here)")]
-    [SerializeField] private CustomerSettings settings;
-
     [Header("Spawn")]
     [SerializeField] private Transform spawnPoint;
 
-    private DayNightClock clock;
+    [Header("Timing")]
+    [SerializeField] private float minimumSpawnTime = 5f;
+    [SerializeField] private float maximumSpawnTime = 10f;
 
-    // Customers only come in the Day Phase
-    private bool dayIsOpen = true;
+    [Header("VIP")]
+    [Range(0f, 100f)]
+    [SerializeField] private float vipChance = 10f;
 
-    // --------------------------------------------------
-    // SETUP
-    // --------------------------------------------------
+    [Header("Shop Sign")]
+    [SerializeField] private ShopOpenCloseSign shopSign;
 
-    private void Start()
+    private float spawnTimer;
+    private float nextSpawnTime;
+    private bool shopIsOpen;
+
+    private void OnEnable()
     {
-        clock = DayNightClock.Instance;
-
-        if (clock == null)
+        if (shopSign != null)
         {
-            Debug.LogWarning("CustomerSpawner: no DayNightClock found. Customers will come all the time.");
+            // Read the current shop state.
+            shopIsOpen = shopSign.IsOpen;
+
+            // Listen for the shop opening or closing.
+            shopSign.OnShopStateChanged += HandleShopStateChanged;
         }
         else
         {
-            dayIsOpen = clock.IsDay;
+            Debug.LogError(
+                "CustomerSpawner: Shop Open/Close Sign is not assigned!",
+                this
+            );
 
-            clock.DayEnded += OnDayEnded;
-            clock.NightEnded += OnNightEnded;
-        }
-
-        StartCoroutine(SpawnLoop());
-    }
-
-    // The clock outlives this scene, so unsubscribe when the spawner is destroyed
-    private void OnDestroy()
-    {
-        if (clock != null)
-        {
-            clock.DayEnded -= OnDayEnded;
-            clock.NightEnded -= OnNightEnded;
+            shopIsOpen = false;
         }
     }
 
-    private void OnDayEnded()
+    private void Start()
     {
-        dayIsOpen = false;
-
-        if (CustomerManager.Instance != null)
-        {
-            CustomerManager.Instance.SendDoorQueueHome();
-        }
-
-        Debug.Log("CustomerSpawner: day ended, no new customers.");
+        SetNextSpawnTime();
     }
 
-    private void OnNightEnded()
+    private void OnDisable()
     {
-        dayIsOpen = true;
-
-        Debug.Log("CustomerSpawner: a new day began, customers are coming again.");
-    }
-
-    // --------------------------------------------------
-    // SPAWNING (a coroutine: code that can wait)
-    // --------------------------------------------------
-
-    private IEnumerator SpawnLoop()
-    {
-        if (settings == null)
+        // Stop listening when this spawner is disabled.
+        if (shopSign != null)
         {
-            Debug.LogError("CustomerSpawner has no CustomerSettings assigned.");
-            yield break;
-        }
-
-        while (true)
-        {
-            // 1. Wait until it is day, the shop is open, and a whole batch fits at the door
-            yield return new WaitUntil(CanSpawnBatch);
-
-            // 2. Wait the spawn delay (5 sec from the settings asset)
-            yield return new WaitForSeconds(settings.doorSpawnDelay);
-
-            // 3. Things may have changed while we waited (the day may have ended), so check again
-            if (CanSpawnBatch())
-            {
-                for (int i = 0; i < settings.customersPerBatch; i++)
-                {
-                    SpawnCustomer();
-                }
-            }
+            shopSign.OnShopStateChanged -= HandleShopStateChanged;
         }
     }
 
-    private bool CanSpawnBatch()
+    private void Update()
     {
-        if (!dayIsOpen || !ShopIsOpen())
-        {
-            return false;
-        }
+        // Do not spawn customers while the shop is closed.
+        if (!shopIsOpen)
+            return;
 
-        if (CustomerManager.Instance == null)
-        {
-            return false;
-        }
+        spawnTimer += Time.deltaTime;
 
-        return CustomerManager.Instance.DoorFreeSpots >= settings.customersPerBatch;
+        if (spawnTimer >= nextSpawnTime)
+        {
+            SpawnCustomer();
+
+            spawnTimer = 0f;
+
+            SetNextSpawnTime();
+        }
     }
 
-    // PLACEHOLDER until Shreyas's Open/Close sign (SCRUM-281) exists.
-    // Then ask the sign: "is the shop open?" and return that here.
-    private bool ShopIsOpen()
+    private void HandleShopStateChanged(bool isOpen)
     {
-        return true;
+        shopIsOpen = isOpen;
+
+        // Start a fresh countdown when the shop changes state.
+        spawnTimer = 0f;
+
+        SetNextSpawnTime();
+
+        Debug.Log(
+            shopIsOpen
+                ? "CustomerSpawner: Shop opened. Customers can spawn."
+                : "CustomerSpawner: Shop closed. Customer spawning stopped."
+        );
+    }
+
+    private void SetNextSpawnTime()
+    {
+        float minimum = Mathf.Max(0f, minimumSpawnTime);
+        float maximum = Mathf.Max(minimum, maximumSpawnTime);
+
+        nextSpawnTime = Random.Range(minimum, maximum);
     }
 
     private void SpawnCustomer()
     {
+        if (spawnPoint == null)
+        {
+            Debug.LogError("CustomerSpawner: Spawn Point is not assigned!", this);
+            return;
+        }
+
+        if (CustomerPool.Instance == null)
+        {
+            Debug.LogError("CustomerSpawner: CustomerPool.Instance was not found!", this);
+            return;
+        }
+
         CustomerType type;
 
-        // VIP chance comes from SO_CustomerSettings (percent)
         float randomNumber = Random.Range(0f, 100f);
 
-        if (randomNumber <= settings.vipChancePercent)
+        if (randomNumber < vipChance)
         {
             type = CustomerType.VIP;
         }
@@ -141,10 +130,21 @@ public class CustomerSpawner : MonoBehaviour
             return;
 
         customer.transform.position = spawnPoint.position;
-
         customer.transform.rotation = spawnPoint.rotation;
 
-        CustomerController controller = customer.GetComponent<CustomerController>();
+        CustomerController controller =
+            customer.GetComponent<CustomerController>();
+
+        if (controller == null)
+        {
+            Debug.LogError(
+                "CustomerSpawner: Spawned customer has no CustomerController!",
+                customer
+            );
+
+            customer.SetActive(false);
+            return;
+        }
 
         controller.StartCustomer(type);
     }

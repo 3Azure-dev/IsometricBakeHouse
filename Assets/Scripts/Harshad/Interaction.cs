@@ -5,6 +5,8 @@ public class PlayerRangeInteraction : MonoBehaviour
 {
     [SerializeField] private string interactableTag = "Interactable";
 
+    [SerializeField] private StartingStateInitializer startingStateInitializer;
+
     private readonly List<GameObject> nearbyObjects =
         new List<GameObject>();
 
@@ -15,6 +17,7 @@ public class PlayerRangeInteraction : MonoBehaviour
             InteractWithNearestObject();
         }
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -42,6 +45,7 @@ public class PlayerRangeInteraction : MonoBehaviour
         }
     }
 
+
     private void OnTriggerExit(Collider other)
     {
         GameObject target =
@@ -60,82 +64,80 @@ public class PlayerRangeInteraction : MonoBehaviour
         }
     }
 
-    // Goes through the objects in range, closest first.
-    // The first one that can actually use the E press gets it.
+
     private void InteractWithNearestObject()
     {
-        nearbyObjects.RemoveAll(target => target == null);
+        nearbyObjects.RemoveAll(
+            target => target == null
+        );
 
         if (nearbyObjects.Count == 0)
         {
             return;
         }
 
-        // Work on a copy, sorted closest first
-        List<GameObject> candidates = new List<GameObject>(nearbyObjects);
-        candidates.Sort(CompareByDistance);
+        GameObject target =
+            nearbyObjects[0];
 
-        foreach (GameObject target in candidates)
+        // Handle objects that implement IInteractable.
+        MonoBehaviour[] components =
+            target.GetComponentsInParent<MonoBehaviour>(true);
+
+        foreach (MonoBehaviour component in components)
         {
-            if (target != null && TryInteract(target))
+            if (component is IInteractable interactable)
             {
+                interactable.Interact();
                 return;
             }
         }
 
-        Debug.Log("Nothing to interact with right now.");
-    }
+        // SHELF - grant starting resources on first interaction
+        IngredientInventory shelf =
+            target.GetComponentInParent<IngredientInventory>();
 
-    private int CompareByDistance(GameObject a, GameObject b)
-    {
-        float distanceA = Vector3.Distance(transform.position, a.transform.position);
-        float distanceB = Vector3.Distance(transform.position, b.transform.position);
+        if (shelf == null)
+        {
+            shelf = target.GetComponentInChildren<IngredientInventory>();
+        }
 
-        return distanceA.CompareTo(distanceB);
-    }
+        if (shelf != null)
+        {
+            if (startingStateInitializer == null)
+            {
+                Debug.LogError(
+                    "StartingStateInitializer is not assigned!",
+                    this
+                );
+            }
+            else
+            {
+                startingStateInitializer.ApplyStartingStateOnce();
+            }
 
-    // Returns true if the object used the E press, false if it is not ready
-    private bool TryInteract(GameObject target)
-    {
-        // CUSTOMER: only if they are ready (waiting to order, or waiting for food)
+            return;
+        }
+
+
+        // CUSTOMER
         CustomerController customer =
             target.GetComponentInParent<CustomerController>();
 
         if (customer != null)
         {
-            if (!customer.CanInteractWithPlayer)
-            {
-                return false;
-            }
-
             customer.InteractWithPlayer();
-            return true;
+            return;
         }
 
-        // TABLE: only if it has dirty plates to clear
-        BakeryTable table =
-            target.GetComponentInParent<BakeryTable>();
-
-        if (table != null)
-        {
-            if (!table.HasDirtyPlates)
-            {
-                return false;
-            }
-
-            table.Interact();
-            return true;
-        }
-
-        // STOVE
         StoveController stove =
-            target.GetComponentInParent<StoveController>();
+    target.GetComponentInParent<StoveController>();
 
         if (stove != null)
         {
             stove.Interact();
-            return true;
+            return;
         }
+
 
         // TRANSPORT
         Transport transport =
@@ -144,8 +146,9 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (transport != null)
         {
             transport.Interact();
-            return true;
+            return;
         }
+
 
         // BUY ITEM DEVICE
         BuyItemDevice buyDevice =
@@ -154,28 +157,9 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (buyDevice != null)
         {
             buyDevice.Interact();
-            return true;
+            return;
         }
 
-        // INGREDIENT SHELF
-        IngredientShelfInteractable shelf =
-            target.GetComponentInParent<IngredientShelfInteractable>();
-
-        if (shelf != null)
-        {
-            shelf.Interact();
-            return true;
-        }
-
-        // OVEN
-        OvenController oven =
-            target.GetComponentInParent<OvenController>();
-
-        if (oven != null)
-        {
-            oven.Interact();
-            return true;
-        }
 
         // DOOR
         Door door =
@@ -184,9 +168,6 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (door != null)
         {
             door.ToggleDoor();
-            return true;
         }
-
-        return false;
     }
 }

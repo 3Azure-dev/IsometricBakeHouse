@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class CreatureSpawnerbackup : MonoBehaviour
 {
-    [SerializeField] private IngredientCreature _creaturePrefab;
+    [SerializeField] private IngredientCreature1 _creaturePrefab;
 
     [Tooltip("A creature that falls below this height goes back to its spawn point")]
     [SerializeField] private float _fallHeight = -10f;
 
-    private readonly List<IngredientCreature> _creatures = new();
+    private readonly List<IngredientCreature1> _creatures = new();
     private readonly List<Vector3> _homes = new();
 
     private void Start()
@@ -16,7 +16,7 @@ public class CreatureSpawnerbackup : MonoBehaviour
         // every child of this object is a spawn point
         foreach (Transform point in transform)
         {
-            IngredientCreature creature = Instantiate(_creaturePrefab, point.position, Quaternion.identity);
+            IngredientCreature1 creature = Instantiate(_creaturePrefab, point.position, Quaternion.identity);
             _creatures.Add(creature);
             _homes.Add(point.position);
         }
@@ -26,7 +26,7 @@ public class CreatureSpawnerbackup : MonoBehaviour
     {
         for (int i = 0; i < _creatures.Count; i++)
         {
-            IngredientCreature creature = _creatures[i];
+            IngredientCreature1 creature = _creatures[i];
             if (!creature.gameObject.activeSelf) continue; // already caught
 
             if (creature.transform.position.y < _fallHeight)

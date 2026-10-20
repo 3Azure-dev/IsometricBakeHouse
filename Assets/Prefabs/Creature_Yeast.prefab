@@ -54,6 +54,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _lookAhead: 0.3
+  _holeProbeDepth: 6
   _state: 0
 --- !u!212 &7827816144222173230
 SpriteRenderer:

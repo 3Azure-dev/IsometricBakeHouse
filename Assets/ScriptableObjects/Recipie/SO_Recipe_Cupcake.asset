@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
   recipeName: Cupcake
   icon: {fileID: 0}
-  foodType: 1
-  unlockLevel: 1
-  blueprintCost: 0
+  unlockLevel: 2
+  blueprintCost: 400
   huntedIngredients:
   - {fileID: 11400000, guid: f0331a998412f1542b42b1562f571898, type: 2}
   - {fileID: 11400000, guid: 2107e02abd71f5541939fde06ea7a62c, type: 2}

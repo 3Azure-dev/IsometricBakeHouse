@@ -44,7 +44,7 @@ public class Bolt : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // did we hit a creature?
-        if (other.TryGetComponent(out IngredientCreature creature))
+        if (other.TryGetComponent(out IngredientCreature1 creature))
         {
             creature.Stun();
             Despawn();

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class Recipe
@@ -11,4 +12,7 @@ public class Recipe
 
     public List<IngredientType> ingredients =
         new List<IngredientType>();
+
+    [Header("Recipe Unlock")]
+    public bool unlockedByDefault = true;
 }

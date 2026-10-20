@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentData
   equipmentName: Oven
   icon: {fileID: 0}
-  cost: 0
+  cost: 400
   unlockLevel: 2

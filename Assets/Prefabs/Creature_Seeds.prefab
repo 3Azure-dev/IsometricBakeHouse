@@ -54,6 +54,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _lookAhead: 0.3
+  _holeProbeDepth: 6
   _state: 0
   _puddlePrefab: {fileID: 8048579113560669760, guid: 153a4c2726191f846b7bcfa6e6646770, type: 3}
 --- !u!212 &7827816144222173230
