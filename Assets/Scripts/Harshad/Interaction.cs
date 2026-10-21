@@ -5,6 +5,7 @@ public class PlayerRangeInteraction : MonoBehaviour
 {
     [SerializeField] private string interactableTag = "Interactable";
 
+    // Shreyas's Starting State (starting coins + ingredients, given at the first E at the shelf)
     [SerializeField] private StartingStateInitializer startingStateInitializer;
 
     private readonly List<GameObject> nearbyObjects =
@@ -17,7 +18,6 @@ public class PlayerRangeInteraction : MonoBehaviour
             InteractWithNearestObject();
         }
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -45,7 +45,6 @@ public class PlayerRangeInteraction : MonoBehaviour
         }
     }
 
-
     private void OnTriggerExit(Collider other)
     {
         GameObject target =
@@ -64,22 +63,44 @@ public class PlayerRangeInteraction : MonoBehaviour
         }
     }
 
-
+    // Goes through the objects in range, closest first.
+    // The first one that can actually use the E press gets it.
     private void InteractWithNearestObject()
     {
-        nearbyObjects.RemoveAll(
-            target => target == null
-        );
+        nearbyObjects.RemoveAll(target => target == null);
 
         if (nearbyObjects.Count == 0)
         {
             return;
         }
 
-        GameObject target =
-            nearbyObjects[0];
+        // Work on a copy, sorted closest first
+        List<GameObject> candidates = new List<GameObject>(nearbyObjects);
+        candidates.Sort(CompareByDistance);
 
-        // Handle objects that implement IInteractable.
+        foreach (GameObject target in candidates)
+        {
+            if (target != null && TryInteract(target))
+            {
+                return;
+            }
+        }
+
+        Debug.Log("Nothing to interact with right now.");
+    }
+
+    private int CompareByDistance(GameObject a, GameObject b)
+    {
+        float distanceA = Vector3.Distance(transform.position, a.transform.position);
+        float distanceB = Vector3.Distance(transform.position, b.transform.position);
+
+        return distanceA.CompareTo(distanceB);
+    }
+
+    // Returns true if the object used the E press, false if it is not ready
+    private bool TryInteract(GameObject target)
+    {
+        // Objects that use Shreyas's IInteractable interface (for example the shop Open/Close sign)
         MonoBehaviour[] components =
             target.GetComponentsInParent<MonoBehaviour>(true);
 
@@ -88,56 +109,76 @@ public class PlayerRangeInteraction : MonoBehaviour
             if (component is IInteractable interactable)
             {
                 interactable.Interact();
-                return;
+                return true;
             }
         }
 
-        // SHELF - grant starting resources on first interaction
-        IngredientInventory shelf =
+        // SHELF starting state (Shreyas): the first E at the shelf grants the starting resources,
+        // and later presses show or hide the ingredient counter. We do NOT stop here,
+        // so the shelf window (below) can still open on the same press.
+        bool usedStartingState = false;
+
+        IngredientInventory startingShelf =
             target.GetComponentInParent<IngredientInventory>();
 
-        if (shelf == null)
+        if (startingShelf == null)
         {
-            shelf = target.GetComponentInChildren<IngredientInventory>();
+            startingShelf = target.GetComponentInChildren<IngredientInventory>();
         }
 
-        if (shelf != null)
+        if (startingShelf != null)
         {
             if (startingStateInitializer == null)
             {
-                Debug.LogError(
-                    "StartingStateInitializer is not assigned!",
-                    this
-                );
+                Debug.LogError("StartingStateInitializer is not assigned on the Player!", this);
             }
             else
             {
                 startingStateInitializer.ApplyStartingStateOnce();
             }
 
-            return;
+            usedStartingState = true;
         }
 
-
-        // CUSTOMER
+        // CUSTOMER: only if they are ready (waiting to order, or waiting for food)
         CustomerController customer =
             target.GetComponentInParent<CustomerController>();
 
         if (customer != null)
         {
+            if (!customer.CanInteractWithPlayer)
+            {
+                return false;
+            }
+
             customer.InteractWithPlayer();
-            return;
+            return true;
         }
 
+        // TABLE: only if it has dirty plates to clear
+        BakeryTable table =
+            target.GetComponentInParent<BakeryTable>();
+
+        if (table != null)
+        {
+            if (!table.HasDirtyPlates)
+            {
+                return false;
+            }
+
+            table.Interact();
+            return true;
+        }
+
+        // STOVE
         StoveController stove =
-    target.GetComponentInParent<StoveController>();
+            target.GetComponentInParent<StoveController>();
 
         if (stove != null)
         {
             stove.Interact();
-            return;
+            return true;
         }
-
 
         // TRANSPORT
         Transport transport =
@@ -146,9 +187,8 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (transport != null)
         {
             transport.Interact();
-            return;
+            return true;
         }
-
 
         // BUY ITEM DEVICE
         BuyItemDevice buyDevice =
@@ -157,9 +197,28 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (buyDevice != null)
         {
             buyDevice.Interact();
-            return;
+            return true;
         }
 
+        // INGREDIENT SHELF
+        IngredientShelfInteractable shelf =
+            target.GetComponentInParent<IngredientShelfInteractable>();
+
+        if (shelf != null)
+        {
+            shelf.Interact();
+            return true;
+        }
+
+        // OVEN
+        OvenController oven =
+            target.GetComponentInParent<OvenController>();
+
+        if (oven != null)
+        {
+            oven.Interact();
+            return true;
+        }
 
         // DOOR
         Door door =
@@ -168,6 +227,10 @@ public class PlayerRangeInteraction : MonoBehaviour
         if (door != null)
         {
             door.ToggleDoor();
+            return true;
         }
+
+        // Nothing else used the press, but the starting-state shelf did
+        return usedStartingState;
     }
 }

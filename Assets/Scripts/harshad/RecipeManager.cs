@@ -18,7 +18,11 @@ public class RecipeManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
+            // Destroy only this extra COMPONENT, never its whole GameObject.
+            // (The Bakery scene has a second RecipeManager sitting on the CustomerManager object;
+            // destroying the GameObject would have deleted the CustomerManager and the spawner with it.)
+            Debug.LogWarning("RecipeManager: a second RecipeManager exists on '" + gameObject.name + "'. Remove the extra one in the scene.");
+            Destroy(this);
             return;
         }
 
