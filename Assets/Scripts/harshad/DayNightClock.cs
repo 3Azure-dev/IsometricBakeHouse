@@ -33,6 +33,20 @@ public class DayNightClock : MonoBehaviour
     public bool IsDay { get { return Phase == DayPhase.Day; } }
     public bool IsNight { get { return Phase == DayPhase.Night; } }
 
+    public float PhaseDuration
+    {
+        get
+        {
+            if (settings == null)
+                return 1f;
+
+            return Mathf.Max(
+                1f,
+                IsDay ? settings.dayLengthSeconds : settings.nightLengthSeconds
+            );
+        }
+    }
+
     // The night clock stops while the player hunts. The day clock never stops.
     public bool IsPausedByHunt { get { return IsNight && inHunt; } }
 

@@ -12,98 +12,117 @@ public class DayNightClockUI : MonoBehaviour
     [SerializeField] private TMP_Text timeRemainingText;
     [SerializeField] private Image timeBarFill;
 
-    [Header("Fake Day/Night Timer")]
-    [SerializeField] private float phaseDurationSeconds = 300f;
+    private DayNightClock clock;
 
-    private float remainingSeconds;
-    private int currentDay = 1;
-    private bool isDaytime = true;
-
-    private void Start()
+    private void OnEnable()
     {
-        // Begin with Day 1.
-        currentDay = 1;
-        isDaytime = true;
-
-        // Start with five minutes remaining.
-        remainingSeconds = phaseDurationSeconds;
-
-        UpdateClockUI();
+        TryConnectToClock();
     }
 
     private void Update()
     {
-        // Reduce the remaining time.
-        remainingSeconds -= Time.deltaTime;
-
-        if (remainingSeconds <= 0f)
+        // Keep checking until the real timer exists.
+        if (clock == null)
         {
-            SwitchDayNightPhase();
+            TryConnectToClock();
+            return;
         }
 
-        UpdateClockUI();
+        // Update the progress bar smoothly.
+        UpdateTimeBar();
     }
 
-    private void SwitchDayNightPhase()
+    private void TryConnectToClock()
     {
-        if (isDaytime)
-        {
-            // Day ends and night begins.
-            isDaytime = false;
+        if (clock != null || DayNightClock.Instance == null)
+            return;
 
-            Debug.Log("Night has started.");
-        }
-        else
-        {
-            // Night ends and the next day begins.
-            isDaytime = true;
-            currentDay++;
+        // Get Harshad's real timer.
+        clock = DayNightClock.Instance;
 
-            Debug.Log("Day " + currentDay + " has started.");
-        }
+        // Subscribe to the existing timer events.
+        clock.SecondTicked += OnSecondTicked;
+        clock.DayEnded += OnPhaseChanged;
+        clock.NightEnded += OnPhaseChanged;
 
-        // Reset the countdown for the new phase.
-        remainingSeconds = Mathf.Max(1f, phaseDurationSeconds);
+        // Immediately display the current timer state.
+        RefreshClockUI();
+
+        Debug.Log("DayNightClockUI connected to the real timer.");
     }
 
-    private void UpdateClockUI()
+    private void OnDisable()
     {
+        if (clock == null)
+            return;
+
+        // Unsubscribe to prevent duplicate event subscriptions.
+        clock.SecondTicked -= OnSecondTicked;
+        clock.DayEnded -= OnPhaseChanged;
+        clock.NightEnded -= OnPhaseChanged;
+
+        clock = null;
+    }
+
+    private void OnSecondTicked(int secondsLeft)
+    {
+        // The real timer provides the remaining seconds.
+        UpdateTimeText(secondsLeft);
+    }
+
+    private void OnPhaseChanged()
+    {
+        // Refresh when day changes to night or night changes to day.
+        RefreshClockUI();
+    }
+
+    private void RefreshClockUI()
+    {
+        if (clock == null)
+            return;
+
+        // Display the actual day number.
+        if (dayNumberText != null)
+        {
+            dayNumberText.text = $"Day {clock.DayNumber}";
+        }
+
+        // Display the correct sun or moon icon.
         if (dayNightIconImage != null)
         {
-            dayNightIconImage.sprite = isDaytime
+            dayNightIconImage.sprite = clock.IsDay
                 ? sunSprite
                 : moonSprite;
         }
-        // Update the countdown.
-        if (timeRemainingText != null)
-        {
-            int totalSeconds = Mathf.CeilToInt(
-                Mathf.Max(0f, remainingSeconds)
-            );
 
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
+        // Display the actual remaining time.
+        UpdateTimeText(Mathf.CeilToInt(clock.TimeLeft));
 
-            timeRemainingText.text =
-                $"{minutes:00}:{seconds:00}";
-        }
-
-        // Update the horizontal progress bar.
-        if (timeBarFill != null)
-        {
-            float duration = Mathf.Max(1f, phaseDurationSeconds);
-
-            timeBarFill.fillAmount = Mathf.Clamp01(
-                remainingSeconds / duration
-            );
-        }
+        UpdateTimeBar();
     }
 
-    private void OnValidate()
+    private void UpdateTimeText(int secondsLeft)
     {
-        phaseDurationSeconds = Mathf.Max(
-            1f,
-            phaseDurationSeconds
-        );
+        if (timeRemainingText == null)
+            return;
+
+        int totalSeconds = Mathf.Max(0, secondsLeft);
+
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        timeRemainingText.text = $"{minutes:00}:{seconds:00}";
+    }
+
+    private void UpdateTimeBar()
+    {
+        if (clock == null || timeBarFill == null)
+            return;
+
+        float duration = clock.PhaseDuration;
+
+        timeBarFill.fillAmount = duration > 0f
+            ? Mathf.Clamp01(clock.TimeLeft / duration)
+            : 0f;
     }
 }
