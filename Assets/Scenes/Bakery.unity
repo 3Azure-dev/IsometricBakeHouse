@@ -4580,7 +4580,6 @@ GameObject:
   - component: {fileID: 544841727}
   - component: {fileID: 544841729}
   - component: {fileID: 544841728}
-  - component: {fileID: 544841730}
   m_Layer: 0
   m_Name: CustomerManager
   m_TagString: Untagged
@@ -4668,40 +4667,6 @@ MonoBehaviour:
   vipCustomerPrefab: {fileID: 4819274423209534283, guid: b18a86e565e6ed84b95171f3e7868e58, type: 3}
   normalPoolSize: 5
   vipPoolSize: 2
---- !u!114 &544841730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 544841724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec60d98069f7d204f94199e2ec0b54df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RecipeManager
-  recipes:
-  - foodType: 0
-    cookingMethod: 0
-    cookingTime: 5
-    ingredients: 000000000000000000000000i
-    unlockedByDefault: 1
-  - foodType: 1
-    cookingMethod: 1
-    cookingTime: 10
-    ingredients: 
-    unlockedByDefault: 1
-  - foodType: 2
-    cookingMethod: 0
-    cookingTime: 10
-    ingredients: 
-    unlockedByDefault: 1
-  - foodType: 1
-    cookingMethod: 0
-    cookingTime: 10
-    ingredients: 
-    unlockedByDefault: 1
-  cupcakeRecipeFoodType: 0
 --- !u!1 &570176041
 GameObject:
   m_ObjectHideFlags: 0
@@ -20248,10 +20213,10 @@ MonoBehaviour:
     ingredients: 00000000i
     unlockedByDefault: 1
   - foodType: 1
-    cookingMethod: 0
-    cookingTime: 3
-    ingredients: 03000000i
-    unlockedByDefault: 0
+    cookingMethod: 1
+    cookingTime: 15
+    ingredients: 010000000300000004000000i
+    unlockedByDefault: 1
   cupcakeRecipeFoodType: 1
 --- !u!4 &1628507687
 Transform:
