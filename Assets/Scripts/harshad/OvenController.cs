@@ -132,9 +132,13 @@ public class OvenController : MonoBehaviour
             if (!IngredientInventory.Instance.HasIngredient(
                     item.Key, item.Value))
             {
+                // Say exactly what is missing, and where ingredients come from
+                int have = IngredientInventory.Instance.GetAmount(item.Key);
+
                 SetStatus(
                     "Not enough " + item.Key +
-                    ". Required: " + item.Value + "."
+                    ". You carry " + have + ", the recipe needs " + item.Value +
+                    ". Press E at the shelf and take it first."
                 );
 
                 return false;
