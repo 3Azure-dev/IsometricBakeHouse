@@ -105,7 +105,9 @@ public class OvenController : MonoBehaviour
         if (recipe.ingredients == null ||
             recipe.ingredients.Count == 0)
         {
-            SetStatus("This recipe has no ingredients configured.");
+            SetStatus(food + " has no ingredients configured. Open the RecipeManager object '" +
+                      RecipeManager.Instance.gameObject.name +
+                      "' in the Hierarchy and fill in Ingredients for " + food + ".");
             return false;
         }
 

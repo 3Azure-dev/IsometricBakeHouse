@@ -20215,7 +20215,10 @@ MonoBehaviour:
   - foodType: 1
     cookingMethod: 1
     cookingTime: 15
-    ingredients: 010000000300000004000000i
+    ingredients:
+    - 1
+    - 3
+    - 4
     unlockedByDefault: 1
   cupcakeRecipeFoodType: 1
 --- !u!4 &1628507687
