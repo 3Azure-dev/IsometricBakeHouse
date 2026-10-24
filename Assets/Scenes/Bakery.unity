@@ -3083,7 +3083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 257547d1d23831a4ba42517d0488b3d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoveController
-  recipeDatabase: {fileID: 0}
+  recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
   cookingProgressCanvas: {fileID: 0}
   cookingProgressSlider: {fileID: 0}
 --- !u!1 &344326207
