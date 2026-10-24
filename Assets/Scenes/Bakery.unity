@@ -374,7 +374,7 @@ RectTransform:
   m_Father: {fileID: 1595985299}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -880,7 +880,7 @@ RectTransform:
   m_Father: {fileID: 1930424949}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3935,9 +3935,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 257547d1d23831a4ba42517d0488b3d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoveController
-  recipeDatabase: {fileID: 0}
-  cookingProgressCanvas: {fileID: 0}
-  cookingProgressSlider: {fileID: 0}
+  recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
+  cookingProgressCanvas: {fileID: 1962229313}
+  cookingProgressSlider: {fileID: 1104378652}
 --- !u!1 &344326207
 GameObject:
   m_ObjectHideFlags: 0
@@ -11427,7 +11427,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: StoveController, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1107660064
 GameObject:
   m_ObjectHideFlags: 0
@@ -14366,7 +14378,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 901967901866568416, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3429914965038243994, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_Name
@@ -19358,7 +19370,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1962229314
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19366,17 +19378,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1962229313}
-  m_LocalRotation: {x: -0, y: 0.71020806, z: -0, w: -0.70399183}
-  m_LocalPosition: {x: 0, y: 0, z: 0.169}
+  m_LocalRotation: {x: -0, y: 0.9991973, z: -0, w: -0.040060006}
+  m_LocalPosition: {x: 0, y: 0, z: -26.56}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1104378651}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 269.496, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 184.592, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.54, y: 2.06}
+  m_AnchoredPosition: {x: 19.09, y: 3.77}
   m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1962229315

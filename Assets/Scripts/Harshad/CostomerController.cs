@@ -11,6 +11,9 @@ public class CustomerController : MonoBehaviour
     [Header("UI")]
     [SerializeField] private ThinkingBubble thinkingBubble;
 
+    [Header("Order Timer UI")]
+    [SerializeField] private OrderTimer orderTimerUI;
+
     public CustomerType customerType;
     public float moveSpeed = 5f;
     public float timer;
@@ -77,6 +80,16 @@ public class CustomerController : MonoBehaviour
         if (settings == null)
         {
             Debug.LogError(name + " has no CustomerSettings assigned. Drag SO_CustomerSettings into the prefab.");
+        }
+
+        if (orderTimerUI == null)
+        {
+            orderTimerUI = GetComponentInChildren<OrderTimer>(true);
+        }
+
+        if (orderTimerUI != null)
+        {
+            orderTimerUI.HideTimer();
         }
     }
 
@@ -211,6 +224,7 @@ public class CustomerController : MonoBehaviour
     // An order that ended badly (wrong dish or timer ran out): no coins, the customer leaves
     private void EndOrderUnhappy(CustomerReaction badReaction)
     {
+        HideOrderTimerUI();
         if (BakeryOrderManager.Instance != null)
         {
             BakeryOrderManager.Instance.RemoveOrder(myOrder);
@@ -473,12 +487,22 @@ public class CustomerController : MonoBehaviour
 
         myOrder = BakeryOrderManager.Instance.CreateOrder(this, chosenFood);
 
-        // The order timer starts NOW (when the player takes the order), not when the bubble showed
+        // Start the customer's gameplay timer.
         orderTimeLeft = GetOrderTimerSeconds();
 
-        state = CustomerState.WaitingForFood;
+        // Start the visible timer ring with the same duration.
+        if (orderTimerUI != null)
+        {
+            orderTimerUI.StartTimer(orderTimeLeft);
+        }
+        else
+        {
+            Debug.LogWarning(
+                name + ": No OrderTimer found on the customer prefab."
+            );
+        }
 
-        Debug.Log(name + "'s order was accepted. Waiting for " + chosenFood);
+        state = CustomerState.WaitingForFood;
     }
 
     // --------------------------------------------------
@@ -498,6 +522,8 @@ public class CustomerController : MonoBehaviour
         }
 
         state = CustomerState.Leaving;
+
+        HideOrderTimerUI();
 
         Debug.Log(name + "'s order was rejected.");
     }
@@ -575,6 +601,10 @@ public class CustomerController : MonoBehaviour
             Debug.LogError("Could not remove " + chosenFood + " from player inventory.");
             return;
         }
+
+        // ADD IT HERE!
+        HideOrderTimerUI();
+
 
         // Play the sound after food is successfully served (from Shreyas's BakeryAudioManager).
         if (BakeryAudioManager.Instance != null)
@@ -732,6 +762,8 @@ public class CustomerController : MonoBehaviour
         {
             agent.ResetPath();
         }
+
+        HideOrderTimerUI();
     }
 
     // --------------------------------------------------
@@ -748,5 +780,13 @@ public class CustomerController : MonoBehaviour
         }
 
         CustomerPool.Instance.ReturnCustomer(gameObject, customerType);
+    }
+
+    private void HideOrderTimerUI()
+    {
+        if (orderTimerUI != null)
+        {
+            orderTimerUI.HideTimer();
+        }
     }
 }
