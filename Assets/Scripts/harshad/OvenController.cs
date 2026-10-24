@@ -105,7 +105,9 @@ public class OvenController : MonoBehaviour
         if (recipe.ingredients == null ||
             recipe.ingredients.Count == 0)
         {
-            SetStatus("This recipe has no ingredients configured.");
+            SetStatus(food + " has no ingredients configured. Open the RecipeManager object '" +
+                      RecipeManager.Instance.gameObject.name +
+                      "' in the Hierarchy and fill in Ingredients for " + food + ".");
             return false;
         }
 
@@ -132,9 +134,13 @@ public class OvenController : MonoBehaviour
             if (!IngredientInventory.Instance.HasIngredient(
                     item.Key, item.Value))
             {
+                // Say exactly what is missing, and where ingredients come from
+                int have = IngredientInventory.Instance.GetAmount(item.Key);
+
                 SetStatus(
                     "Not enough " + item.Key +
-                    ". Required: " + item.Value + "."
+                    ". You carry " + have + ", the recipe needs " + item.Value +
+                    ". Press E at the shelf and take it first."
                 );
 
                 return false;
