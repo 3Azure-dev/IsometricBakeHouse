@@ -81,15 +81,21 @@ public class GrandfatherDunk : MonoBehaviour
 
     private void OnLevelEmpty(int caught)
     {
-        // roll the chance: Random.value is a number from 0 to 1
-        bool comes = _alwaysCome || UnityEngine.Random.value < _data.grandfatherChance;
-
-        // no catch or no Grandfather today: the hunt is over right away
-        if (caught < 1 || !comes)
+        if (caught < 1)
         {
             HuntFinished?.Invoke();
             return;
         }
+
+        bool comes = _alwaysCome || GrandfatherVisits.ShouldCome(_data);
+
+        if (!comes)
+        {
+            HuntFinished?.Invoke();
+            return;
+        }
+
+        GrandfatherVisits.RecordVisit();
 
         _state = State.Ready; // wait for the player to reach the dunk spot
         Debug.Log("Grandfather is waiting near the exit");

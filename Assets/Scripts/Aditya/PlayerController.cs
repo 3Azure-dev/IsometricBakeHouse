@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     private float _stunTimer;
     private float _noJumpTimer; // jam: can't jump while this counts down
+
+    private float _knockbackTimer;
     public bool IsStunned => _stunTimer > 0f;
 
     void Awake()
@@ -50,6 +52,15 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         _isGrounded = CheckGround();
+
+        // knockback: let the push play out, ignore input
+        if (_knockbackTimer > 0f)
+        {
+            _knockbackTimer -= Time.fixedDeltaTime;
+            _jumpPressed = false;
+            UpdateState();
+            return;
+        }
 
         // count the slow down, then go back to normal speed
         if (_slowTimer > 0f)
@@ -130,6 +141,13 @@ public class PlayerController : MonoBehaviour
     {
         _stunTimer = duration;
         Debug.Log($"Player stunned for {duration} sec");
+    }
+
+    // Anything can call this to push the player
+    public void Knockback(Vector2 velocity, float duration)
+    {
+        _rb.linearVelocity = velocity;
+        _knockbackTimer = duration;
     }
 
     void OnDrawGizmosSelected()
