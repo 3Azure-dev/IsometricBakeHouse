@@ -13,9 +13,39 @@ public class DoughCreature : IngredientCreature1
     [SerializeField] private float _splitCheckTime = 1f;
     [SerializeField] private float _fastMultiplier = 1.5f;
 
+    [Header("Copy blast - Pravin can tune these")]
+    [SerializeField] private float _blastRange = 5f;
+    [SerializeField] private float _blastForce = 10f;
+    [SerializeField] private float _blastUp = 5f;
+    [SerializeField] private float _blastTime = 0.3f;
+
     private bool _hasSplit;
     private bool _isCopy;
     private float _splitTimer;
+
+    public override void Stun()
+    {
+        if (!_isCopy)
+        {
+            base.Stun();
+            return;
+        }
+        Blast();
+    }
+
+    private void Blast()
+    {
+        if (_player != null && DistanceToPlayer() < _blastRange
+            && _player.TryGetComponent(out PlayerController player))
+        {
+            float dir = Mathf.Sign(_player.position.x - transform.position.x);
+            player.Knockback(new Vector2(dir * _blastForce, _blastUp), _blastTime);
+        }
+
+        Debug.Log($"{name}: copy blasted");
+        CopyPopped?.Invoke(this);
+        gameObject.SetActive(false);
+    }
 
     protected override void UpdateFleeing()
     {

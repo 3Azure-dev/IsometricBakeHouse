@@ -7,6 +7,8 @@ public class CheeseCreature : IngredientCreature1
 
     [Header("Cheese roll - Pravin can tune this")]
     [SerializeField] private float _rollTime = 0.6f; // seconds to roll thin
+
+    [SerializeField] private float _popHeight = 0.5f; // how far it pokes out of the hole
     private bool _inHole;
     private bool _poppedUp;
     private Vector3 _normalScale;
@@ -59,7 +61,7 @@ public class CheeseCreature : IngredientCreature1
         {
             yield return new WaitForSeconds(_data.hideTime);
 
-            transform.position = group.RandomHolePosition();
+            transform.position = group.RandomHolePosition() + Vector3.up * _popHeight;
             SetVisible(true);
             _poppedUp = true;
 

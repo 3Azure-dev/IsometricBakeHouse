@@ -29,9 +29,12 @@ MonoBehaviour:
   slowMultiplier: 0.5
   slowDuration: 1
   puddleLifetime: 4
-  dropletsPerDrop: 2
+  dropletsPerDrop: 1
   dropletBackSpeed: 4
   dropletUpSpeed: 5
   dropletLifetime: 4
   extraCooldown: 3
   debuffTime: 8
+  popUpTime: 0.8
+  hideTime: 0.6
+  popUpCount: 3
