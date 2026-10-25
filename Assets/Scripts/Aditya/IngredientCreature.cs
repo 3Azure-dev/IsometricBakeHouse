@@ -86,7 +86,7 @@ public class IngredientCreature1 : MonoBehaviour
         Debug.Log($"{name} -> {newState}");
     }
 
-    public void Stun()
+    public virtual void Stun()
     {
         if (_state == State.Caught) return;
 
@@ -99,14 +99,15 @@ public class IngredientCreature1 : MonoBehaviour
         ChangeState(State.Stunned);
     }
 
-    private void Catch()
+    protected virtual void Catch()
     {
         ChangeState(State.Caught);
-        Debug.Log(
-    $"CAUGHT: Creature={name}, " +
-    $"DataAsset={_data.name}, " +
-    $"Ingredient={_data.ingredientName}"
-);
+        Debug.Log
+        (
+            $"CAUGHT: Creature={name}, " +
+            $"DataAsset={_data.name}, " +
+            $"Ingredient={_data.ingredientName}"
+        );
 
         Inventory1.Instance.Add(_data, _data.ingredientsPerCatch);
         CreatureCaught?.Invoke(this);

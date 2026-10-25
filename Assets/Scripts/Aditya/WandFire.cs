@@ -10,6 +10,16 @@ public class WandFire1 : MonoBehaviour
     [SerializeField] private Transform _firePoint;
     [SerializeField] private int _poolSize = 20;
 
+    [Header("Sticky sauce")]
+    [SerializeField] private SpriteRenderer _wandSprite; // optional, turns red
+    [SerializeField] private Color _sauceColor = new Color(0.9f, 0.2f, 0.15f);
+
+    private float _sauceUntil;
+    private float _sauceExtra;
+    private Color _normalColor;
+
+    private bool IsSticky => Time.time < _sauceUntil;
+
     private WandAim _aim;
     private IObjectPool<Bolt1> _pool;
     private float _nextFireTime;   // earliest time we can shoot again
@@ -28,6 +38,8 @@ public class WandFire1 : MonoBehaviour
             actionOnDestroy: bolt => Destroy(bolt.gameObject),
             defaultCapacity: _poolSize,
             maxSize: 50);
+
+        if (_wandSprite != null) _normalColor = _wandSprite.color;
     }
 
     private Bolt1 CreateBolt()
@@ -39,6 +51,8 @@ public class WandFire1 : MonoBehaviour
 
     private void Update()
     {
+        if (_wandSprite != null) _wandSprite.color = IsSticky ? _sauceColor : _normalColor;
+
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             TryFire();
     }
@@ -50,6 +64,7 @@ public class WandFire1 : MonoBehaviour
         Fire();
 
         float cooldown = _data != null ? _data.cooldown : 0f;
+        if (IsSticky) cooldown += _sauceExtra;
         _nextFireTime = Time.time + cooldown;
     }
 
@@ -61,5 +76,12 @@ public class WandFire1 : MonoBehaviour
 
         if (BreadSFX.Instance != null)
             BreadSFX.Instance.PlayWandZap();
+    }
+
+    public void AddStickySauce(float extraCooldown, float duration)
+    {
+        _sauceExtra = extraCooldown;
+        _sauceUntil = Time.time + duration; // restarts, doesn't stack
+        Debug.Log($"Wand sticky: +{extraCooldown}s cooldown for {duration}s");
     }
 }
