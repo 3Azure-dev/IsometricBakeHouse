@@ -64,6 +64,8 @@ MonoBehaviour:
   _boltPrefab: {fileID: 2241123234446948383, guid: f285c99214080154d83d12dd9f796d48, type: 3}
   _firePoint: {fileID: 7265170770356765076}
   _poolSize: 20
+  _wandSprite: {fileID: 0}
+  _sauceColor: {r: 0.9, g: 0.2, b: 0.15, a: 1}
 --- !u!1 &6133076930700731423
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +205,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &1354442169684424048
