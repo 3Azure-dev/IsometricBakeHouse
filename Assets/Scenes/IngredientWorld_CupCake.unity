@@ -1727,6 +1727,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: WandFireCooldownFill
       objectReference: {fileID: 0}
+    - target: {fileID: 5469088729807036918, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_Color.b
+      value: 0.03529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469088729807036918, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6117647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469088729807036918, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9764706
+      objectReference: {fileID: 0}
     - target: {fileID: 8156289220253447105, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
       propertyPath: m_Pivot.x
       value: 0
