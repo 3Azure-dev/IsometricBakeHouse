@@ -15,4 +15,8 @@ public class FurnitureData : ScriptableObject
     public int appeal;
     [Tooltip("How many customers can sit here. 0 for decorations")]
     public int seats;
+
+    [Header("Building")]
+    [Tooltip("Diamonds to buy this item's blueprint")]
+    [Min(0)] public int blueprintDiamonds = 0;
 }
