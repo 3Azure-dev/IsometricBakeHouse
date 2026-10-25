@@ -9240,7 +9240,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2416788730265784873, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 382
+      value: 345
+      objectReference: {fileID: 0}
+    - target: {fileID: 2416788730265784873, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -169
       objectReference: {fileID: 0}
     - target: {fileID: 2631618879094070673, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
       propertyPath: m_Name
@@ -9340,11 +9344,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8566198686403872557, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 380
+      value: 345
       objectReference: {fileID: 0}
     - target: {fileID: 8566198686403872557, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -229
+      value: -170
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2613522320010740073, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
@@ -9911,6 +9915,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: MouldCooldownCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2416788730265784873, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 422
+      objectReference: {fileID: 0}
+    - target: {fileID: 2416788730265784873, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -173
+      objectReference: {fileID: 0}
     - target: {fileID: 8156289220253447105, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -9990,6 +10002,14 @@ PrefabInstance:
     - target: {fileID: 8156289220253447105, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8566198686403872557, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 422
+      objectReference: {fileID: 0}
+    - target: {fileID: 8566198686403872557, guid: 8dae712e9166f9744b9d0855057ee976, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -172
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
