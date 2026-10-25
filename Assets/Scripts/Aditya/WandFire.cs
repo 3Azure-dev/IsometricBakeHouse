@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
+using System;
 
 [RequireComponent(typeof(WandAim))]
 public class WandFire1 : MonoBehaviour
+
 {
+    public static event Action<float> WandFired;
     [SerializeField] private WandData _data;   // SO_Wand goes here
     [SerializeField] private Bolt1 _boltPrefab;
     [SerializeField] private Transform _firePoint;
@@ -59,13 +62,20 @@ public class WandFire1 : MonoBehaviour
 
     private void TryFire()
     {
-        if (Time.time < _nextFireTime) return;   // still cooling down
+        if (Time.time < _nextFireTime) return;
 
         Fire();
 
         float cooldown = _data != null ? _data.cooldown : 0f;
-        if (IsSticky) cooldown += _sauceExtra;
+
+        // Preserve the extra cooldown caused by sticky Tomato Sauce.
+        if (IsSticky)
+            cooldown += _sauceExtra;
+
         _nextFireTime = Time.time + cooldown;
+
+        // Notify the cooldown UI using the final cooldown duration.
+        WandFired?.Invoke(cooldown);
     }
 
     private void Fire()
