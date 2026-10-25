@@ -309,4 +309,27 @@ public class GrandfatherDunk : MonoBehaviour
 
         _frozenScripts.Clear();
     }
+
+    // Molten cheese burn: lose random ingredients caught in this level
+    public int LoseCaught(int amount)
+    {
+        int lost = 0;
+
+        for (int i = 0; i < amount; i++)
+        {
+            List<IngredientData> have = new List<IngredientData>();
+            foreach (var pair in _caughtThisLevel)
+                if (pair.Value > 0) have.Add(pair.Key);
+
+            if (have.Count == 0) break;
+
+            IngredientData pick = have[UnityEngine.Random.Range(0, have.Count)];
+            if (!Inventory1.Instance.Remove(pick, 1)) break;
+
+            _caughtThisLevel[pick]--;
+            lost++;
+            Debug.Log($"Burned: lost 1 {pick.ingredientName}");
+        }
+        return lost;
+    }
 }
