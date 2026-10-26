@@ -4,66 +4,99 @@ using TMPro;
 
 public class OrderTimer : MonoBehaviour
 {
-    [Header("Settings (drag SO_CustomerSettings here)")]
+    [Header("Timer Visuals")]
+    [SerializeField] private GameObject timerVisualRoot;
+
+    [SerializeField] private Image timerRing;
+    [SerializeField] private TMP_Text timerText;
+
+    [Header("Optional Automatic Start")]
     [SerializeField] private CustomerSettings settings;
-
-    [Header("Start")]
-    [Tooltip("Ticked = the timer runs as soon as the scene starts (old behaviour). " +
-             "Unticked = it waits until StartTimer() is called, e.g. when an order is accepted.")]
-    [SerializeField] private bool startAutomatically = true;
-
-    public Image timerRing;
-    public TMP_Text timerText;
+    [SerializeField] private bool startAutomatically = false;
 
     private float timeLimit;
     private float timeLeft;
     private bool running;
 
-    void Start()
+    private void Awake()
+    {
+        HideTimer();
+    }
+
+    private void Start()
     {
         if (!startAutomatically)
-        {
             return;
-        }
 
         if (settings == null)
         {
-            Debug.LogError("OrderTimer has no CustomerSettings assigned.");
+            Debug.LogError(
+                name + ": OrderTimer has no CustomerSettings assigned."
+            );
             return;
         }
 
-        // Default: the normal order timer
         StartTimer(settings.orderTimer);
     }
 
-    // Call this with customer.GetOrderTimerSeconds(): 180 for Normal, 240 for VIP
     public void StartTimer(float seconds)
     {
-        timeLimit = seconds;
-        timeLeft = seconds;
-        running = seconds > 0f;
-
-        // Start with the ring completely full
-        timerRing.fillAmount = 1f;
-        timerText.text = Mathf.CeilToInt(timeLeft).ToString();
-    }
-
-    void Update()
-    {
-        if (!running)
+        if (seconds <= 0f)
         {
+            HideTimer();
             return;
         }
 
-        // Count down, never below zero
-        timeLeft = Mathf.Max(timeLeft - Time.deltaTime, 0f);
+        timeLimit = seconds;
+        timeLeft = seconds;
+        running = true;
 
-        timerRing.fillAmount = timeLeft / timeLimit;
-        timerText.text = Mathf.CeilToInt(timeLeft).ToString();
+        if (timerVisualRoot != null)
+            timerVisualRoot.SetActive(true);
+
+        UpdateTimerVisuals();
+    }
+
+    public void HideTimer()
+    {
+        running = false;
+        timeLeft = 0f;
+
+        if (timerVisualRoot != null)
+        {
+            timerVisualRoot.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (!running)
+            return;
+
+        timeLeft = Mathf.Max(
+            timeLeft - Time.deltaTime,
+            0f
+        );
+
+        UpdateTimerVisuals();
 
         if (timeLeft <= 0f)
-        {
             running = false;
+    }
+
+    private void UpdateTimerVisuals()
+    {
+        if (timerRing != null)
+        {
+            timerRing.fillAmount = timeLimit > 0f
+                ? Mathf.Clamp01(timeLeft / timeLimit)
+                : 0f;
+        }
+
+        if (timerText != null)
+        {
+            timerText.text =
+                Mathf.CeilToInt(timeLeft).ToString();
         }
     }
 }

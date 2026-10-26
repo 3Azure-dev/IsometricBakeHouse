@@ -55,4 +55,26 @@ public class IngredientData : ScriptableObject
 
     [Tooltip("Seconds before a puddle disappears")]
     public float puddleLifetime = 4f;
+
+    [Header("Sauce Droplets - only used by Tomato Sauce")]
+    [Min(1)] public int dropletsPerDrop = 2;
+    public float dropletBackSpeed = 4f;   // how fast they fly back at the player
+    public float dropletUpSpeed = 5f;
+    public float dropletLifetime = 4f;
+
+    [Tooltip("Seconds added to the wand cooldown when a droplet hits")]
+    public float extraCooldown = 3f;
+
+    [Tooltip("How long the sticky wand lasts. A new hit restarts it")]
+    public float debuffTime = 8f;
+
+    [Header("Cheese Holes - only used by Cheese")]
+    [Tooltip("Seconds Cheese stays out of a hole")]
+    public float popUpTime = 0.8f;
+
+    [Tooltip("Seconds hidden between pop-ups")]
+    public float hideTime = 0.6f;
+
+    [Tooltip("Pop-ups before it escapes for good")]
+    [Min(1)] public int popUpCount = 3;
 }

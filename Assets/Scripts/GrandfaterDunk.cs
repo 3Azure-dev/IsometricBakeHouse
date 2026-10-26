@@ -81,15 +81,21 @@ public class GrandfatherDunk : MonoBehaviour
 
     private void OnLevelEmpty(int caught)
     {
-        // roll the chance: Random.value is a number from 0 to 1
-        bool comes = _alwaysCome || UnityEngine.Random.value < _data.grandfatherChance;
-
-        // no catch or no Grandfather today: the hunt is over right away
-        if (caught < 1 || !comes)
+        if (caught < 1)
         {
             HuntFinished?.Invoke();
             return;
         }
+
+        bool comes = _alwaysCome || GrandfatherVisits.ShouldCome(_data);
+
+        if (!comes)
+        {
+            HuntFinished?.Invoke();
+            return;
+        }
+
+        GrandfatherVisits.RecordVisit();
 
         _state = State.Ready; // wait for the player to reach the dunk spot
         Debug.Log("Grandfather is waiting near the exit");
@@ -302,5 +308,28 @@ public class GrandfatherDunk : MonoBehaviour
             if (script != null) script.enabled = true;
 
         _frozenScripts.Clear();
+    }
+
+    // Molten cheese burn: lose random ingredients caught in this level
+    public int LoseCaught(int amount)
+    {
+        int lost = 0;
+
+        for (int i = 0; i < amount; i++)
+        {
+            List<IngredientData> have = new List<IngredientData>();
+            foreach (var pair in _caughtThisLevel)
+                if (pair.Value > 0) have.Add(pair.Key);
+
+            if (have.Count == 0) break;
+
+            IngredientData pick = have[UnityEngine.Random.Range(0, have.Count)];
+            if (!Inventory1.Instance.Remove(pick, 1)) break;
+
+            _caughtThisLevel[pick]--;
+            lost++;
+            Debug.Log($"Burned: lost 1 {pick.ingredientName}");
+        }
+        return lost;
     }
 }
