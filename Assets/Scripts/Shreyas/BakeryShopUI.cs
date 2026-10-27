@@ -25,8 +25,14 @@ public class BakeryShopUI : MonoBehaviour
     [SerializeField] private UnityEvent onOvenPurchased;
     [SerializeField] private UnityEvent onCupcakeRecipePurchased;
 
-    private bool ovenPurchased;
-    private bool cupcakeRecipePurchased;
+    // These now come from BakeryProgress, so they survive the scene reload
+    private bool ovenPurchased =>
+        BakeryProgress.Instance != null &&
+        BakeryProgress.Instance.HasEquipment(EquipmentType.Oven);
+
+    private bool cupcakeRecipePurchased =>
+        BakeryProgress.Instance != null &&
+        BakeryProgress.Instance.IsRecipeUnlocked(FoodType.Cupcake);
 
     private Wallet subscribedWallet;
 
@@ -99,7 +105,8 @@ public class BakeryShopUI : MonoBehaviour
         if (!TrySpendCoins(ovenPrice))
             return;
 
-        ovenPurchased = true;
+        if (BakeryProgress.Instance != null)
+            BakeryProgress.Instance.AddEquipment(EquipmentType.Oven);
 
         if (onOvenPurchased != null)
             onOvenPurchased.Invoke();
@@ -117,7 +124,8 @@ public class BakeryShopUI : MonoBehaviour
         if (!TrySpendCoins(cupcakeRecipePrice))
             return;
 
-        cupcakeRecipePurchased = true;
+        if (BakeryProgress.Instance != null)
+            BakeryProgress.Instance.UnlockRecipe(FoodType.Cupcake);
 
         if (onCupcakeRecipePurchased != null)
             onCupcakeRecipePurchased.Invoke();
