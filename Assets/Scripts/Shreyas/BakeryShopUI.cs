@@ -13,6 +13,11 @@ public class BakeryShopUI : MonoBehaviour
     [SerializeField] private Button buyOvenButton;
     [SerializeField] private Button buyCupcakeRecipeButton;
 
+    [Header("Level")]
+    [SerializeField] private Button buyLevelButton;
+    [SerializeField] private TMP_Text levelButtonText;   // shows "BUY LEVEL 2 - 1000"
+    [SerializeField] private TMP_Text levelText;         // shows "Level 1"
+
     [Header("Button Labels")]
     [SerializeField] private TMP_Text ovenButtonText;
     [SerializeField] private TMP_Text cupcakeRecipeButtonText;
@@ -36,6 +41,8 @@ public class BakeryShopUI : MonoBehaviour
 
     private Wallet subscribedWallet;
 
+    private PlayerLevel subscribedLevel;
+
     private void Awake()
     {
         if (buyOvenButton != null)
@@ -43,6 +50,9 @@ public class BakeryShopUI : MonoBehaviour
 
         if (buyCupcakeRecipeButton != null)
             buyCupcakeRecipeButton.onClick.AddListener(BuyCupcakeRecipe);
+
+        if (buyLevelButton != null)
+            buyLevelButton.onClick.AddListener(BuyLevel);
     }
 
     private void OnEnable()
@@ -65,6 +75,13 @@ public class BakeryShopUI : MonoBehaviour
             subscribedWallet.CoinsChanged -= OnCoinsChanged;
             subscribedWallet = null;
         }
+
+        if (subscribedLevel != null)
+        {
+            subscribedLevel.LevelChanged -= OnLevelChanged;
+            subscribedLevel = null;
+        }
+
     }
 
     private void OnDestroy()
@@ -74,6 +91,9 @@ public class BakeryShopUI : MonoBehaviour
 
         if (buyCupcakeRecipeButton != null)
             buyCupcakeRecipeButton.onClick.RemoveListener(BuyCupcakeRecipe);
+
+        if (buyLevelButton != null)
+            buyLevelButton.onClick.RemoveListener(BuyLevel);
     }
 
     private void SubscribeToWallet()
@@ -99,6 +119,13 @@ public class BakeryShopUI : MonoBehaviour
 
     public void BuyOven()
     {
+        if (PlayerLevel.Instance != null &&
+    !PlayerLevel.Instance.IsEquipmentAvailable(EquipmentType.Oven))
+        {
+            Debug.Log("The Oven unlocks at level 2.");
+            return;
+        }
+
         if (ovenPurchased)
             return;
 
@@ -116,8 +143,37 @@ public class BakeryShopUI : MonoBehaviour
         Debug.Log("Oven purchased for " + ovenPrice + " coins.");
     }
 
+    private void SubscribeToLevel()
+    {
+        PlayerLevel current = PlayerLevel.Instance;
+
+        if (current == subscribedLevel)
+            return;
+
+        if (subscribedLevel != null)
+            subscribedLevel.LevelChanged -= OnLevelChanged;
+
+        subscribedLevel = current;
+
+        if (subscribedLevel != null)
+            subscribedLevel.LevelChanged += OnLevelChanged;
+    }
+
+    private void OnLevelChanged(int newLevel)
+    {
+        RefreshUI();
+    }
+
     public void BuyCupcakeRecipe()
     {
+
+        if (PlayerLevel.Instance != null &&
+    !PlayerLevel.Instance.IsRecipeAvailable(FoodType.Cupcake))
+        {
+            Debug.Log("The Cupcake recipe unlocks at level 2.");
+            return;
+        }
+
         if (cupcakeRecipePurchased)
             return;
 
@@ -167,20 +223,29 @@ public class BakeryShopUI : MonoBehaviour
         bool canAffordRecipe =
             wallet != null && wallet.Coins >= cupcakeRecipePrice;
 
+        PlayerLevel level = PlayerLevel.Instance;
+
+        bool ovenUnlocked =
+            level == null || level.IsEquipmentAvailable(EquipmentType.Oven);
+
+        bool recipeUnlocked =
+            level == null || level.IsRecipeAvailable(FoodType.Cupcake);
+
         if (buyOvenButton != null)
             buyOvenButton.interactable =
-                !ovenPurchased && canAffordOven;
+                !ovenPurchased && canAffordOven && ovenUnlocked;
 
         if (buyCupcakeRecipeButton != null)
             buyCupcakeRecipeButton.interactable =
-                !cupcakeRecipePurchased && canAffordRecipe;
+                !cupcakeRecipePurchased && canAffordRecipe && recipeUnlocked;
 
         if (ovenButtonText != null)
-            ovenButtonText.text = ovenPurchased ? "OWNED" : "BUY";
+            ovenButtonText.text =
+                ovenPurchased ? "OWNED" : (ovenUnlocked ? "BUY" : "LOCKED");
 
         if (cupcakeRecipeButtonText != null)
             cupcakeRecipeButtonText.text =
-                cupcakeRecipePurchased ? "OWNED" : "BUY";
+                cupcakeRecipePurchased ? "OWNED" : (recipeUnlocked ? "BUY" : "LOCKED");
 
         if (ovenStatusText != null)
             ovenStatusText.text = GetStatus(ovenPurchased, canAffordOven);
@@ -188,6 +253,20 @@ public class BakeryShopUI : MonoBehaviour
         if (cupcakeRecipeStatusText != null)
             cupcakeRecipeStatusText.text =
                 GetStatus(cupcakeRecipePurchased, canAffordRecipe);
+
+        if (level != null)
+        {
+            if (levelText != null)
+                levelText.text = "Level " + level.Level;
+
+            if (buyLevelButton != null)
+                buyLevelButton.interactable = level.CanBuyNextLevel;
+
+            if (levelButtonText != null)
+                levelButtonText.text = level.IsMaxLevel
+                    ? "MAX LEVEL"
+                    : "BUY LEVEL " + (level.Level + 1) + " - " + level.NextLevelCost;
+        }
     }
 
     private string GetStatus(bool purchased, bool canAfford)
@@ -202,5 +281,17 @@ public class BakeryShopUI : MonoBehaviour
             return "NOT ENOUGH COINS";
 
         return "AVAILABLE";
+    }
+
+    public void BuyLevel()
+    {
+        if (PlayerLevel.Instance == null)
+        {
+            Debug.LogError("BakeryShopUI: PlayerLevel was not found.");
+            return;
+        }
+
+        PlayerLevel.Instance.BuyNextLevel();
+        RefreshUI();
     }
 }

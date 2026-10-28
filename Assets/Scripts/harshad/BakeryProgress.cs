@@ -87,15 +87,19 @@ public class BakeryProgress : MonoBehaviour
 
     // ---------------- LEVEL ----------------
 
-    public void LevelUp()
-    {
-        if (Level >= MaxLevel) return;
+    public void LevelUp() => SetLevel(Level + 1);
 
-        Level++;
+    // The one place where the level changes. Clamped to 1..MaxLevel.
+    public void SetLevel(int level)
+    {
+        level = Mathf.Clamp(level, 1, MaxLevel);
+
+        if (level == Level) return;
+
+        Level = level;
         Debug.Log("BakeryProgress: level " + Level);
         Changed?.Invoke(ProgressChange.Level);
     }
-
     // ---------------- BUILT FURNITURE ----------------
 
     public void AddBuiltItem(string itemId, Vector3 position, Quaternion rotation)
