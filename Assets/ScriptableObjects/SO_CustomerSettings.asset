@@ -25,4 +25,4 @@ MonoBehaviour:
   vipOrderTimer: 240
   vipCoinMultiplier: 2
   vipDiamondReward: 20
-  vipChancePercent: 4
+  vipChancePercent: 1

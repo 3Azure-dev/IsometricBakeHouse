@@ -17,8 +17,11 @@ MonoBehaviour:
   foodType: 2
   unlockLevel: 3
   blueprintCost: 200
-  huntedIngredients: []
-  autoAppliedIngredient: 
+  huntedIngredients:
+  - {fileID: 11400000, guid: e82d88024f110a247827815e1062b140, type: 2}
+  - {fileID: 11400000, guid: 0ec2288ae06440346845271475c79052, type: 2}
+  - {fileID: 11400000, guid: 0fbda30970162de418f0aee449272f15, type: 2}
+  autoAppliedIngredient: Pepporine
   requiredEquipment: {fileID: 0}
   cookTime: 20
   coinReward: 60

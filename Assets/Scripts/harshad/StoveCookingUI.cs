@@ -15,8 +15,6 @@ public class StoveUI : MonoBehaviour
     [SerializeField] private Button breadButton;
     [SerializeField] private Button cupcakeButton;
     [SerializeField] private Button pizzaButton;
-    [SerializeField] private Button burgerButton;
-
     [Header("Close Button")]
     [SerializeField] private Button closeButton;
 
@@ -50,10 +48,6 @@ public class StoveUI : MonoBehaviour
 
         pizzaButton.onClick.AddListener(
             CookPizza
-        );
-
-        burgerButton.onClick.AddListener(
-            CookBurger
         );
 
         closeButton.onClick.AddListener(
@@ -114,17 +108,6 @@ public class StoveUI : MonoBehaviour
     {
         SelectFood(FoodType.Pizza);
     }
-
-
-    // --------------------------------------------------
-    // COOK BURGER
-    // --------------------------------------------------
-
-    private void CookBurger()
-    {
-        SelectFood(FoodType.Burger);
-    }
-
 
     // --------------------------------------------------
     // SELECT FOOD
