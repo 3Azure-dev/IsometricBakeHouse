@@ -35,7 +35,7 @@ public class OrderBoardUI : MonoBehaviour
 
     private void Start()
     {
-        orderPanel.SetActive(true);
+        orderPanel.SetActive(false);
 
         acceptButton.onClick.AddListener(AcceptOrder);
         rejectButton.onClick.AddListener(RejectOrder);
@@ -94,7 +94,7 @@ public class OrderBoardUI : MonoBehaviour
             "'s order was accepted."
         );
 
-        orderPanel.SetActive(true);
+        orderPanel.SetActive(false);
 
         currentCustomer = null;
     }
@@ -114,7 +114,7 @@ public class OrderBoardUI : MonoBehaviour
             "'s order was rejected."
         );
 
-        orderPanel.SetActive(true);
+        orderPanel.SetActive(false);
 
         currentCustomer = null;
     }

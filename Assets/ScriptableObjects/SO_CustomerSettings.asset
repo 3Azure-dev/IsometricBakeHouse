@@ -20,9 +20,9 @@ MonoBehaviour:
   eatingTime: 12
   maxCustomersAtDoor: 4
   customersPerBatch: 2
-  doorSpawnDelay: 3
+  doorSpawnDelay: 5
   seatsPerTable: 2
   vipOrderTimer: 240
   vipCoinMultiplier: 2
   vipDiamondReward: 20
-  vipChancePercent: 4
+  vipChancePercent: 1
