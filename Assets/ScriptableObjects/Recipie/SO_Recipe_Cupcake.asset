@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   foodType: 1
   unlockLevel: 2
-  blueprintCost: 400
+  blueprintCost: 150
   huntedIngredients: []
   autoAppliedIngredient: Frosting
   requiredEquipment: {fileID: 11400000, guid: 0dc06b4214e27334a88a0a571422e388, type: 2}
