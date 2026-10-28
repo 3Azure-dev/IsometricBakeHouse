@@ -157,7 +157,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Creatures Left 0
+  m_text: 'Creatures Left : 0
 
 
 '
@@ -716,7 +716,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.7
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -813,10 +813,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BreadSFX
   sfxSource: {fileID: 165504241}
-  wandZap: {fileID: 8300000, guid: 3319315e684a869468e4393c62983750, type: 3}
-  creatureStunned: {fileID: 8300000, guid: 6e5f91f8490e53543a7074097e4c08c9, type: 3}
-  creatureCaught: {fileID: 8300000, guid: f9761751ab534da41940e9cfecf2302e, type: 3}
-  mouldPlaced: {fileID: 8300000, guid: 3319315e684a869468e4393c62983750, type: 3}
+  wandZap: {fileID: 8300000, guid: 66ec3ed17440e2b47a3402bdfa45c48a, type: 3}
+  creatureStunned: {fileID: 8300000, guid: a16a02640a975c64b8bf4ab7c187d5cc, type: 3}
+  creatureCaught: {fileID: 8300000, guid: cd0d78371f2c5cc43985b33569376990, type: 3}
+  mouldPlaced: {fileID: 8300000, guid: cd3b5b4eb8fe00447b7bf19ad280aa4a, type: 3}
   eggshellThrow: {fileID: 8300000, guid: 54695beb1a4a1684c8d5cd8ad0ff2597, type: 3}
   eggshellHit: {fileID: 8300000, guid: 0695bb51660396749a43b312d537c8a0, type: 3}
   sugarDash: {fileID: 8300000, guid: 07afec5ea4b05314d859c4782edea1ef, type: 3}
@@ -9995,7 +9995,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 5452188602864505034, guid: 8984cb163460f144eb5114fcff0e0124, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0848923edffd1ec43a697b13a6f8cd1b, type: 3}
+  m_Resource: {fileID: 8300000, guid: b960d0acd95b0114e961760f5577e24f, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.3
   m_Pitch: 1
@@ -10377,6 +10377,22 @@ PrefabInstance:
     - target: {fileID: 3429914965038243994, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_Name
       value: IngreidentCountsRow
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 420
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 471.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -68.9
       objectReference: {fileID: 0}
     - target: {fileID: 7723746079459703015, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_Pivot.x
@@ -10838,6 +10854,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 7940418016567038619, guid: c7dd39a6537a8d047a3f33226b9bb01b, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8137793245264168211, guid: c7dd39a6537a8d047a3f33226b9bb01b, type: 3}
       propertyPath: m_LocalPosition.z
       value: 44.7

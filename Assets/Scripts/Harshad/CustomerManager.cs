@@ -100,15 +100,30 @@ public class CustomerManager : MonoBehaviour
     {
         while (doorQueue.Count > 0)
         {
+            CustomerController customer = doorQueue.Peek();
+
+            if (customer == null)
+            {
+                doorQueue.Dequeue();
+                continue;
+            }
+
+            // Wait until the customer reaches the door queue.
+            if (!customer.IsWaitingAtDoor)
+            {
+                return;
+            }
+
+            // Do not seat the customer if no table is available.
             Transform seat = TakeFreeSeat();
 
             if (seat == null)
             {
-                // No free seat at a clear table. Door customers wait (forever).
                 return;
             }
 
-            CustomerController customer = doorQueue.Dequeue();
+            // Remove the customer from the queue and send them to the table.
+            doorQueue.Dequeue();
 
             customer.GoToSeat(seat);
 
