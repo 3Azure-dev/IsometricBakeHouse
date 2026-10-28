@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c7050be312dea24bb2379402e8eed5c, type: 3}
   m_Name: DunkData
   m_EditorClassIdentifier: Assembly-CSharp::DunkData
-  swingTime: 1.5
-  speedUpEvery: 2
-  speedUpAmount: 0.15
+  swingTime: 2
+  speedUpDelay: 2
+  speedUpPerSecond: 0.075
   maxSpeed: 3
   hitZoneCenter: 0.36
   hitZoneSize: 0.13
   bonusMultiplier: 2
+  grandfatherChance: 0.33
+  visitsPerBlock: 2
+  daysPerBlock: 4
