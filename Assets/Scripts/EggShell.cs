@@ -26,7 +26,16 @@ public class EggShell : MonoBehaviour
     {
         if (other.TryGetComponent(out PlayerController player))
         {
+            // Play the sound when the Eggshell hits the player.
+            if (BreadSFX.Instance != null)
+            {
+                BreadSFX.Instance.PlayEggshellHit();
+            }
+
+            // Stun the player.
             player.Stun(_stunDuration);
+
+            // Remove the Eggshell after the hit.
             Destroy(gameObject);
         }
     }

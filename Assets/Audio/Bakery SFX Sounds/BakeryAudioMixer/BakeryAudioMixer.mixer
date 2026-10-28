@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!244 &-3385157814635013770
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: a60f63b45b8e20f46a6430490ab6639a
+  m_EffectName: Attenuation
+  m_MixLevel: 3741d23592aba7746a62e20019b2e082
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -20,6 +34,7 @@ AudioMixerController:
   - guids:
     - 72004a1b47ca833488d7383b5b71945c
     - 4838a3f55cc7b1f4aab34359869d2490
+    - da7af48fc9fbadb4aba7905dba9df581
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -34,6 +49,7 @@ AudioMixerGroupController:
   m_GroupID: 72004a1b47ca833488d7383b5b71945c
   m_Children:
   - {fileID: 8036226042752401605}
+  - {fileID: 3468586068470848145}
   m_Volume: fb4070a464570aa469992c35ae8f7c52
   m_Pitch: ddc6adefaa87bcd49904b6d95842fe28
   m_Send: 00000000000000000000000000000000
@@ -82,6 +98,25 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!243 &3468586068470848145
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Music
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: da7af48fc9fbadb4aba7905dba9df581
+  m_Children: []
+  m_Volume: 0ae1a1c1ff3e7d046a95f15e928ec701
+  m_Pitch: 7d6d0147193d9cc419224db2ab6bf7ea
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -3385157814635013770}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!243 &8036226042752401605
 AudioMixerGroupController:
   m_ObjectHideFlags: 0

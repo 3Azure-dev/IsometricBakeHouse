@@ -30,10 +30,19 @@ public class EggCreature : IngredientCreature1
     {
         float toPlayer = Mathf.Sign(_player.position.x - transform.position.x);
 
-        // leg level: just above the floor
-        Vector2 spot = new Vector2(_col.bounds.center.x, _col.bounds.min.y + 0.2f);
+        // Leg level: just above the floor.
+        Vector2 spot = new Vector2(
+            _col.bounds.center.x,
+            _col.bounds.min.y + 0.2f
+        );
 
         EggShell shell = Instantiate(_shellPrefab, spot, Quaternion.identity);
         shell.Setup(toPlayer, _shellSpeed, _playerStunTime, _shellLifetime);
+
+        // Play the sound when the Egg creature throws a shell.
+        if (BreadSFX.Instance != null)
+        {
+            BreadSFX.Instance.PlayEggshellThrow();
+        }
     }
 }

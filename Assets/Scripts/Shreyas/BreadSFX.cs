@@ -7,11 +7,21 @@ public class BreadSFX : MonoBehaviour
     [Header("Audio Source")]
     [SerializeField] private AudioSource sfxSource;
 
-    [Header("Sound Effects")]
+    [Header("Shared Hunt Sounds")]
     [SerializeField] private AudioClip wandZap;
     [SerializeField] private AudioClip creatureStunned;
     [SerializeField] private AudioClip creatureCaught;
     [SerializeField] private AudioClip mouldPlaced;
+
+    [Header("Cupcake Sounds")]
+    [SerializeField] private AudioClip eggshellThrow;
+    [SerializeField] private AudioClip eggshellHit;
+    [SerializeField] private AudioClip sugarDash;
+    [SerializeField] private AudioClip butterTrail;
+
+    [Header("Pizza Creature Sounds")]
+    [SerializeField] private AudioClip pizzaCreatureStunned;
+    [SerializeField] private AudioClip pizzaCreatureCaught;
 
     private void Awake()
     {
@@ -37,6 +47,18 @@ public class BreadSFX : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        MouldZone.MouldPlaced += HandleMouldPlaced;
+    }
+
+    private void OnDisable()
+    {
+        MouldZone.MouldPlaced -= HandleMouldPlaced;
+    }
+
+    // Shared hunt sounds
+
     public void PlayWandZap()
     {
         PlaySound(wandZap);
@@ -55,6 +77,45 @@ public class BreadSFX : MonoBehaviour
     public void PlayMouldPlaced()
     {
         PlaySound(mouldPlaced);
+    }
+
+    // Cupcake sounds
+
+    public void PlayEggshellThrow()
+    {
+        PlaySound(eggshellThrow);
+    }
+
+    public void PlayEggshellHit()
+    {
+        PlaySound(eggshellHit);
+    }
+
+    public void PlaySugarDash()
+    {
+        PlaySound(sugarDash);
+    }
+
+    public void PlayButterTrail()
+    {
+        PlaySound(butterTrail);
+    }
+
+    // Pizza creature sounds
+
+    public void PlayPizzaCreatureStunned()
+    {
+        PlaySound(pizzaCreatureStunned);
+    }
+
+    public void PlayPizzaCreatureCaught()
+    {
+        PlaySound(pizzaCreatureCaught);
+    }
+
+    private void HandleMouldPlaced(MouldZone zone)
+    {
+        PlayMouldPlaced();
     }
 
     private void PlaySound(AudioClip clip)
@@ -77,21 +138,5 @@ public class BreadSFX : MonoBehaviour
         {
             Instance = null;
         }
-    }
-    private void OnEnable()
-    {
-        MouldZone.MouldPlaced += HandleMouldPlaced;
-    }
-
-    private void OnDisable()
-    {
-        MouldZone.MouldPlaced -= HandleMouldPlaced;
-    }
-
-    private void HandleMouldPlaced(MouldZone zone)
-    {
-        Debug.Log("Mould sound event received!");
-
-        PlayMouldPlaced();
     }
 }

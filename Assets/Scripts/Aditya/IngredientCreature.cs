@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -92,7 +93,14 @@ public class IngredientCreature1 : MonoBehaviour
 
         if (_state != State.Stunned && BreadSFX.Instance != null)
         {
-            BreadSFX.Instance.PlayCreatureStunned();
+            if (IsPizzaLevel())
+            {
+                BreadSFX.Instance.PlayPizzaCreatureStunned();
+            }
+            else
+            {
+                BreadSFX.Instance.PlayCreatureStunned();
+            }
         }
 
         _stunTimer = _data.stunDuration;
@@ -114,7 +122,14 @@ public class IngredientCreature1 : MonoBehaviour
 
         if (BreadSFX.Instance != null)
         {
-            BreadSFX.Instance.PlayCreatureCaught();
+            if (IsPizzaLevel())
+            {
+                BreadSFX.Instance.PlayPizzaCreatureCaught();
+            }
+            else
+            {
+                BreadSFX.Instance.PlayCreatureCaught();
+            }
         }
 
         gameObject.SetActive(false);
@@ -135,6 +150,11 @@ public class IngredientCreature1 : MonoBehaviour
     }
 
     // ---------- States ----------
+
+    private bool IsPizzaLevel()
+    {
+        return SceneManager.GetActiveScene().name.Contains("Pizza");
+    }
 
     protected virtual void UpdateIdle()
     {
