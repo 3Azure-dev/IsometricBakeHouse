@@ -69,6 +69,7 @@ public class CustomerController : MonoBehaviour
         get
         {
             return state == CustomerState.WaitingForPlayer ||
+                   state == CustomerState.Ordering ||
                    state == CustomerState.WaitingForFood;
         }
     }
@@ -399,7 +400,7 @@ public class CustomerController : MonoBehaviour
 
                     if (thinkingBubble != null)
                     {
-                        thinkingBubble.Show(GetOrderText());
+                        thinkingBubble.Show("Thinking...");
                     }
 
                     Debug.Log(
@@ -418,6 +419,11 @@ public class CustomerController : MonoBehaviour
                     state = CustomerState.WaitingForPlayer;
 
                     timer = 0f;
+
+                    if (thinkingBubble != null)
+                    {
+                        thinkingBubble.Show(GetOrderText());
+                    }
 
                     Debug.Log(
                         name + " finished thinking and is waiting for the player."
@@ -459,7 +465,7 @@ public class CustomerController : MonoBehaviour
 
                     if (orderTimeLeft <= 0f)
                     {
-                        EndOrderUnhappy(CustomerReaction.Furious);
+                        EndOrderUnhappy(orderTimeoutReaction);
                     }
                 }
 
@@ -521,6 +527,16 @@ public class CustomerController : MonoBehaviour
         if (state == CustomerState.WaitingForPlayer)
         {
             PlayerTakesOrder();
+            return;
+        }
+
+        if (state == CustomerState.Ordering)
+        {
+            if (OrderBoardUI.Instance != null)
+            {
+                OrderBoardUI.Instance.ShowOrder(this);
+            }
+
             return;
         }
 
@@ -610,6 +626,15 @@ public class CustomerController : MonoBehaviour
         state = CustomerState.WaitingForFood;
     }
 
+    // The order panel moved on to another customer without accept or reject.
+    // Go back to waiting. The patience timer keeps the time it had.
+    public void CancelOrdering()
+    {
+        if (state == CustomerState.Ordering)
+        {
+            state = CustomerState.WaitingForPlayer;
+        }
+    }
     // --------------------------------------------------
     // REJECT ORDER
     // --------------------------------------------------
@@ -929,4 +954,7 @@ public class CustomerController : MonoBehaviour
             orderTimerUI.HideTimer();
         }
     }
+
+        [Tooltip("How the customer reacts when the order timer runs out. SCRUM-274 says Furious.")]
+    public CustomerReaction orderTimeoutReaction = CustomerReaction.Furious;
 }
