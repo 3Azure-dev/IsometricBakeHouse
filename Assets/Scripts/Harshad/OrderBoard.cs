@@ -49,6 +49,11 @@ public class OrderBoardUI : MonoBehaviour
             return;
         }
 
+        if (currentCustomer != null && currentCustomer != customer)
+        {
+            currentCustomer.CancelOrdering();
+        }
+
         currentCustomer = customer;
 
         customerNameText.text =
