@@ -9,6 +9,7 @@ public class CheeseCreature : IngredientCreature1
     [SerializeField] private float _rollTime = 0.6f; // seconds to roll thin
 
     [SerializeField] private float _popHeight = 0.5f; // how far it pokes out of the hole
+    [SerializeField] private float _rumbleAmount = 0.08f; // how far the hole shakes
     private bool _inHole;
     private bool _poppedUp;
     private Vector3 _normalScale;
@@ -60,8 +61,11 @@ public class CheeseCreature : IngredientCreature1
         for (int i = 0; i < _data.popUpCount; i++)
         {
             yield return new WaitForSeconds(_data.hideTime);
+            
+            Transform popHole = group.RandomHole();
+            yield return Rumble(popHole);
 
-            transform.position = group.RandomHolePosition() + Vector3.up * _popHeight;
+            transform.position = popHole.position + Vector3.up * _popHeight;
             SetVisible(true);
             _poppedUp = true;
 
@@ -73,6 +77,19 @@ public class CheeseCreature : IngredientCreature1
 
         Debug.Log($"{name} got away through the cheese holes");
         Escape();
+    }
+
+    private IEnumerator Rumble(Transform hole)
+    {
+        Vector3 start = hole.localPosition;
+
+        for (float t = 0f; t < _data.rumbleTime; t += Time.deltaTime)
+        {
+            hole.localPosition = start + (Vector3)Random.insideUnitCircle * _rumbleAmount;
+            yield return null;
+        }
+
+        hole.localPosition = start;
     }
 
     public override void Stun()

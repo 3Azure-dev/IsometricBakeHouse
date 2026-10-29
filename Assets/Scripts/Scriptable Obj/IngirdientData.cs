@@ -71,6 +71,8 @@ public class IngredientData : ScriptableObject
     [Header("Cheese Holes - only used by Cheese")]
     [Tooltip("Seconds Cheese stays out of a hole")]
     public float popUpTime = 0.8f;
+    [Tooltip("Seconds the hole shakes before Cheese pops out")]
+    public float rumbleTime = 0.5f;
 
     [Tooltip("Seconds hidden between pop-ups")]
     public float hideTime = 0.6f;

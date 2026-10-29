@@ -1,36 +1,67 @@
-using System;
 using UnityEngine;
 
-// Dough: while running it can split into a copy. After the split the real one runs faster.
+// Dough: every few seconds it leaves a look-alike clone that also runs.
+// Clones are not one of the level's creatures. Hitting one blasts the player back.
 public class DoughCreature : IngredientCreature1
 {
-    public static event Action<IngredientCreature1> Split; // LevelTracker counts the copy
+    [Header("Clone - Pravin can tune these (T31, T32)")]
+    [SerializeField] private float _cloneInterval = 5f;
+    [SerializeField] private float _cloneLifetime = 3f;
 
-    public static event Action<IngredientCreature1> CopyPopped; // LevelTracker removes the copy
-
-    [Header("Dough split - Pravin can tune these")]
-    [SerializeField, Range(0f, 1f)] private float _splitChance = 0.3f;
-    [SerializeField] private float _splitCheckTime = 1f;
-    [SerializeField] private float _fastMultiplier = 1.5f;
-
-    [Header("Copy blast - Pravin can tune these")]
-    [SerializeField] private float _blastRange = 5f;
+    [Header("Clone blast - Pravin can tune these (T38)")]
+    [SerializeField] private float _blastRange = 3f;
     [SerializeField] private float _blastForce = 10f;
-    [SerializeField] private float _blastUp = 5f;
-    [SerializeField] private float _blastTime = 0.3f;
+    [SerializeField] private float _blastUp = 2f;
+    [SerializeField] private float _blastTime = 0.3f; // force x time = about 3 units
 
-    private bool _hasSplit;
-    private bool _isCopy;
-    private float _splitTimer;
+    private bool _isClone;
+    private float _cloneTimer;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _cloneTimer = _cloneInterval;
+    }
 
     public override void Stun()
     {
-        if (!_isCopy)
-        {
-            base.Stun();
-            return;
-        }
-        Blast();
+        if (_isClone) { Blast(); return; }
+        base.Stun();
+    }
+
+    public override void Escape()
+    {
+        if (_isClone) { Destroy(gameObject); return; }
+        base.Escape();
+    }
+
+    protected override void Catch()
+    {
+        if (_isClone) return;
+        base.Catch();
+    }
+
+    protected override void UpdateFleeing()
+    {
+        base.UpdateFleeing();
+        if (_isClone || CurrentState != State.Fleeing) return;
+
+        _cloneTimer -= Time.fixedDeltaTime;
+        if (_cloneTimer > 0f) return;
+
+        _cloneTimer = _cloneInterval;
+        MakeClone();
+    }
+
+    private void MakeClone()
+    {
+        float dir = Mathf.Sign(transform.position.x - _player.position.x);
+        Vector3 pos = transform.position - new Vector3(dir * 0.6f, 0f, 0f);
+
+        DoughCreature clone = Instantiate(this, pos, Quaternion.identity);
+        clone._isClone = true;
+        clone.name = "Creature_Dough(Clone)";
+        Destroy(clone.gameObject, _cloneLifetime);
     }
 
     private void Blast()
@@ -41,54 +72,6 @@ public class DoughCreature : IngredientCreature1
             float dir = Mathf.Sign(_player.position.x - transform.position.x);
             player.Knockback(new Vector2(dir * _blastForce, _blastUp), _blastTime);
         }
-
-        Debug.Log($"{name}: copy blasted");
-        CopyPopped?.Invoke(this);
-        gameObject.SetActive(false);
-    }
-
-    protected override void UpdateFleeing()
-    {
-        base.UpdateFleeing();
-        if (CurrentState != State.Fleeing) return;
-
-        if (_hasSplit && !_isCopy)
-            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x * _fastMultiplier, _rb.linearVelocity.y);
-
-        if (_hasSplit) return;
-
-        _splitTimer -= Time.fixedDeltaTime;
-        if (_splitTimer > 0f) return;
-        _splitTimer = _splitCheckTime;
-
-        if (UnityEngine.Random.value < _splitChance) MakeCopy();
-    }
-
-    private void MakeCopy()
-    {
-        _hasSplit = true;
-
-        float dir = Mathf.Sign(transform.position.x - _player.position.x);
-        Vector3 pos = transform.position - new Vector3(dir * 0.6f, 0f, 0f);
-
-        DoughCreature copy = Instantiate(this, pos, Quaternion.identity);
-        copy._hasSplit = true;
-        copy._isCopy = true;
-        copy.name = "Creature_Dough(Copy)";
-
-        Split?.Invoke(copy);
-        Debug.Log($"{name} split into a copy");
-    }
-
-    protected override void Catch()
-    {
-        if (_isCopy)
-        {
-            Debug.Log($"{name}: it was the copy, poof");
-            CopyPopped?.Invoke(this);
-            gameObject.SetActive(false); // gone, not caught or escaped
-            return;
-        }
-        base.Catch();
+        Destroy(gameObject);
     }
 }

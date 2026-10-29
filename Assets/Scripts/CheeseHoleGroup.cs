@@ -11,9 +11,9 @@ public class CheeseHoleGroup : MonoBehaviour
         GetComponent<Collider2D>().isTrigger = true;
     }
 
-    public Vector3 RandomHolePosition()
+    public Transform RandomHole()
     {
-        return _holes[Random.Range(0, _holes.Length)].position;
+        return _holes[Random.Range(0, _holes.Length)];
     }
 
     private void OnDrawGizmos()
