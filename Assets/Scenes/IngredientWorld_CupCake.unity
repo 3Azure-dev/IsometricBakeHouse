@@ -1318,7 +1318,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 5452188602864505034, guid: 8984cb163460f144eb5114fcff0e0124, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: b960d0acd95b0114e961760f5577e24f, type: 3}
+  m_Resource: {fileID: 8300000, guid: 3424bf6526a6f1b419e3ee47742cb71f, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.3
   m_Pitch: 1
@@ -2627,12 +2627,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b870c724d01db64aa0dd6cedb1babf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _creaturePrefabs:
-  - {fileID: 717270776667871282, guid: 1ba82db5fb89d6f4c99587c5c3147681, type: 3}
-  - {fileID: -4536029019286661188, guid: 5075e961d0021754bbebf9736d9a04ab, type: 3}
-  - {fileID: 717270776667871282, guid: fcc1bd769e8df274e90beb459588135b, type: 3}
-  _minPerType: 3
-  _fallHeight: -7
 --- !u!114 &611287425 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3774568660546122127, guid: d2b5c2061daad2f4f82faa28f3e14250, type: 3}
@@ -15969,7 +15963,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2489816511cb144418f092321039aba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  recipe: {fileID: 11400000, guid: 0a925f9d8e9310d4cb74e0e4eee0e56c, type: 2}
 --- !u!4 &2081165232
 Transform:
   m_ObjectHideFlags: 0
