@@ -42,6 +42,15 @@ public class CustomerSettings : ScriptableObject
     [Tooltip("How many seats each table has.")]
     public int seatsPerTable = 2;
 
+    [Header("Customer Names")]
+    [Tooltip("Each customer gets a random name from this list. Add as many as you like.")]
+    public string[] customerNames =
+{
+        "Harshad", "Pravin", "Shreyas", "Aditya", "Vijay", "Mohan",
+        "Rahul", "Priya", "Neha", "Karan", "Anjali", "Rohan"
+    }; 
+
+
     [Header("VIP Customers")]
     [Tooltip("Order timer (seconds) for a VIP customer.")]
     public float vipOrderTimer = 240f;
@@ -56,4 +65,7 @@ public class CustomerSettings : ScriptableObject
     [Tooltip("Chance (percent) that a new customer is a VIP. The GDD says about 1 VIP per 3 in-game days, " +
              "which is about 4% with 8 customers a day. Replace this once the day counter exists.")]
     public float vipChancePercent = 4f;
+
+    [Tooltip("Body colour of a VIP customer (gold)")]
+    public Color vipColor = new Color(1f, 0.84f, 0f);
 }

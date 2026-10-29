@@ -11,6 +11,14 @@ public class CustomerController : MonoBehaviour
     [Header("UI")]
     [SerializeField] private ThinkingBubble thinkingBubble;
 
+    [Header("VIP look")]
+    [Tooltip("Leave empty to use the first MeshRenderer on the customer")]
+    [SerializeField] private Renderer bodyRenderer;
+
+    [Tooltip("How the customer reacts when the order timer runs out. SCRUM-274 says Furious.")]
+    public CustomerReaction orderTimeoutReaction = CustomerReaction.Furious;
+    private MaterialPropertyBlock tintBlock;
+
     [Header("Order Timer UI")]
     [SerializeField] private OrderTimer orderTimerUI;
 
@@ -22,6 +30,23 @@ public class CustomerController : MonoBehaviour
     private NavMeshAgent agent;
     private Transform mySeat;
     private CustomerState state;
+
+    // The name shown on the order board (Harshad, Pravin, ...)
+    private string displayName;
+
+    // Names that active customers already use, so two customers do not share one
+    private static readonly HashSet<string> namesInUse = new HashSet<string>();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetNames()
+    {
+        namesInUse.Clear();
+    }
+
+    public string DisplayName
+    {
+        get { return displayName; }
+    }
 
     // Prevents the arrival bell from playing more than once per customer.
     private bool arrivalBellPlayed;
@@ -56,7 +81,6 @@ public class CustomerController : MonoBehaviour
     {
         get { return customerType == CustomerType.VIP; }
     }
-
     // True once the order has really been accepted.
     public bool IsWaitingForFood
     {
@@ -122,6 +146,13 @@ public class CustomerController : MonoBehaviour
         customerType = type;
 
         ResetCustomer();
+
+        ApplyLook();
+
+        // Give this customer a real name. The order board and the Console show it.
+        ReleaseName();
+        displayName = PickName();
+        name = IsVIP ? displayName + " (VIP)" : displayName;
 
         if (agent != null)
         {
@@ -886,6 +917,80 @@ public class CustomerController : MonoBehaviour
         return false;
     }
 
+
+    // A VIP gets the gold colour. A normal customer keeps the material colour.
+    // MaterialPropertyBlock changes the colour of THIS customer only,
+    // without making a new material for every customer.
+    private void ApplyLook()
+    {
+        if (bodyRenderer == null)
+        {
+            bodyRenderer = GetComponentInChildren<MeshRenderer>();
+        }
+
+        if (bodyRenderer == null || settings == null)
+        {
+            return;
+        }
+
+        if (!IsVIP)
+        {
+            bodyRenderer.SetPropertyBlock(null);
+            return;
+        }
+
+        if (tintBlock == null)
+        {
+            tintBlock = new MaterialPropertyBlock();
+        }
+
+        bodyRenderer.GetPropertyBlock(tintBlock);
+
+        // URP shaders use _BaseColor, the built-in shader uses _Color
+        tintBlock.SetColor("_BaseColor", settings.vipColor);
+        tintBlock.SetColor("_Color", settings.vipColor);
+
+        bodyRenderer.SetPropertyBlock(tintBlock);
+    }
+
+
+    // Picks a random name from the settings list that nobody else is using
+    private string PickName()
+    {
+        string[] names = settings != null ? settings.customerNames : null;
+
+        if (names == null || names.Length == 0)
+        {
+            return name;
+        }
+
+        List<string> free = new List<string>();
+
+        foreach (string candidate in names)
+        {
+            if (!string.IsNullOrEmpty(candidate) && !namesInUse.Contains(candidate))
+            {
+                free.Add(candidate);
+            }
+        }
+
+        string chosen = free.Count > 0
+            ? free[Random.Range(0, free.Count)]
+            : names[Random.Range(0, names.Length)];
+
+        namesInUse.Add(chosen);
+
+        return chosen;
+    }
+
+    private void ReleaseName()
+    {
+        if (!string.IsNullOrEmpty(displayName))
+        {
+            namesInUse.Remove(displayName);
+            displayName = null;
+        }
+    }
     // --------------------------------------------------
     // RESET CUSTOMER
     // --------------------------------------------------
@@ -934,6 +1039,8 @@ public class CustomerController : MonoBehaviour
 
     private void ReturnToPool()
     {
+        ReleaseName();
+
         if (CustomerPool.Instance == null)
         {
             Debug.LogError("CustomerPool.Instance was not found.");
@@ -955,6 +1062,4 @@ public class CustomerController : MonoBehaviour
         }
     }
 
-        [Tooltip("How the customer reacts when the order timer runs out. SCRUM-274 says Furious.")]
-    public CustomerReaction orderTimeoutReaction = CustomerReaction.Furious;
 }
