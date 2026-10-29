@@ -1,67 +1,135 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class WandCooldownUI : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private WandFire1 wand; // Drag your Wand GameObject here
+    [Header("Wand Cooldown UI")]
     [SerializeField] private Image cooldownFill;
     [SerializeField] private TMP_Text cooldownTimerText;
 
-    [Header("Visuals")]
-    [SerializeField] private Color normalColor = Color.white;
-    [SerializeField] private Color penaltyColor = new Color(1f, 0.3f, 0.3f); // Red flash
-    [SerializeField] private float flashTime = 0.5f;
+    private Coroutine cooldownRoutine;
 
-    private float lastRemaining;
-    private float flashTimer;
-
-    private void Update()
+    private void OnEnable()
     {
-        if (wand == null) return;
+        // Listen for the wand firing event.
+        WandFire1.WandFired += OnWandFired;
 
-        // 1. Read the ACTUAL time from the wand
-        float remaining = wand.CooldownRemaining;
-        float max = wand.CooldownMax;
-
-        // 2. Detect if time was ADDED (e.g., tomato hit +3s)
-        if (remaining > lastRemaining + 0.05f)
-        {
-            flashTimer = flashTime; // Trigger the red flash!
-        }
-        lastRemaining = remaining;
-
-        bool isOnCooldown = remaining > 0.05f;
-
-        // 3. Update the Bar
+        // Start with a full bar and hidden timer.
         if (cooldownFill != null)
         {
-            // (1 - remaining/max) makes it fill UP from 0 to 1 as time passes, 
-            // matching your original visual style.
-            float fill = max > 0f ? 1f - Mathf.Clamp01(remaining / max) : 1f;
-            cooldownFill.fillAmount = fill;
-
-            // Apply color flash
-            cooldownFill.color = (flashTimer > 0f) ? penaltyColor : normalColor;
+            cooldownFill.fillAmount = 1f;
         }
 
-        // 4. Update the Text
+        HideTimer();
+    }
+
+    private void OnDisable()
+    {
+        // Stop listening when this UI is disabled.
+        WandFire1.WandFired -= OnWandFired;
+
+        if (cooldownRoutine != null)
+        {
+            StopCoroutine(cooldownRoutine);
+            cooldownRoutine = null;
+        }
+
+        HideTimer();
+    }
+
+    private void OnWandFired(float cooldownDuration)
+    {
+        if (cooldownFill == null)
+        {
+            Debug.LogWarning(
+                "WandCooldownUI: Cooldown Fill is missing."
+            );
+        }
+
+        // Stop an existing cooldown display if necessary.
+        if (cooldownRoutine != null)
+        {
+            StopCoroutine(cooldownRoutine);
+            cooldownRoutine = null;
+        }
+
+        // Handle a cooldown of zero or less.
+        if (cooldownDuration <= 0f)
+        {
+            if (cooldownFill != null)
+            {
+                cooldownFill.fillAmount = 1f;
+            }
+
+            HideTimer();
+            return;
+        }
+
+        // Empty the bar before it refills.
+        if (cooldownFill != null)
+        {
+            cooldownFill.fillAmount = 0f;
+        }
+
+        // Show the countdown text.
         if (cooldownTimerText != null)
         {
-            if (isOnCooldown)
-            {
-                cooldownTimerText.gameObject.SetActive(true);
-                cooldownTimerText.text = $"{remaining:0.0}s";
-            }
-            else
-            {
-                cooldownTimerText.gameObject.SetActive(false);
-                cooldownTimerText.text = "";
-            }
+            cooldownTimerText.gameObject.SetActive(true);
+            cooldownTimerText.text = $"{cooldownDuration:0.0}s";
         }
 
-        // Tick down the flash timer
-        if (flashTimer > 0f) flashTimer -= Time.deltaTime;
+        // Start the cooldown animation and countdown.
+        cooldownRoutine = StartCoroutine(
+            FillCooldown(cooldownDuration)
+        );
+    }
+
+    private IEnumerator FillCooldown(float duration)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            float remaining = Mathf.Max(0f, duration - elapsed);
+
+            // Fill the vertical bar from bottom to top.
+            if (cooldownFill != null)
+            {
+                cooldownFill.fillAmount =
+                    Mathf.Clamp01(elapsed / duration);
+            }
+
+            // Update the countdown.
+            if (cooldownTimerText != null)
+            {
+                cooldownTimerText.text = $"{remaining:0.0}s";
+            }
+
+            yield return null;
+        }
+
+        // Cooldown is complete.
+        if (cooldownFill != null)
+        {
+            cooldownFill.fillAmount = 1f;
+        }
+
+        cooldownRoutine = null;
+
+        // Hide the timer when the bar is full.
+        HideTimer();
+    }
+
+    private void HideTimer()
+    {
+        if (cooldownTimerText != null)
+        {
+            cooldownTimerText.text = "";
+            cooldownTimerText.gameObject.SetActive(false);
+        }
     }
 }
