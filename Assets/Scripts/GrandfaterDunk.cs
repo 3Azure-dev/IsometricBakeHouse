@@ -87,15 +87,13 @@ public class GrandfatherDunk : MonoBehaviour
             return;
         }
 
-        bool comes = _alwaysCome || GrandfatherVisits.ShouldCome(_data);
+        bool comes = _alwaysCome || UnityEngine.Random.value < _data.grandfatherChance;
 
         if (!comes)
         {
             HuntFinished?.Invoke();
             return;
         }
-
-        GrandfatherVisits.RecordVisit();
 
         _state = State.Ready; // wait for the player to reach the dunk spot
         Debug.Log("Grandfather is waiting near the exit");
@@ -331,5 +329,14 @@ public class GrandfatherDunk : MonoBehaviour
             Debug.Log($"Burned: lost 1 {pick.ingredientName}");
         }
         return lost;
+    }
+
+    [ContextMenu("Test: Roll Grandfather 1000 times")]
+    private void TestRoll()
+    {
+        int came = 0;
+        for (int i = 0; i < 1000; i++)
+            if (UnityEngine.Random.value < _data.grandfatherChance) came++;
+        Debug.Log("Grandfather came " + came + " / 1000");
     }
 }

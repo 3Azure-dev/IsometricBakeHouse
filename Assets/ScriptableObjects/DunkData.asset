@@ -20,5 +20,3 @@ MonoBehaviour:
   hitZoneSize: 0.13
   bonusMultiplier: 2
   grandfatherChance: 0.33
-  visitsPerBlock: 2
-  daysPerBlock: 4

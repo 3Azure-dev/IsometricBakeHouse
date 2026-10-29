@@ -30,12 +30,6 @@ public class DunkData : ScriptableObject
     public int bonusMultiplier = 2;
 
     [Header("Grandfather")]
-    [Tooltip("Chance he comes after a hunt. 0.33 = 1 in 3. The visits rule below can still force him or stop him")]
+    [Tooltip("Chance he comes after a hunt. 0.33 = 1 in 3")]
     [Range(0f, 1f)] public float grandfatherChance = 0.33f;
-
-    [Tooltip("How many times he comes in one block of days")]
-    [Min(0)] public int visitsPerBlock = 2;
-
-    [Tooltip("How many in-game days one block lasts")]
-    [Min(1)] public int daysPerBlock = 4;
 }
