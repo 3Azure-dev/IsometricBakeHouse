@@ -7,6 +7,12 @@ using System;
 public class WandFire1 : MonoBehaviour
 
 {
+    // Automatically calculates how much time is left based on your _nextFireTime
+    public float CooldownRemaining => Mathf.Max(0f, _nextFireTime - Time.time);
+
+    // Tracks the maximum duration for the UI bar's "100%" mark
+    public float CooldownMax { get; private set; }
+
     public static event Action<float> WandFired;
     [SerializeField] private WandData _data;   // SO_Wand goes here
     [SerializeField] private Bolt1 _boltPrefab;
@@ -54,6 +60,8 @@ public class WandFire1 : MonoBehaviour
 
     private void Update()
     {
+       
+
         if (_wandSprite != null) _wandSprite.color = IsSticky ? _sauceColor : _normalColor;
 
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
@@ -74,6 +82,9 @@ public class WandFire1 : MonoBehaviour
 
         _nextFireTime = Time.time + cooldown;
 
+        // ADD THIS LINE to tell the UI how big the bar should be:
+        CooldownMax = cooldown;
+
         // Notify the cooldown UI using the final cooldown duration.
         WandFired?.Invoke(cooldown);
     }
@@ -83,9 +94,12 @@ public class WandFire1 : MonoBehaviour
         Bolt1 bolt = _pool.Get();
         float range = _data != null ? _data.range : Mathf.Infinity;
         bolt.Launch(_firePoint.position, _aim.AimDirection, range);
+       
 
         if (BreadSFX.Instance != null)
             BreadSFX.Instance.PlayWandZap();
+        // ADD THESE TWO LINES:
+      
     }
 
     public void AddStickySauce(float extraCooldown, float duration)
@@ -93,5 +107,12 @@ public class WandFire1 : MonoBehaviour
         _sauceExtra = extraCooldown;
         _sauceUntil = Time.time + duration; // restarts, doesn't stack
         Debug.Log($"Wand sticky: +{extraCooldown}s cooldown for {duration}s");
+
+        // THIS adds 3 seconds to the actual timer
+        _nextFireTime += 3f;
+
+        // THIS expands the UI bar so the +3s is visible
+        // (It is perfectly fine to READ CooldownRemaining here, just don't assign to it)
+        CooldownMax = Mathf.Max(CooldownMax, CooldownRemaining);
     }
 }

@@ -20,6 +20,16 @@ public class CustomerSpawner : MonoBehaviour
     // Customers only come in the Day Phase
     private bool dayIsOpen = true;
 
+    // Set by the test button: the next customer is a VIP
+    private bool nextIsVip;
+
+    [ContextMenu("TEST: Next customer is VIP")]
+    private void TestNextCustomerIsVip()
+    {
+        nextIsVip = true;
+        Debug.Log("CustomerSpawner: the next customer will be a VIP.");
+    }
+
     // --------------------------------------------------
     // SETUP
     // --------------------------------------------------
@@ -158,16 +168,20 @@ public class CustomerSpawner : MonoBehaviour
     {
         CustomerType type;
 
-        // VIP chance comes from SO_CustomerSettings (percent)
-        float randomNumber = Random.Range(0f, 100f);
-
-        if (randomNumber <= settings.vipChancePercent)
+        if (nextIsVip)
         {
+            // Test switch is on: force a VIP once
             type = CustomerType.VIP;
+            nextIsVip = false;
         }
         else
         {
-            type = CustomerType.Normal;
+            // VIP chance comes from SO_CustomerSettings (percent)
+            float randomNumber = Random.Range(0f, 100f);
+
+            type = randomNumber <= settings.vipChancePercent
+                ? CustomerType.VIP
+                : CustomerType.Normal;
         }
 
         GameObject customer = CustomerPool.Instance.GetCustomer(type);

@@ -439,6 +439,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WandCooldownCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6314462300453414798, guid: c7dd39a6537a8d047a3f33226b9bb01b, type: 3}
+      propertyPath: wand
+      value: 
+      objectReference: {fileID: 851013464}
     - target: {fileID: 6808093451013889531, guid: c7dd39a6537a8d047a3f33226b9bb01b, type: 3}
       propertyPath: m_Camera
       value: 
@@ -805,7 +809,7 @@ MonoBehaviour:
   creatureStunned: {fileID: 8300000, guid: a16a02640a975c64b8bf4ab7c187d5cc, type: 3}
   creatureCaught: {fileID: 8300000, guid: cd0d78371f2c5cc43985b33569376990, type: 3}
   mouldPlaced: {fileID: 8300000, guid: cd3b5b4eb8fe00447b7bf19ad280aa4a, type: 3}
-  eggshellThrow: {fileID: 8300000, guid: 54695beb1a4a1684c8d5cd8ad0ff2597, type: 3}
+  eggshellThrow: {fileID: 8300000, guid: 759bd47a1c9a6d94c96d1f8708b80f41, type: 3}
   eggshellHit: {fileID: 8300000, guid: 0695bb51660396749a43b312d537c8a0, type: 3}
   sugarDash: {fileID: 8300000, guid: 07afec5ea4b05314d859c4782edea1ef, type: 3}
   butterTrail: {fileID: 8300000, guid: b7d0e0e6054eec2418ebf0fb7211eede, type: 3}
@@ -2333,6 +2337,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &851013464 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3774568660546122127, guid: d2b5c2061daad2f4f82faa28f3e14250, type: 3}
+  m_PrefabInstance: {fileID: 7636890777690186296}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7067ed764a81f34b8f8b9fc8c25045d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &882865576 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7818236198970437732, guid: d0cdaa4d49c4e8c478ae1cd4afb46ec5, type: 3}
@@ -16091,6 +16106,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7761961012945094200, guid: e9fb8599af5354f498c9a3722649afd7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8584212101836292214, guid: e9fb8599af5354f498c9a3722649afd7, type: 3}
+      propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
