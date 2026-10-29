@@ -805,7 +805,7 @@ MonoBehaviour:
   creatureStunned: {fileID: 8300000, guid: a16a02640a975c64b8bf4ab7c187d5cc, type: 3}
   creatureCaught: {fileID: 8300000, guid: cd0d78371f2c5cc43985b33569376990, type: 3}
   mouldPlaced: {fileID: 8300000, guid: cd3b5b4eb8fe00447b7bf19ad280aa4a, type: 3}
-  eggshellThrow: {fileID: 8300000, guid: 54695beb1a4a1684c8d5cd8ad0ff2597, type: 3}
+  eggshellThrow: {fileID: 8300000, guid: 759bd47a1c9a6d94c96d1f8708b80f41, type: 3}
   eggshellHit: {fileID: 8300000, guid: 0695bb51660396749a43b312d537c8a0, type: 3}
   sugarDash: {fileID: 8300000, guid: 07afec5ea4b05314d859c4782edea1ef, type: 3}
   butterTrail: {fileID: 8300000, guid: b7d0e0e6054eec2418ebf0fb7211eede, type: 3}
