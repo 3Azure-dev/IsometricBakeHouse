@@ -1,0 +1,72 @@
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "SO_Ingredient_New", menuName = "Tiny Bake House/Ingredient")]
+public class IngredientData : ScriptableObject
+{
+    [Header("Info")]
+    public string ingredientName;
+    public Sprite icon;
+
+    [Header("Hunting - Movement")]
+    [Tooltip("How fast this creature runs from the player")]
+    public float fleeSpeed = 4f;
+
+    [Tooltip("How high this creature jumps over walls and gaps")]
+    public float jumpForce = 8f;
+
+    [Tooltip("1 = normal fall. Lower = floats down slowly")]
+    public float gravityScale = 1f;
+
+    [Tooltip("Creature starts running when the player is closer than this")]
+    public float detectRange = 4f;
+
+    [Tooltip("Creature calms down when the player is farther than this. Keep it bigger than Detect Range")]
+    public float safeRange = 7f;
+
+    [Header("Hunting - Catching")]
+    [Tooltip("Seconds the creature stays frozen after a bolt hits it")]
+    public float stunDuration = 2f;
+
+    [Tooltip("How close the player must be to press E and catch it")]
+    public float catchRange = 1.5f;
+
+    [Tooltip("How many ingredients the player gets for one catch")]
+    [Min(1)] public int ingredientsPerCatch = 1;
+
+    [Header("Slow Trail - only used by creatures that drop puddles")]
+    [Tooltip("Seconds between each puddle while running away")]
+    public float dropInterval = 0.8f;
+
+    [Tooltip("Player speed inside a puddle. 0.5 = half speed")]
+    [Range(0.1f, 1f)] public float slowMultiplier = 0.5f;
+
+    [Tooltip("Seconds the player stays slow after leaving a puddle")]
+    public float slowDuration = 1f;
+
+    [Tooltip("Seconds before a puddle disappears")]
+    public float puddleLifetime = 4f;
+
+    [Header("Sauce Droplets - only used by Tomato Sauce")]
+    [Min(1)] public int dropletsPerDrop = 2;
+    public float dropletBackSpeed = 4f;   // how fast they fly back at the player
+    public float dropletUpSpeed = 5f;
+    public float dropletLifetime = 4f;
+
+    [Tooltip("Seconds added to the wand cooldown when a droplet hits")]
+    public float extraCooldown = 3f;
+
+    [Tooltip("How long the sticky wand lasts. A new hit restarts it")]
+    public float debuffTime = 8f;
+
+    [Header("Cheese Holes - only used by Cheese")]
+    [Tooltip("Seconds Cheese stays out of a hole")]
+    public float popUpTime = 0.8f;
+    [Tooltip("Seconds the hole shakes before Cheese pops out")]
+    public float rumbleTime = 0.5f;
+
+    [Tooltip("Seconds hidden between pop-ups")]
+    public float hideTime = 0.6f;
+
+    [Tooltip("Pop-ups before it escapes for good")]
+    [Min(1)] public int popUpCount = 3;
+}

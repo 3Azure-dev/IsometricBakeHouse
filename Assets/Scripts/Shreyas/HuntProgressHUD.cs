@@ -30,8 +30,8 @@ public class HuntProgressHUD : MonoBehaviour
         IngredientCreature1.CreatureEscaped += OnCreatureRemoved;
 
         // Track creatures that split or are popped.
-        DoughCreature.Split += OnCreatureSpawned;
-        DoughCreature.CopyPopped += OnCreatureRemoved;
+        // DoughCreature.Split += OnCreatureSpawned;
+        // DoughCreature.CopyPopped += OnCreatureRemoved;
 
         // Listen for the level becoming empty.
         LevelTracker.LevelEmpty += OnLevelEmpty;
@@ -56,8 +56,8 @@ public class HuntProgressHUD : MonoBehaviour
         IngredientCreature1.CreatureCaught -= OnCreatureRemoved;
         IngredientCreature1.CreatureEscaped -= OnCreatureRemoved;
 
-        DoughCreature.Split -= OnCreatureSpawned;
-        DoughCreature.CopyPopped -= OnCreatureRemoved;
+        // DoughCreature.Split -= OnCreatureSpawned;
+        // DoughCreature.CopyPopped -= OnCreatureRemoved;
 
         LevelTracker.LevelEmpty -= OnLevelEmpty;
     }

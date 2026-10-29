@@ -142,7 +142,7 @@ public class IngredientCreature1 : MonoBehaviour
     }
 
     [ContextMenu("Test: Escape")]
-    public void Escape()
+    public virtual void Escape()
     {
         if (_state == State.Caught) return;
         CreatureEscaped?.Invoke(this);

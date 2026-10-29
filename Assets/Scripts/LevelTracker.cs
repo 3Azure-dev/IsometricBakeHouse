@@ -22,8 +22,6 @@ public class LevelTracker : MonoBehaviour
         MouldZone.CreatureSpawned += OnSpawned;
         IngredientCreature1.CreatureCaught += OnCaught;
         IngredientCreature1.CreatureEscaped += OnEscaped;
-        DoughCreature.Split += OnSplit;
-        DoughCreature.CopyPopped += OnCopyPopped;
 
     }
 
@@ -33,8 +31,6 @@ public class LevelTracker : MonoBehaviour
         MouldZone.CreatureSpawned -= OnSpawned;
         IngredientCreature1.CreatureCaught -= OnCaught;
         IngredientCreature1.CreatureEscaped -= OnEscaped;
-        DoughCreature.Split -= OnSplit;
-        DoughCreature.CopyPopped -= OnCopyPopped;
     }
 
     private void Start()
