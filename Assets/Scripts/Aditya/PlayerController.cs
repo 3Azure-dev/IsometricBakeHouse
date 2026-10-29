@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.8f, 0.1f);
 
+    [Header("Stun Visual")]
+    [SerializeField] private GameObject _stunIndicator;
+
     public PlayerState CurrentState { get; private set; }
 
     private Rigidbody2D _rb;
@@ -21,39 +24,50 @@ public class PlayerController : MonoBehaviour
     private bool _jumpPressed;
     private bool _isGrounded;
 
-    private float _slowMultiplier = 1f; // 1 = normal speed, 0.5 = half speed
+    private float _slowMultiplier = 1f;
     private float _slowTimer;
 
-    private float _blockedDirection; // +1 = can't go right, -1 = can't go left
+    private float _blockedDirection;
     private float _blockTimer;
 
     private float _stunTimer;
-    private float _noJumpTimer; // jam: can't jump while this counts down
+    private float _noJumpTimer;
 
     private float _knockbackTimer;
+
     public bool IsStunned => _stunTimer > 0f;
 
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
+
+        // Hide the stun icon when the level starts.
+        UpdateStunIndicator();
     }
 
     void Update()
     {
         _moveInput = 0f;
+
+        if (Keyboard.current == null)
+            return;
+
         if (Keyboard.current.aKey.isPressed) _moveInput -= 1f;
         if (Keyboard.current.dKey.isPressed) _moveInput += 1f;
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame || Keyboard.current.wKey.wasPressedThisFrame)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame ||
+            Keyboard.current.wKey.wasPressedThisFrame)
+        {
             _jumpPressed = true;
+        }
     }
 
     void FixedUpdate()
     {
         _isGrounded = CheckGround();
 
-        // knockback: let the push play out, ignore input
+        // Knockback: let the push play out and ignore input.
         if (_knockbackTimer > 0f)
         {
             _knockbackTimer -= Time.fixedDeltaTime;
@@ -62,22 +76,27 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // count the slow down, then go back to normal speed
+        // Count the slow down, then return to normal speed.
         if (_slowTimer > 0f)
         {
             _slowTimer -= Time.fixedDeltaTime;
-            if (_slowTimer <= 0f) _slowMultiplier = 1f;
+
+            if (_slowTimer <= 0f)
+                _slowMultiplier = 1f;
         }
 
-        // while blocked, ignore input in the blocked direction
+        // While blocked, ignore input in the blocked direction.
         float move = _moveInput;
+
         if (_blockTimer > 0f)
         {
             _blockTimer -= Time.fixedDeltaTime;
-            if (move != 0f && Mathf.Sign(move) == _blockedDirection) move = 0f;
+
+            if (move != 0f && Mathf.Sign(move) == _blockedDirection)
+                move = 0f;
         }
 
-        // while stunned: no walking, no jumping
+        // While stunned, disable walking and jumping.
         if (_stunTimer > 0f)
         {
             _stunTimer -= Time.fixedDeltaTime;
@@ -85,17 +104,28 @@ public class PlayerController : MonoBehaviour
             _jumpPressed = false;
         }
 
-        // while stuck in jam: no jumping
+        // Update the icon as the stun timer counts down.
+        UpdateStunIndicator();
+
+        // While stuck in jam, disable jumping.
         if (_noJumpTimer > 0f)
         {
             _noJumpTimer -= Time.fixedDeltaTime;
             _jumpPressed = false;
         }
 
-        _rb.linearVelocity = new Vector2(move * _moveSpeed * _slowMultiplier, _rb.linearVelocity.y);
+        _rb.linearVelocity = new Vector2(
+            move * _moveSpeed * _slowMultiplier,
+            _rb.linearVelocity.y
+        );
 
         if (_jumpPressed && _isGrounded)
-            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _jumpForce);
+        {
+            _rb.linearVelocity = new Vector2(
+                _rb.linearVelocity.x,
+                _jumpForce
+            );
+        }
 
         _jumpPressed = false;
 
@@ -104,46 +134,81 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckGround()
     {
-        Vector2 feet = new Vector2(_col.bounds.center.x, _col.bounds.min.y);
-        return Physics2D.OverlapBox(feet, _groundCheckSize, 0f, _groundLayer);
+        Vector2 feet = new Vector2(
+            _col.bounds.center.x,
+            _col.bounds.min.y
+        );
+
+        return Physics2D.OverlapBox(
+            feet,
+            _groundCheckSize,
+            0f,
+            _groundLayer
+        );
     }
 
     private void UpdateState()
     {
         if (_isGrounded)
-            CurrentState = Mathf.Abs(_moveInput) > 0.01f ? PlayerState.Running : PlayerState.Idle;
+        {
+            CurrentState = Mathf.Abs(_moveInput) > 0.01f
+                ? PlayerState.Running
+                : PlayerState.Idle;
+        }
         else
-            CurrentState = _rb.linearVelocity.y > 0f ? PlayerState.Jumping : PlayerState.Falling;
+        {
+            CurrentState = _rb.linearVelocity.y > 0f
+                ? PlayerState.Jumping
+                : PlayerState.Falling;
+        }
     }
 
-    // Anything can call this to slow the player for a short time
+    // Show or hide the icon based on the current stun state.
+    private void UpdateStunIndicator()
+    {
+        if (_stunIndicator == null)
+            return;
+
+        bool shouldBeVisible = IsStunned;
+
+        if (_stunIndicator.activeSelf != shouldBeVisible)
+        {
+            _stunIndicator.SetActive(shouldBeVisible);
+        }
+    }
+
+    // Anything can call this to slow the player.
     public void ApplySlow(float multiplier, float duration)
     {
         _slowMultiplier = multiplier;
         _slowTimer = duration;
     }
 
-    // Anything can call this to stop the player walking one way for a short time
+    // Anything can call this to block movement in one direction.
     public void BlockDirection(float direction, float duration)
     {
         _blockedDirection = Mathf.Sign(direction);
         _blockTimer = duration;
     }
 
-    // Anything can call this to stop the player jumping for a short time
+    // Anything can call this to stop the player jumping.
     public void BlockJump(float duration)
     {
         _noJumpTimer = duration;
     }
 
-    // Anything can call this to freeze the player for a short time
+    // Anything can call this to freeze the player.
     public void Stun(float duration)
     {
-        _stunTimer = duration;
+        _stunTimer = Mathf.Max(0f, duration);
+
+        // Show the icon immediately when the stun begins.
+        UpdateStunIndicator();
+
         Debug.Log($"Player stunned for {duration} sec");
     }
 
-    // Anything can call this to push the player
+    // Anything can call this to push the player.
     public void Knockback(Vector2 velocity, float duration)
     {
         _rb.linearVelocity = velocity;
@@ -152,9 +217,19 @@ public class PlayerController : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        if (_col == null) _col = GetComponent<CapsuleCollider2D>();
+        if (_col == null)
+            _col = GetComponent<CapsuleCollider2D>();
+
+        if (_col == null)
+            return;
+
         Gizmos.color = Color.green;
-        Vector2 feet = new Vector2(_col.bounds.center.x, _col.bounds.min.y);
+
+        Vector2 feet = new Vector2(
+            _col.bounds.center.x,
+            _col.bounds.min.y
+        );
+
         Gizmos.DrawWireCube(feet, _groundCheckSize);
     }
 }

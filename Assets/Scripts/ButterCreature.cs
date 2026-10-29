@@ -61,5 +61,11 @@ public class ButterCreature : IngredientCreature1
         }
 
         trail.Setup(direction, _data.puddleLifetime);
+
+        // Play the sound when the Butter trail is created.
+        if (BreadSFX.Instance != null)
+        {
+            BreadSFX.Instance.PlayButterTrail();
+        }
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,19 +23,24 @@ public class CustomerController : MonoBehaviour
     private Transform mySeat;
     private CustomerState state;
 
-    // My place in the door line (set by the CustomerManager)
+    // Prevents the arrival bell from playing more than once per customer.
+    private bool arrivalBellPlayed;
+
+    // My place in the door line (set by the CustomerManager).
     private Vector3 doorTarget;
 
-    // Picked randomly between thinkingTimeMin and thinkingTimeMax each time a customer sits down
+    // Picked randomly between thinkingTimeMin and thinkingTimeMax
+    // each time a customer sits down.
     private float currentThinkingTime;
 
-    // The ONE food this customer wants
+    // The ONE food this customer wants.
     private FoodType chosenFood;
 
-    // Seconds left on MY order timer. It starts when the player accepts the order (SCRUM-295).
+    // Seconds left on MY order timer.
+    // It starts when the player accepts the order (SCRUM-295).
     private float orderTimeLeft;
 
-    // How my order ended: satisfied, disappointed, furious or walked out (SCRUM-274)
+    // How my order ended: satisfied, disappointed, furious or walked out (SCRUM-274).
     private CustomerReaction reaction = CustomerReaction.None;
 
     public CustomerReaction Reaction
@@ -52,19 +57,28 @@ public class CustomerController : MonoBehaviour
         get { return customerType == CustomerType.VIP; }
     }
 
-    // True once the order has really been accepted (the order board uses this to start the timer)
+    // True once the order has really been accepted.
     public bool IsWaitingForFood
     {
         get { return state == CustomerState.WaitingForFood; }
     }
 
-    // True when pressing E on this customer would do something (take the order or serve the food)
+    // True when pressing E on this customer would do something.
     public bool CanInteractWithPlayer
     {
-        get { return state == CustomerState.WaitingForPlayer || state == CustomerState.WaitingForFood; }
+        get
+        {
+            return state == CustomerState.WaitingForPlayer ||
+                   state == CustomerState.WaitingForFood;
+        }
     }
-    // How many seconds the order timer should run for this customer
-    // (180 for Normal, 240 for VIP, both from SO_CustomerSettings)
+    public bool IsWaitingAtDoor
+    {
+        get { return state == CustomerState.WaitingAtDoor; }
+    }
+
+    // How many seconds the order timer should run for this customer.
+    // Normal and VIP durations come from SO_CustomerSettings.
     public float GetOrderTimerSeconds()
     {
         if (settings == null)
@@ -79,7 +93,10 @@ public class CustomerController : MonoBehaviour
     {
         if (settings == null)
         {
-            Debug.LogError(name + " has no CustomerSettings assigned. Drag SO_CustomerSettings into the prefab.");
+            Debug.LogError(
+                name + " has no CustomerSettings assigned. " +
+                "Drag SO_CustomerSettings into the prefab."
+            );
         }
 
         if (orderTimerUI == null)
@@ -117,38 +134,41 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
-        // Get in line at the door. The spawner only spawns when there is room.
+        // Get in line at the door.
+        // The arrival bell does NOT play when the customer spawns.
         if (!CustomerManager.Instance.JoinDoorQueue(this))
         {
-            Debug.LogWarning(name + ": the door is full. Going back to the pool.");
+            Debug.LogWarning(
+                name + ": the door is full. Going back to the pool."
+            );
+
             ReturnToPool();
             return;
         }
 
-        // Play the customer arrival sound (from Shreyas's BakeryAudioManager).
-        if (BakeryAudioManager.Instance != null)
-        {
-            BakeryAudioManager.Instance.PlayCustomerArrives();
-        }
-
-        Debug.Log(name + " spawned as " + customerType + " and is walking to the door.");
+        Debug.Log(
+            name + " spawned as " + customerType +
+            " and is walking to the door."
+        );
     }
 
     // --------------------------------------------------
     // CALLED BY THE CUSTOMER MANAGER
     // --------------------------------------------------
 
-    // "This is your place in the door line" (also used when the line moves forward)
+    // This is your place in the door line.
+    // Also used when the line moves forward.
     public void SetDoorTarget(Vector3 position)
     {
-        if (state != CustomerState.GoingToDoor && state != CustomerState.WaitingAtDoor)
+        if (state != CustomerState.GoingToDoor &&
+            state != CustomerState.WaitingAtDoor)
         {
             return;
         }
 
         doorTarget = position;
 
-        // Forget the old path so the agent walks to the new place
+        // Forget the old path so the agent walks to the new place.
         if (agent != null)
         {
             agent.ResetPath();
@@ -157,7 +177,8 @@ public class CustomerController : MonoBehaviour
         state = CustomerState.GoingToDoor;
     }
 
-    // "A seat at a clear table is free. Walk in and sit."
+    // A seat at a clear table is free.
+    // The customer starts walking towards that table.
     public void GoToSeat(Transform seat)
     {
         mySeat = seat;
@@ -169,14 +190,15 @@ public class CustomerController : MonoBehaviour
 
         state = CustomerState.GoingToSeat;
 
-        Debug.Log(name + " leaves the door and walks to a seat.");
+        Debug.Log(name + " leaves the door and starts walking to a seat.");
     }
 
     // The day ended: customers still at the door walk away.
     // Customers who are already seated or eating are left alone.
     public void LeaveBecauseDayEnded()
     {
-        if (state != CustomerState.GoingToDoor && state != CustomerState.WaitingAtDoor)
+        if (state != CustomerState.GoingToDoor &&
+            state != CustomerState.WaitingAtDoor)
         {
             return;
         }
@@ -191,7 +213,11 @@ public class CustomerController : MonoBehaviour
         Debug.Log(name + " was sent home because the day ended.");
     }
 
-    // Shows how the order ended above the customer (text + colour for now)
+    // --------------------------------------------------
+    // CUSTOMER REACTION
+    // --------------------------------------------------
+
+    // Shows how the order ended above the customer.
     private void ShowReaction(CustomerReaction newReaction)
     {
         reaction = newReaction;
@@ -204,27 +230,45 @@ public class CustomerController : MonoBehaviour
         switch (newReaction)
         {
             case CustomerReaction.Satisfied:
-                thinkingBubble.ShowReaction("Satisfied!", new Color(0.2f, 0.8f, 0.3f));
+                thinkingBubble.ShowReaction(
+                    "Satisfied!",
+                    new Color(0.2f, 0.8f, 0.3f)
+                );
                 break;
 
             case CustomerReaction.Disappointed:
-                thinkingBubble.ShowReaction("Disappointed", new Color(1f, 0.6f, 0.1f));
+                thinkingBubble.ShowReaction(
+                    "Disappointed",
+                    new Color(1f, 0.6f, 0.1f)
+                );
                 break;
 
             case CustomerReaction.Furious:
-                thinkingBubble.ShowReaction("FURIOUS!", new Color(0.9f, 0.15f, 0.15f));
+                thinkingBubble.ShowReaction(
+                    "FURIOUS!",
+                    new Color(0.9f, 0.15f, 0.15f)
+                );
                 break;
 
             case CustomerReaction.WalkedOut:
-                thinkingBubble.ShowReaction("Walked out", new Color(0.6f, 0.6f, 0.6f));
+                thinkingBubble.ShowReaction(
+                    "Walked out",
+                    new Color(0.6f, 0.6f, 0.6f)
+                );
                 break;
         }
     }
 
-    // An order that ended badly (wrong dish or timer ran out): no coins, the customer leaves
+    // --------------------------------------------------
+    // END ORDER UNHAPPY
+    // --------------------------------------------------
+
+    // Wrong dish or timer ran out:
+    // no coins, and the customer leaves.
     private void EndOrderUnhappy(CustomerReaction badReaction)
     {
         HideOrderTimerUI();
+
         if (BakeryOrderManager.Instance != null)
         {
             BakeryOrderManager.Instance.RemoveOrder(myOrder);
@@ -236,10 +280,18 @@ public class CustomerController : MonoBehaviour
 
         state = CustomerState.Leaving;
 
-        Debug.Log(name + " is " + badReaction + ". 0 coins. Leaving.");
+        Debug.Log(
+            name + " is " + badReaction +
+            ". 0 coins. Leaving."
+        );
     }
 
-    // Done eating: leave a dirty plate on the table, free the chair, and walk out
+    // --------------------------------------------------
+    // FINISH EATING
+    // --------------------------------------------------
+
+    // Done eating: leave a dirty plate on the table,
+    // free the chair, and walk out.
     private void FinishEating()
     {
         if (thinkingBubble != null)
@@ -249,10 +301,11 @@ public class CustomerController : MonoBehaviour
 
         if (CustomerManager.Instance != null)
         {
-            // The plate stays. The table is NOT clear until the player presses E.
+            // The plate stays.
+            // The table is NOT clear until the player presses E.
             CustomerManager.Instance.LeaveDirtyPlate(mySeat);
 
-            // The chair itself is free right away
+            // The chair itself is free right away.
             CustomerManager.Instance.ReleaseSeat(mySeat);
         }
 
@@ -260,7 +313,9 @@ public class CustomerController : MonoBehaviour
 
         state = CustomerState.Leaving;
 
-        Debug.Log(name + " finished eating, left a dirty plate and is leaving.");
+        Debug.Log(
+            name + " finished eating, left a dirty plate and is leaving."
+        );
     }
 
     // --------------------------------------------------
@@ -269,7 +324,7 @@ public class CustomerController : MonoBehaviour
 
     private void Update()
     {
-        // No settings = setup mistake (error already shown in Awake)
+        // No settings = setup mistake.
         if (settings == null)
         {
             return;
@@ -279,7 +334,8 @@ public class CustomerController : MonoBehaviour
         {
             case CustomerState.GoingToDoor:
 
-                // Walk to my place in the door line
+                // Walk to my place in the door line.
+                // Do NOT play the bell here.
                 if (MoveTo(doorTarget))
                 {
                     state = CustomerState.WaitingAtDoor;
@@ -289,19 +345,51 @@ public class CustomerController : MonoBehaviour
 
             case CustomerState.WaitingAtDoor:
 
-                // Door customers wait forever (the GDD has no door patience).
-                // The CustomerManager sends us to a seat when one is free at a clear table.
+                // Door customers wait until a table becomes available.
+                // The CustomerManager sends them to a seat when one is free.
                 break;
 
             case CustomerState.GoingToSeat:
 
-                if (MoveTo(mySeat.position))
+                if (mySeat == null)
+                {
+                    break;
+                }
+
+                // Move towards the assigned table.
+                bool reachedSeat = MoveTo(mySeat.position);
+
+                // Play the bell when the customer actually starts moving.
+                if (!arrivalBellPlayed &&
+                    agent != null &&
+                    agent.isOnNavMesh &&
+                    agent.velocity.sqrMagnitude > 0.04f)
+                {
+                    arrivalBellPlayed = true;
+
+                    if (BakeryAudioManager.Instance != null)
+                    {
+                        BakeryAudioManager.Instance.PlayCustomerArrives();
+
+                        Debug.Log(
+                            "Arrival bell: " + name +
+                            " is approaching its table."
+                        );
+                    }
+                    else
+                    {
+                        Debug.LogWarning(
+                            "BakeryAudioManager.Instance was not found."
+                        );
+                    }
+                }
+
+                // When the customer reaches the table, begin thinking.
+                if (reachedSeat)
                 {
                     state = CustomerState.Thinking;
-
                     timer = 0f;
 
-                    // Random time between the min and max from the settings asset
                     currentThinkingTime = Random.Range(
                         settings.thinkingTimeMin,
                         settings.thinkingTimeMax
@@ -314,11 +402,13 @@ public class CustomerController : MonoBehaviour
                         thinkingBubble.Show(GetOrderText());
                     }
 
-                    Debug.Log(name + " is sitting and thinking for " + currentThinkingTime + " sec.");
+                    Debug.Log(
+                        name + " is sitting and thinking for " +
+                        currentThinkingTime + " sec."
+                    );
                 }
 
                 break;
-
             case CustomerState.Thinking:
 
                 timer += Time.deltaTime;
@@ -329,14 +419,17 @@ public class CustomerController : MonoBehaviour
 
                     timer = 0f;
 
-                    Debug.Log(name + " finished thinking and is waiting for the player.");
+                    Debug.Log(
+                        name + " finished thinking and is waiting for the player."
+                    );
                 }
 
                 break;
 
             case CustomerState.WaitingForPlayer:
 
-                // Patience timer: the customer walks out if the order is not taken in time
+                // Patience timer:
+                // the customer walks out if the order is not taken in time.
                 timer += Time.deltaTime;
 
                 if (timer >= settings.orderPatience)
@@ -345,7 +438,9 @@ public class CustomerController : MonoBehaviour
 
                     state = CustomerState.Leaving;
 
-                    Debug.Log(name + " ran out of patience and is leaving.");
+                    Debug.Log(
+                        name + " ran out of patience and is leaving."
+                    );
                 }
 
                 break;
@@ -356,7 +451,8 @@ public class CustomerController : MonoBehaviour
 
             case CustomerState.WaitingForFood:
 
-                // My own order timer (180 sec Normal, 240 sec VIP). Runs out = furious, 0 coins.
+                // My own order timer.
+                // Runs out = furious, 0 coins.
                 if (orderTimeLeft > 0f)
                 {
                     orderTimeLeft -= Time.deltaTime;
@@ -382,17 +478,25 @@ public class CustomerController : MonoBehaviour
 
             case CustomerState.Leaving:
 
+                if (CustomerManager.Instance == null)
+                {
+                    Debug.LogError("CustomerManager.Instance was not found.");
+                    break;
+                }
+
                 Transform exit = CustomerManager.Instance.GetExitPoint();
 
                 if (exit == null)
                 {
-                    Debug.LogError("CustomerManager has no Exit Point assigned.");
+                    Debug.LogError(
+                        "CustomerManager has no Exit Point assigned."
+                    );
                     break;
                 }
 
                 if (MoveTo(exit.position))
                 {
-                    // mySeat is empty for customers who left from the door (that is fine)
+                    // mySeat is empty for customers who left from the door.
                     CustomerManager.Instance.ReleaseSeat(mySeat);
 
                     Debug.Log(name + " reached the exit.");
@@ -410,19 +514,19 @@ public class CustomerController : MonoBehaviour
 
     public void InteractWithPlayer()
     {
-        Debug.Log(name + " interacted with player. Current state: " + state);
+        Debug.Log(
+            name + " interacted with player. Current state: " + state
+        );
 
         if (state == CustomerState.WaitingForPlayer)
         {
             PlayerTakesOrder();
-
             return;
         }
 
         if (state == CustomerState.WaitingForFood)
         {
             ReceiveFood();
-
             return;
         }
 
@@ -467,7 +571,9 @@ public class CustomerController : MonoBehaviour
     {
         if (state != CustomerState.Ordering)
         {
-            Debug.Log(name + " cannot accept order. Current state: " + state);
+            Debug.Log(
+                name + " cannot accept order. Current state: " + state
+            );
 
             return;
         }
@@ -475,11 +581,10 @@ public class CustomerController : MonoBehaviour
         if (BakeryOrderManager.Instance == null)
         {
             Debug.LogError("BakeryOrderManager.Instance was not found.");
-
             return;
         }
 
-        // Hide the bubble only after we know the order is really accepted
+        // Hide the bubble only after we know the order is really accepted.
         if (thinkingBubble != null)
         {
             thinkingBubble.Hide();
@@ -529,9 +634,10 @@ public class CustomerController : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // RECEIVE FOOD (serve the dish and get paid)
+    // RECEIVE FOOD
     // --------------------------------------------------
 
+    // Serve the dish and get paid.
     public void ReceiveFood()
     {
         if (state != CustomerState.WaitingForFood)
@@ -551,14 +657,18 @@ public class CustomerController : MonoBehaviour
             return;
         }
 
-        // Nothing happens if the player is carrying no food at all
+        // Nothing happens if the player is carrying no food.
         if (!PlayerFoodInventory.Instance.IsCarryingFood())
         {
-            Debug.Log(name + " needs " + chosenFood + ", but the player is not carrying any food.");
+            Debug.Log(
+                name + " needs " + chosenFood +
+                ", but the player is not carrying any food."
+            );
+
             return;
         }
 
-        // The player carries food, but not the dish that was ordered = WRONG DISH
+        // The player carries food, but not the dish that was ordered.
         if (!PlayerFoodInventory.Instance.HasFood(chosenFood))
         {
             if (settings.wrongDishDisappoints)
@@ -567,14 +677,16 @@ public class CustomerController : MonoBehaviour
             }
             else
             {
-                Debug.Log(name + " needs " + chosenFood + ", but the player is not carrying it.");
+                Debug.Log(
+                    name + " needs " + chosenFood +
+                    ", but the player is not carrying it."
+                );
             }
 
             return;
         }
 
-        // Look up the reward BEFORE taking the dish, so a setup mistake
-        // does not eat the player's food for nothing
+        // Look up the reward BEFORE taking the dish.
         RecipeData recipe = null;
 
         if (recipeDatabase != null)
@@ -584,7 +696,11 @@ public class CustomerController : MonoBehaviour
 
         if (recipe == null)
         {
-            Debug.LogError("No recipe found for " + chosenFood + ". Check SO_RecipeDatabase and the Food Type on the recipe asset.");
+            Debug.LogError(
+                "No recipe found for " + chosenFood +
+                ". Check SO_RecipeDatabase and the Food Type on the recipe asset."
+            );
+
             return;
         }
 
@@ -598,21 +714,24 @@ public class CustomerController : MonoBehaviour
 
         if (!removed)
         {
-            Debug.LogError("Could not remove " + chosenFood + " from player inventory.");
+            Debug.LogError(
+                "Could not remove " + chosenFood + " from player inventory."
+            );
+
             return;
         }
 
-        // ADD IT HERE!
+        // Hide the order timer after the food is successfully served.
         HideOrderTimerUI();
 
-
-        // Play the sound after food is successfully served (from Shreyas's BakeryAudioManager).
+        // Play the sound after food is successfully served.
         if (BakeryAudioManager.Instance != null)
         {
             BakeryAudioManager.Instance.PlayDishServed();
         }
 
-        // Coins come from the recipe asset. A VIP pays a multiple of the dish price (2x in the GDD).
+        // Coins come from the recipe asset.
+        // A VIP pays a multiple of the dish price.
         int coins = recipe.coinReward;
 
         if (IsVIP)
@@ -622,15 +741,18 @@ public class CustomerController : MonoBehaviour
 
         Wallet.Instance.AddCoins(coins);
 
-        // Only a VIP gives diamonds (20 from SO_CustomerSettings), and only when served right
+        // Only a VIP gives diamonds, and only when served correctly.
         if (IsVIP)
         {
             Wallet.Instance.AddDiamonds(settings.vipDiamondReward);
         }
 
-        Debug.Log(name + " (" + customerType + ") received " + chosenFood + " and paid " + coins + " coins.");
+        Debug.Log(
+            name + " (" + customerType + ") received " +
+            chosenFood + " and paid " + coins + " coins."
+        );
 
-        // The order is finished, so stop tracking it
+        // The order is finished, so stop tracking it.
         if (BakeryOrderManager.Instance != null)
         {
             BakeryOrderManager.Instance.RemoveOrder(myOrder);
@@ -645,35 +767,48 @@ public class CustomerController : MonoBehaviour
         timer = 0f;
     }
 
-    // The player served a dish that was not the ordered one: disappointed, 0 coins, 0 diamonds
+    // --------------------------------------------------
+    // WRONG DISH
+    // --------------------------------------------------
+
+    // The player served a dish that was not ordered.
+    // Disappointed, 0 coins, 0 diamonds.
     private void ServeWrongDish()
     {
-        List<FoodType> carried = PlayerFoodInventory.Instance.GetCarriedFoods();
+        List<FoodType> carried =
+            PlayerFoodInventory.Instance.GetCarriedFoods();
 
         FoodType wrongDish = carried[0];
 
         PlayerFoodInventory.Instance.RemoveFood(wrongDish);
 
-        Debug.Log(name + " wanted " + chosenFood + " but got " + wrongDish + ".");
+        Debug.Log(
+            name + " wanted " + chosenFood + " but got " + wrongDish + "."
+        );
 
         EndOrderUnhappy(CustomerReaction.Disappointed);
     }
 
     // --------------------------------------------------
-    // CREATE ORDER (only dishes that have a recipe)
+    // CREATE ORDER
     // --------------------------------------------------
 
+    // Only choose dishes that have a recipe.
     private void CreateMyOrder()
     {
         FoodType food;
 
-        if (recipeDatabase != null && recipeDatabase.TryGetRandomFood(out food))
+        if (recipeDatabase != null &&
+            recipeDatabase.TryGetRandomFood(out food))
         {
             chosenFood = food;
         }
         else
         {
-            Debug.LogWarning(name + ": no recipes in SO_RecipeDatabase. Defaulting to Bread.");
+            Debug.LogWarning(
+                name + ": no recipes in SO_RecipeDatabase. Defaulting to Bread."
+            );
+
             chosenFood = FoodType.Bread;
         }
 
@@ -703,7 +838,6 @@ public class CustomerController : MonoBehaviour
         if (agent == null)
         {
             Debug.LogError(name + " does not have a NavMeshAgent.");
-
             return false;
         }
 
@@ -721,7 +855,6 @@ public class CustomerController : MonoBehaviour
             agent.remainingDistance <= agent.stoppingDistance)
         {
             agent.ResetPath();
-
             return true;
         }
 
@@ -734,6 +867,10 @@ public class CustomerController : MonoBehaviour
 
     private void ResetCustomer()
     {
+        // Reset the bell so it can play for the next customer
+        // when this customer object is reused from the pool.
+        arrivalBellPlayed = false;
+
         if (thinkingBubble != null)
         {
             thinkingBubble.Hide();
@@ -775,12 +912,15 @@ public class CustomerController : MonoBehaviour
         if (CustomerPool.Instance == null)
         {
             Debug.LogError("CustomerPool.Instance was not found.");
-
             return;
         }
 
         CustomerPool.Instance.ReturnCustomer(gameObject, customerType);
     }
+
+    // --------------------------------------------------
+    // HIDE ORDER TIMER
+    // --------------------------------------------------
 
     private void HideOrderTimerUI()
     {

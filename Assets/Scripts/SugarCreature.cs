@@ -24,6 +24,13 @@ public class SugarCreature : IngredientCreature1
         {
             _dashDirection = Mathf.Sign(transform.position.x - _player.position.x);
             _dashTimer = _dashTime;
+
+            // Play the sound once when the dash starts.
+            if (BreadSFX.Instance != null)
+            {
+                BreadSFX.Instance.PlaySugarDash();
+            }
+
             ChangeState(State.Fleeing);
         }
     }
@@ -40,9 +47,15 @@ public class SugarCreature : IngredientCreature1
             return;
         }
 
-        _rb.linearVelocity = new Vector2(_dashDirection * _dashSpeed, _rb.linearVelocity.y);
+        _rb.linearVelocity = new Vector2(
+            _dashDirection * _dashSpeed,
+            _rb.linearVelocity.y
+        );
 
-        if (IsGrounded() && (WallAhead(_dashDirection) || GapAhead(_dashDirection)))
+        if (IsGrounded() &&
+            (WallAhead(_dashDirection) || GapAhead(_dashDirection)))
+        {
             Jump();
+        }
     }
 }
