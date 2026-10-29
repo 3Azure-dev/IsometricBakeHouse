@@ -949,10 +949,10 @@ MonoBehaviour:
   creatureStunned: {fileID: 8300000, guid: a16a02640a975c64b8bf4ab7c187d5cc, type: 3}
   creatureCaught: {fileID: 8300000, guid: cd0d78371f2c5cc43985b33569376990, type: 3}
   mouldPlaced: {fileID: 8300000, guid: cd3b5b4eb8fe00447b7bf19ad280aa4a, type: 3}
-  eggshellThrow: {fileID: 8300000, guid: 54695beb1a4a1684c8d5cd8ad0ff2597, type: 3}
-  eggshellHit: {fileID: 8300000, guid: 0695bb51660396749a43b312d537c8a0, type: 3}
-  sugarDash: {fileID: 8300000, guid: 07afec5ea4b05314d859c4782edea1ef, type: 3}
-  butterTrail: {fileID: 8300000, guid: b7d0e0e6054eec2418ebf0fb7211eede, type: 3}
+  eggshellThrow: {fileID: 8300000, guid: f4b6a1acb7d3c1042a2214b39e587fe6, type: 3}
+  eggshellHit: {fileID: 8300000, guid: 759bd47a1c9a6d94c96d1f8708b80f41, type: 3}
+  sugarDash: {fileID: 8300000, guid: 4b9fe11e4b50b99488765e46899413f2, type: 3}
+  butterTrail: {fileID: 8300000, guid: c6c49ac8bd881dc41b1bdf7e6649b0fe, type: 3}
   pizzaCreatureStunned: {fileID: 8300000, guid: c874b71aaba2c064da948dd26fcbea6b, type: 3}
   pizzaCreatureCaught: {fileID: 8300000, guid: 5a2955fad49fdf447a05824a36d98e12, type: 3}
 --- !u!4 &165504243
@@ -1823,6 +1823,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WandCooldownCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6314462300453414798, guid: c7dd39a6537a8d047a3f33226b9bb01b, type: 3}
+      propertyPath: wand
+      value: 
+      objectReference: {fileID: 611287425}
     - target: {fileID: 6808093451013889531, guid: c7dd39a6537a8d047a3f33226b9bb01b, type: 3}
       propertyPath: m_Camera
       value: 
@@ -2629,6 +2633,17 @@ MonoBehaviour:
   - {fileID: 717270776667871282, guid: fcc1bd769e8df274e90beb459588135b, type: 3}
   _minPerType: 3
   _fallHeight: -7
+--- !u!114 &611287425 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3774568660546122127, guid: d2b5c2061daad2f4f82faa28f3e14250, type: 3}
+  m_PrefabInstance: {fileID: 7636890777690186296}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7067ed764a81f34b8f8b9fc8c25045d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1001 &612559981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3717,7 +3732,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -390, y: 169}
+  m_AnchoredPosition: {x: -380.9, y: 170.1}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1081810181
@@ -15005,7 +15020,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -390, y: 215}
+  m_AnchoredPosition: {x: -382.9, y: 211.9}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1674820561
