@@ -19,3 +19,6 @@ MonoBehaviour:
   seats: 2
   blueprintDiamonds: 0
   prefab: {fileID: 8929319760707577786, guid: 8f8fbf3f767546c488629aa28de25b55, type: 3}
+  materialBoxes: 1
+  itemId: Table_Basic
+  materialId: Wood

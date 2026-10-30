@@ -44,13 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 780482f18c09341479af9cf5d1380b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildPlacer
-  testItem: {fileID: 11400000, guid: ac70ec757d4262847b31caf29aecfa9a, type: 2}
+  catalogue:
+  - {fileID: 11400000, guid: ac70ec757d4262847b31caf29aecfa9a, type: 2}
   floorLayer:
     serializedVersion: 2
     m_Bits: 128
   blockingLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 257
   gridSize: 1
   ghostOk: {fileID: 2100000, guid: 5a90691de736f964da9686a16851eb42, type: 2}
   ghostBlocked: {fileID: 2100000, guid: cc18e429609ea80478d9638746e2af39, type: 2}

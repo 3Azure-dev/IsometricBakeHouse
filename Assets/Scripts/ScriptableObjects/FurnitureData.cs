@@ -24,4 +24,10 @@ public class FurnitureData : ScriptableObject
     public GameObject prefab;
     [Tooltip("Material boxes needed to finish building")]
     [Min(1)] public int materialBoxes = 1;
+
+    [Header("IDs (shop, delivery and save use these)")]
+    [Tooltip("Must match what the shop orders, e.g. Table_Basic")]
+    public string itemId;
+    [Tooltip("Material this blueprint needs, e.g. Wood")]
+    public string materialId = "Wood";
 }

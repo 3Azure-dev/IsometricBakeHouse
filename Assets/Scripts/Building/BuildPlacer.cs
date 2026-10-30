@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 // SCRUM-393: move a furniture ghost on the floor, click to place the blueprint.
 public class BuildPlacer : MonoBehaviour
 {
-    [Header("Test (until the shop sends items)")]
-    [SerializeField] private FurnitureData testItem;
+    [Header("Every buildable item (Table Basic, Nice, Counter, Decorations)")]
+    [SerializeField] private FurnitureData[] catalogue;
 
     [Header("Floor and blocking")]
     [SerializeField] private LayerMask floorLayer;
@@ -37,7 +37,7 @@ public class BuildPlacer : MonoBehaviour
     {
         if (!IsPlacing)
         {
-            if (Keyboard.current.bKey.wasPressedThisFrame) StartPlacing(testItem);
+            if (Keyboard.current.bKey.wasPressedThisFrame) StartPlacingFirstOwned();
             return;
         }
 
@@ -50,6 +50,23 @@ public class BuildPlacer : MonoBehaviour
             Place();
         else if (Mouse.current.rightButton.wasPressedThisFrame)
             Cancel();
+    }
+
+    // B: place the first blueprint the player owns. Shreyas's inventory UI can call StartPlacing later.
+    private void StartPlacingFirstOwned()
+    {
+        if (BakeryProgress.Instance == null) return;
+
+        foreach (FurnitureData data in catalogue)
+        {
+            if (data != null && BakeryProgress.Instance.HasBlueprint(data.itemId))
+            {
+                StartPlacing(data);
+                return;
+            }
+        }
+
+        Debug.Log("BuildPlacer: no blueprints. Collect one from a delivery box first.");
     }
 
     public void StartPlacing(FurnitureData data)
@@ -120,6 +137,7 @@ public class BuildPlacer : MonoBehaviour
         ghost.AddComponent<Blueprint>().Init(item);
         Debug.Log($"BuildPlacer: placed {item.furnitureName} blueprint at {ghost.transform.position}");
 
+        BakeryProgress.Instance.TakeBlueprint(item.itemId);
         ghost = null;
         item = null;
     }
@@ -130,9 +148,6 @@ public class BuildPlacer : MonoBehaviour
         ghost = null;
         item = null;
     }
-
-    [ContextMenu("Test: place test item")]
-    private void TestPlace() => StartPlacing(testItem);
 
     private void OnDrawGizmos()
     {
