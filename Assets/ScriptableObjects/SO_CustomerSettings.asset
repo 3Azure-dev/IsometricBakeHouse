@@ -22,7 +22,21 @@ MonoBehaviour:
   customersPerBatch: 2
   doorSpawnDelay: 5
   seatsPerTable: 2
+  customerNames:
+  - Harshad
+  - Pravin
+  - Shreyas
+  - Aditya
+  - Vijay
+  - Mohan
+  - Rahul
+  - Priya
+  - Neha
+  - Karan
+  - Anjali
+  - Rohan
   vipOrderTimer: 240
   vipCoinMultiplier: 2
   vipDiamondReward: 20
   vipChancePercent: 1
+  vipColor: {r: 1, g: 0.84, b: 0, a: 1}

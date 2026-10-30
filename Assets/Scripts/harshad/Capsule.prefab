@@ -321,6 +321,8 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: 008604b27263f244ebe90a5e72e29dc3, type: 2}
   recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
   thinkingBubble: {fileID: 2640969945548522860}
+  bodyRenderer: {fileID: 0}
+  orderTimeoutReaction: 3
   orderTimerUI: {fileID: 2251856692566652882}
   customerType: 0
   moveSpeed: 5
