@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum EquipmentType { Stove, Oven, PizzaStone }
 
-public enum ProgressChange { Equipment, Recipe, Level, BuiltItems, Plots, Delivery }
+public enum ProgressChange { Equipment, Recipe, Level, BuiltItems, Plots, Delivery, Blueprints, Materials }
+
 
 // One piece of furniture the player built: which item, where, and how it is turned
 [Serializable]
@@ -32,6 +33,8 @@ public class BakeryProgress : MonoBehaviour
     private readonly List<BuiltItem> builtItems = new List<BuiltItem>();
     private readonly HashSet<int> plots = new HashSet<int>();
     private readonly List<string> deliveryBox = new List<string>();
+    private readonly HashSet<string> blueprints = new HashSet<string>();
+    private readonly Dictionary<string, int> materials = new Dictionary<string, int>();
 
     public int Level { get; private set; } = 1;
 
@@ -150,6 +153,48 @@ public class BakeryProgress : MonoBehaviour
         return items;
     }
 
+    // ---------------- BLUEPRINTS (from delivery boxes) ----------------
+
+    public bool HasBlueprint(string id) => blueprints.Contains(id);
+
+    public void AddBlueprint(string id)
+    {
+        if (blueprints.Add(id))
+        {
+            Debug.Log("BakeryProgress: blueprint " + id + " added");
+            Changed?.Invoke(ProgressChange.Blueprints);
+        }
+    }
+
+    public List<string> GetBlueprints() => new List<string>(blueprints);
+
+    // ---------------- MATERIALS (carried) ----------------
+
+    public int GetMaterialCount(string id)
+    {
+        int count;
+        return materials.TryGetValue(id, out count) ? count : 0;
+    }
+
+    public void AddMaterial(string id, int amount)
+    {
+        if (amount <= 0) return;
+
+        materials[id] = GetMaterialCount(id) + amount;
+
+        Debug.Log("BakeryProgress: +" + amount + " " + id + ", carrying " + materials[id]);
+        Changed?.Invoke(ProgressChange.Materials);
+    }
+
+    // The building system (SCRUM-375) uses this to pay for a build
+    public bool TakeMaterial(string id, int amount)
+    {
+        if (amount <= 0 || GetMaterialCount(id) < amount) return false;
+
+        materials[id] -= amount;
+        Changed?.Invoke(ProgressChange.Materials);
+        return true;
+    }
     // ---------------- TEST BUTTONS ----------------
     // Right-click the BakeryProgress object in the Hierarchy while the game is playing
 
@@ -168,6 +213,17 @@ public class BakeryProgress : MonoBehaviour
         for (int i = 1; i <= MaxPlots; i++)
         {
             if (!HasPlot(i)) { AddPlot(i); return; }
+        }
+    }
+
+    [ContextMenu("TEST: Print blueprints and materials")]
+    private void TestPrintInventory()
+    {
+        Debug.Log("Blueprints: " + (blueprints.Count == 0 ? "none" : string.Join(", ", blueprints)));
+
+        foreach (KeyValuePair<string, int> pair in materials)
+        {
+            Debug.Log("Material " + pair.Key + ": " + pair.Value);
         }
     }
 }
