@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using UnityEngine;
@@ -33,6 +32,21 @@ public class ShopOpenCloseSign : MonoBehaviour, IInteractable
     public void Interact()
     {
         if (isFlipping) return;
+
+        // At night the sign offers to skip the night instead of opening the shop
+        if (DayNightClock.Instance != null && DayNightClock.Instance.IsNight)
+        {
+            if (SkipNightPrompt.Instance != null)
+            {
+                SkipNightPrompt.Instance.Show();
+            }
+            else
+            {
+                Debug.LogWarning("ShopOpenCloseSign: no SkipNightPrompt in the scene.");
+            }
+
+            return;
+        }
 
         IsOpen = !IsOpen;
         OnShopStateChanged?.Invoke(IsOpen);

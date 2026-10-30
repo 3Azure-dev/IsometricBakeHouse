@@ -212,4 +212,18 @@ public class DayNightClock : MonoBehaviour
 
         SwitchPhase();
     }
+
+    // The free "Skip night" from the Open/Close sign: ends the night right away.
+    // No restock happens, the next day just begins.
+    public void SkipNight()
+    {
+        if (!IsNight)
+        {
+            return;
+        }
+
+        Debug.Log("DayNightClock: the player skipped the night.");
+
+        SwitchPhase();
+    }
 }

@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class DevCheatKey : MonoBehaviour
 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEBUG
     [SerializeField] private int coinsToAdd = 1000;
     [SerializeField] private int diamondsToAdd = 100;
 
