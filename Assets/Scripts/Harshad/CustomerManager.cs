@@ -16,7 +16,7 @@ public class CustomerManager : MonoBehaviour
     [SerializeField] private Transform[] doorSlots;
 
     [Header("Tables")]
-    [SerializeField] private BakeryTable[] tables;
+    [SerializeField] private List<BakeryTable> tables = new List<BakeryTable>();
 
     // The door line. Queue = first in, first out.
     private readonly Queue<CustomerController> doorQueue = new Queue<CustomerController>();
@@ -36,7 +36,25 @@ public class CustomerManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("CustomerManager: " + tables.Length + " tables, the door holds " + DoorCapacity);
+        Debug.Log("CustomerManager: " + tables.Count + " tables, the door holds " + DoorCapacity);
+    }
+
+    private void OnEnable() => Blueprint.Built += OnFurnitureBuilt;
+    private void OnDisable() => Blueprint.Built -= OnFurnitureBuilt;
+
+    // A built table (SCRUM-396) joins the seating
+    private void OnFurnitureBuilt(FurnitureData data, GameObject built)
+    {
+        BakeryTable table = built.GetComponentInChildren<BakeryTable>();
+        if (table != null) AddTable(table);
+    }
+
+    public void AddTable(BakeryTable table)
+    {
+        if (tables.Contains(table)) return;
+
+        tables.Add(table);
+        Debug.Log("CustomerManager: table added, now " + tables.Count + " tables");
     }
 
     private void Update()

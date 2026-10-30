@@ -168,6 +168,14 @@ public class BakeryProgress : MonoBehaviour
 
     public List<string> GetBlueprints() => new List<string>(blueprints);
 
+    // The building system (SCRUM-375) uses this when a blueprint is placed
+    public bool TakeBlueprint(string id)
+    {
+        if (!blueprints.Remove(id)) return false;
+        Changed?.Invoke(ProgressChange.Blueprints);
+        return true;
+    }
+
     // ---------------- MATERIALS (carried) ----------------
 
     public int GetMaterialCount(string id)
