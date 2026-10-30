@@ -19,4 +19,9 @@ public class FurnitureData : ScriptableObject
     [Header("Building")]
     [Tooltip("Diamonds to buy this item's blueprint")]
     [Min(0)] public int blueprintDiamonds = 0;
+
+    [Tooltip("The real object that gets built")]
+    public GameObject prefab;
+    [Tooltip("Material boxes needed to finish building")]
+    [Min(1)] public int materialBoxes = 1;
 }
