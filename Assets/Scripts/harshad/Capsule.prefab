@@ -321,7 +321,7 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: 008604b27263f244ebe90a5e72e29dc3, type: 2}
   recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
   thinkingBubble: {fileID: 2640969945548522860}
-  bodyRenderer: {fileID: 0}
+  bodyRenderer: {fileID: 6474069629827740037}
   orderTimeoutReaction: 3
   orderTimerUI: {fileID: 2251856692566652882}
   customerType: 0
@@ -463,6 +463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ThinkingBubble
   targetCamera: {fileID: 0}
   orderText: {fileID: 1956776288074329499}
+  fontSize: 5
 --- !u!114 &2854563366497616919
 MonoBehaviour:
   m_ObjectHideFlags: 0
