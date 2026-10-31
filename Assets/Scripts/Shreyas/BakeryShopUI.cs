@@ -5,9 +5,15 @@ using UnityEngine.UI;
 
 public class BakeryShopUI : MonoBehaviour
 {
-    [Header("Item Prices")]
-    [SerializeField] private int ovenPrice = 400;
-    [SerializeField] private int cupcakeRecipePrice = 150;
+    [Header("Shop Data")]
+    [SerializeField] private EquipmentData ovenData;
+    [SerializeField] private RecipeData cupcakeRecipeData;
+
+    private int OvenPrice =>
+        ovenData != null ? ovenData.cost : 0;
+
+    private int CupcakeRecipePrice =>
+        cupcakeRecipeData != null ? cupcakeRecipeData.blueprintCost : 0;
 
     [Header("Buy Buttons")]
     [SerializeField] private Button buyOvenButton;
@@ -58,16 +64,16 @@ public class BakeryShopUI : MonoBehaviour
     private void OnEnable()
     {
         SubscribeToWallet();
+        SubscribeToLevel();
         RefreshUI();
     }
 
     private void Start()
     {
-        // Try again in case the Wallet was not available earlier. 
         SubscribeToWallet();
+        SubscribeToLevel();
         RefreshUI();
     }
-
     private void OnDisable()
     {
         if (subscribedWallet != null)
@@ -129,7 +135,13 @@ public class BakeryShopUI : MonoBehaviour
         if (ovenPurchased)
             return;
 
-        if (!TrySpendCoins(ovenPrice))
+        if (ovenData == null)
+        {
+            Debug.LogError("SO_Equipment_Oven is not assigned!");
+            return;
+        }
+
+        if (!TrySpendCoins(OvenPrice))
             return;
 
         if (BakeryProgress.Instance != null)
@@ -140,7 +152,7 @@ public class BakeryShopUI : MonoBehaviour
 
         RefreshUI();
 
-        Debug.Log("Oven purchased for " + ovenPrice + " coins.");
+        Debug.Log("Oven purchased for " + OvenPrice + " coins.");
     }
 
     private void SubscribeToLevel()
@@ -177,7 +189,13 @@ public class BakeryShopUI : MonoBehaviour
         if (cupcakeRecipePurchased)
             return;
 
-        if (!TrySpendCoins(cupcakeRecipePrice))
+        if (cupcakeRecipeData == null)
+        {
+            Debug.LogError("SO_Recipe_Cupcake is not assigned!");
+            return;
+        }
+
+        if (!TrySpendCoins(CupcakeRecipePrice))
             return;
 
         if (BakeryProgress.Instance != null)
@@ -188,11 +206,8 @@ public class BakeryShopUI : MonoBehaviour
 
         RefreshUI();
 
-        Debug.Log(
-            "Cupcake recipe purchased for " +
-            cupcakeRecipePrice +
-            " coins."
-        );
+        Debug.Log("Cupcake recipe purchased for " +
+           CupcakeRecipePrice + " coins.");
     }
 
     private bool TrySpendCoins(int price)
@@ -218,11 +233,10 @@ public class BakeryShopUI : MonoBehaviour
         Wallet wallet = Wallet.Instance;
 
         bool canAffordOven =
-            wallet != null && wallet.Coins >= ovenPrice;
+      wallet != null && wallet.Coins >= OvenPrice;
 
         bool canAffordRecipe =
-            wallet != null && wallet.Coins >= cupcakeRecipePrice;
-
+            wallet != null && wallet.Coins >= CupcakeRecipePrice;
         PlayerLevel level = PlayerLevel.Instance;
 
         bool ovenUnlocked =
@@ -233,12 +247,17 @@ public class BakeryShopUI : MonoBehaviour
 
         if (buyOvenButton != null)
             buyOvenButton.interactable =
-                !ovenPurchased && canAffordOven && ovenUnlocked;
+                ovenData != null &&
+                !ovenPurchased &&
+                canAffordOven &&
+                ovenUnlocked;
 
         if (buyCupcakeRecipeButton != null)
             buyCupcakeRecipeButton.interactable =
-                !cupcakeRecipePurchased && canAffordRecipe && recipeUnlocked;
-
+                cupcakeRecipeData != null &&
+                !cupcakeRecipePurchased &&
+                canAffordRecipe &&
+                recipeUnlocked;
         if (ovenButtonText != null)
             ovenButtonText.text =
                 ovenPurchased ? "OWNED" : (ovenUnlocked ? "BUY" : "LOCKED");
