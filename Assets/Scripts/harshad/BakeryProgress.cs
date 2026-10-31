@@ -204,6 +204,9 @@ public class BakeryProgress : MonoBehaviour
     [ContextMenu("TEST: Unlock Cupcake")]
     private void TestUnlockCupcake() => UnlockRecipe(FoodType.Cupcake);
 
+    [ContextMenu("TEST: Unlock Pizza")]
+    private void TestUnlockPizza() => UnlockRecipe(FoodType.Pizza);
+
     [ContextMenu("TEST: Level Up")]
     private void TestLevelUp() => LevelUp();
 

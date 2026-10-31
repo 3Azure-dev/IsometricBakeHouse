@@ -23,38 +23,57 @@ public class RecipeDatabase : ScriptableObject
 
     // Picks a random dish that actually has a recipe.
     // Returns false if the database is empty.
+    // Picks a random dish for a customer to order.
+    // GDD 1.6: each customer orders one dish, chosen randomly (equal chance)
+    // from the recipes the player has UNLOCKED. A recipe counts only if it
+    // has a recipe asset here AND the player has unlocked it (BakeryProgress).
+    // Returns false if nothing is available.
     public bool TryGetRandomFood(out FoodType food)
     {
         List<FoodType> available = new List<FoodType>();
-
-        // TEMPORARY debug text: shows each recipe asset and the Food Type it is set to
-        string report = "";
 
         foreach (RecipeData recipe in recipes)
         {
             if (recipe == null)
             {
-                report += "[EMPTY SLOT]  ";
                 continue;
             }
 
-            report += recipe.name + " = " + recipe.foodType + "   ";
+            if (available.Contains(recipe.foodType))
+            {
+                continue;
+            }
 
-            if (!available.Contains(recipe.foodType))
+            if (IsUnlocked(recipe.foodType))
             {
                 available.Add(recipe.foodType);
             }
         }
 
-        Debug.Log("RecipeDatabase: " + report + "-> " + available.Count + " different dish(es) available");
-
         if (available.Count == 0)
         {
+            Debug.LogWarning("RecipeDatabase: no unlocked recipe has a recipe asset. Check the recipes list.");
+
             food = FoodType.Bread;
             return false;
         }
 
         food = available[Random.Range(0, available.Count)];
+
+        Debug.Log("RecipeDatabase: " + available.Count + " unlocked dish(es), picked " + food);
+
         return true;
+    }
+
+    // Bread is unlocked from the start (BakeryProgress adds it).
+    // If BakeryProgress is missing for some reason, do not lock anything.
+    private bool IsUnlocked(FoodType food)
+    {
+        if (BakeryProgress.Instance == null)
+        {
+            return true;
+        }
+
+        return BakeryProgress.Instance.IsRecipeUnlocked(food);
     }
 }

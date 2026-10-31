@@ -11027,6 +11027,7 @@ GameObject:
   - component: {fileID: 1024299046}
   - component: {fileID: 1024299045}
   - component: {fileID: 1024299044}
+  - component: {fileID: 1024299047}
   m_Layer: 5
   m_Name: CupCake World Button
   m_TagString: Untagged
@@ -11148,6 +11149,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1024299042}
   m_CullTransparentMesh: 1
+--- !u!114 &1024299047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024299042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e1ea1b7849aab4cada48aee6789c90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUnlockButton
+  world: 1
+  button: {fileID: 0}
+  lockIcon: {fileID: 0}
+  lockText: {fileID: 0}
+  lockedAlpha: 0.5
 --- !u!1 &1034775557
 GameObject:
   m_ObjectHideFlags: 0
@@ -16944,6 +16962,7 @@ GameObject:
   - component: {fileID: 1655126696}
   - component: {fileID: 1655126695}
   - component: {fileID: 1655126694}
+  - component: {fileID: 1655126697}
   m_Layer: 5
   m_Name: Pizza World Button
   m_TagString: Untagged
@@ -17065,6 +17084,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655126692}
   m_CullTransparentMesh: 1
+--- !u!114 &1655126697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655126692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e1ea1b7849aab4cada48aee6789c90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUnlockButton
+  world: 2
+  button: {fileID: 0}
+  lockIcon: {fileID: 0}
+  lockText: {fileID: 0}
+  lockedAlpha: 0.5
 --- !u!1 &1659972533
 GameObject:
   m_ObjectHideFlags: 0
@@ -22281,6 +22317,7 @@ GameObject:
   - component: {fileID: 2105288677}
   - component: {fileID: 2105288676}
   - component: {fileID: 2105288675}
+  - component: {fileID: 2105288678}
   m_Layer: 5
   m_Name: Bread WorldButton
   m_TagString: Untagged
@@ -22402,6 +22439,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2105288673}
   m_CullTransparentMesh: 1
+--- !u!114 &2105288678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105288673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e1ea1b7849aab4cada48aee6789c90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUnlockButton
+  world: 0
+  button: {fileID: 0}
+  lockIcon: {fileID: 0}
+  lockText: {fileID: 0}
+  lockedAlpha: 0.5
 --- !u!1 &2105645384
 GameObject:
   m_ObjectHideFlags: 0
