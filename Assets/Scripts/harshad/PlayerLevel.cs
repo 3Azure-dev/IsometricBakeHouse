@@ -107,6 +107,17 @@ public class PlayerLevel : MonoBehaviour
         return true; // recipes not in the list (Burger) are not locked by level
     }
 
+    // The level that unlocks this dish's world (1 if the dish is not in the list)
+    public int GetRequiredLevel(FoodType food)
+    {
+        foreach (LevelData.LevelEntry entry in data.levels)
+        {
+            if (entry.unlocksRecipe && entry.recipe == food)
+                return entry.level;
+        }
+
+        return 1;
+    }
     public bool IsEquipmentAvailable(EquipmentType type)
     {
         foreach (LevelData.LevelEntry entry in data.levels)
