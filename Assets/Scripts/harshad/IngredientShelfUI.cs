@@ -174,26 +174,46 @@ public class IngredientShelfUI : MonoBehaviour
 
     public void RefreshAmounts()
     {
-        if (currentShelf == null)
-            return;
-
         foreach (IngredientRow row in ingredientRows)
         {
             if (row == null)
                 continue;
 
-            int amount = currentShelf.GetAmount(row.ingredient);
+            int amount = GetBagAmount(row.ingredient);
 
             if (row.amountText != null)
             {
                 row.amountText.text = amount.ToString();
             }
 
+            // Nothing to take out any more: ingredients stay in the bag and stations use them from there
             if (row.takeButton != null)
             {
-                row.takeButton.interactable = amount > 0;
+                row.takeButton.interactable = false;
             }
         }
+    }
+
+    // Reads the count from Inventory1 by matching the name ("Tomato Sauce" = TomatoSauce)
+    private int GetBagAmount(IngredientType type)
+    {
+        if (Inventory1.Instance == null)
+            return 0;
+
+        string wanted = type.ToString().Replace(" ", "").ToLowerInvariant();
+
+        foreach (var item in Inventory1.Instance.GetAllCounts())
+        {
+            if (item.Key == null)
+                continue;
+
+            string have = item.Key.ingredientName.Replace(" ", "").ToLowerInvariant();
+
+            if (have == wanted)
+                return item.Value;
+        }
+
+        return 0;
     }
 
     private void OnDestroy()
