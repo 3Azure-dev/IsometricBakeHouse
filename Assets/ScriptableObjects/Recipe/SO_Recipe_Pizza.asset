@@ -22,6 +22,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0ec2288ae06440346845271475c79052, type: 2}
   - {fileID: 11400000, guid: 0fbda30970162de418f0aee449272f15, type: 2}
   autoAppliedIngredient: Pepporine
-  requiredEquipment: {fileID: 0}
+  requiredEquipment: {fileID: 11400000, guid: 77cc82b83b181294ba2c34ed02e05b40, type: 2}
   cookTime: 25
   coinReward: 60

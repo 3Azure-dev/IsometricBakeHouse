@@ -8,6 +8,8 @@ public class RecipeDatabase : ScriptableObject
 {
     [SerializeField] private RecipeData[] recipes;
 
+    public IReadOnlyList<RecipeData> Recipes => recipes;
+
     public RecipeData GetRecipe(FoodType food)
     {
         foreach (RecipeData recipe in recipes)

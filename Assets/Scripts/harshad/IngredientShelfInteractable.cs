@@ -7,29 +7,10 @@ public class IngredientShelfInteractable : MonoBehaviour
 
     public void Interact()
     {
-        if (shelf == null)
-        {
-            Debug.LogError("IngredientShelf is not assigned.");
-            return;
-        }
-
-        if (IngredientShelfUI.Instance == null)
-        {
-            Debug.LogError("IngredientShelfUI was not found.");
-            return;
-        }
-
-        // E at the shelf: first put everything the player hunted onto the shelf (SCRUM-142),
-        // then open the shelf window so ingredients can be taken for cooking.
-        shelf.DepositHuntedIngredients();
-
-        IngredientShelfUI.Instance.Open(shelf);
-
-        // Open() clears the message, so show what was put on the shelf AFTER opening
-        if (!string.IsNullOrEmpty(shelf.LastDepositSummary))
-        {
-            IngredientShelfUI.Instance.ShowMessage(shelf.LastDepositSummary);
-        }
+        // Ingredients now stay in Inventory1 (one store for hunts, the starting state and cooking).
+        // The Starting State script on the player toggles the counter panel on the same E press,
+        // so nothing else is needed here.
+        Debug.Log("Shelf: ingredients are kept in the ingredient bag. The counter panel shows the amounts.");
     }
 
     private void Awake()

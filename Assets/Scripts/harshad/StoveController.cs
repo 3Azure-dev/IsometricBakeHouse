@@ -14,6 +14,9 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
     [Header("Recipes (drag SO_RecipeDatabase here)")]
     [SerializeField] private RecipeDatabase recipeDatabase;
 
+    [Header("Which equipment is this? (drag SO_Equipment_Stove)")]
+    [SerializeField] private EquipmentData equipment;
+
     [Header("Cooking Progress UI")]
     [SerializeField] private GameObject cookingProgressCanvas;
     [SerializeField] private Slider cookingProgressSlider;
@@ -127,6 +130,20 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
         if (recipe == null)
         {
             Debug.LogWarning("No recipe found for " + food + ". Check SO_RecipeDatabase and the Food Type on the recipe asset.");
+            return;
+        }
+
+        // Cupcake needs the Oven, Pizza needs the Pizza Stone
+        if (equipment != null && recipe.requiredEquipment != equipment)
+        {
+            Debug.Log(food + " cannot be cooked on the " + equipment.equipmentName + ".");
+            return;
+        }
+
+        // Uses 1 of each ingredient from Inventory1 (Bread = Flour + Yeast + Seeds)
+        if (Inventory1.Instance != null && !Inventory1.Instance.UseIngredients(recipe))
+        {
+            Debug.Log("Not enough ingredients for " + food + ".");
             return;
         }
 

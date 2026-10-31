@@ -212,6 +212,9 @@ public class BakeryProgress : MonoBehaviour
     [ContextMenu("TEST: Unlock Cupcake")]
     private void TestUnlockCupcake() => UnlockRecipe(FoodType.Cupcake);
 
+    [ContextMenu("TEST: Give Pizza Stone")]
+    private void TestGivePizzaStone() => AddEquipment(EquipmentType.PizzaStone);
+
     [ContextMenu("TEST: Unlock Pizza")]
     private void TestUnlockPizza() => UnlockRecipe(FoodType.Pizza);
 
@@ -226,6 +229,9 @@ public class BakeryProgress : MonoBehaviour
             if (!HasPlot(i)) { AddPlot(i); return; }
         }
     }
+
+
+   
 
     [ContextMenu("TEST: Print blueprints and materials")]
     private void TestPrintInventory()

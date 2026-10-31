@@ -120,13 +120,8 @@ public class OvenUI : MonoBehaviour
                 Destroy(child.gameObject);
         }
 
-        foreach (FoodType food in Enum.GetValues(typeof(FoodType)))
+        foreach (RecipeData recipe in currentOven.GetAvailableRecipes())
         {
-            if (!currentOven.CanCook(food))
-                continue;
-
-            Recipe recipe = RecipeManager.Instance.GetRecipe(food);
-
             Button button = Instantiate(
                 recipeButtonPrefab,
                 recipeButtonContainer
@@ -138,11 +133,11 @@ public class OvenUI : MonoBehaviour
 
             if (label != null)
             {
-                label.text = food + " (" +
-                    recipe.cookingTime.ToString("0.#") + " sec)";
+                label.text = recipe.recipeName + " (" +
+                    recipe.cookTime.ToString("0.#") + " sec)";
             }
 
-            FoodType selectedFood = food;
+            FoodType selectedFood = recipe.foodType;
 
             button.onClick.AddListener(() =>
             {
