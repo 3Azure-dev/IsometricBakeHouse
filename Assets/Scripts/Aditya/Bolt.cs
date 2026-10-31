@@ -1,0 +1,101 @@
+using UnityEngine;
+using UnityEngine.Pool;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class Bolt1 : MonoBehaviour
+{
+    [SerializeField] private float _speed = 20f;
+    [SerializeField] private LayerMask _groundLayer;
+
+    private Rigidbody2D _rb;
+    private TrailRenderer _trail;
+    private Camera _cam;
+
+    private IObjectPool<Bolt1> _pool;
+    private bool _released;
+
+    private Vector2 _startPos;              // where this shot started
+    private float _range = Mathf.Infinity;  // max distance, set by the wand (SO_Wand)
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        _trail = GetComponent<TrailRenderer>();
+        _cam = Camera.main;
+    }
+
+    // The wand tells each bolt which pool it belongs to
+    public void SetPool(IObjectPool<Bolt1> pool)
+    {
+        _pool = pool;
+    }
+
+    public void Launch(Vector2 position, Vector2 direction, float range = Mathf.Infinity)
+    {
+        _startPos = position;
+        _range = range;
+
+        transform.position = position;
+        _rb.position = position;
+
+        transform.right = direction;
+
+        _trail.Clear();
+
+        _released = false;
+
+        _rb.linearVelocity = direction * _speed;
+    }
+
+    private void Update()
+    {
+        // flew its full range: gone
+        if (((Vector2)transform.position - _startPos).sqrMagnitude > _range * _range)
+        {
+            Despawn();
+            return;
+        }
+
+        // 0 to 1 = on screen.
+        // A little past that = off screen.
+        Vector3 vp = _cam.WorldToViewportPoint(transform.position);
+
+        if (vp.x < -0.1f ||
+            vp.x > 1.1f ||
+            vp.y < -0.1f ||
+            vp.y > 1.1f)
+        {
+            Despawn();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // Did we hit a creature?
+        if (other.TryGetComponent(out IngredientCreature1 creature))
+        {
+            creature.Stun();
+            Despawn();
+            return;
+        }
+
+        // Is the thing we hit on the Ground layer?
+        if ((_groundLayer.value & (1 << other.gameObject.layer)) != 0)
+        {
+            Despawn();
+        }
+    }
+
+    private void Despawn()
+    {
+        if (_released)
+            return;
+
+        _released = true;
+
+        if (_pool != null)
+            _pool.Release(this);
+        else
+            Destroy(gameObject);
+    }
+}

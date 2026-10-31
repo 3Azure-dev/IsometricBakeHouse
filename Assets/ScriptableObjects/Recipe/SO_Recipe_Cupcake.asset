@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7293d49de9ab444d9be67410cae205d, type: 3}
+  m_Name: SO_Recipe_Cupcake
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeName: Cupcake
+  icon: {fileID: 0}
+  foodType: 1
+  unlockLevel: 2
+  blueprintCost: 150
+  huntedIngredients:
+  - {fileID: 11400000, guid: f0331a998412f1542b42b1562f571898, type: 2}
+  - {fileID: 11400000, guid: aee72eed3a5ae7645aece17526ec22f3, type: 2}
+  - {fileID: 11400000, guid: 2107e02abd71f5541939fde06ea7a62c, type: 2}
+  autoAppliedIngredient: Frosting
+  requiredEquipment: {fileID: 11400000, guid: 0dc06b4214e27334a88a0a571422e388, type: 2}
+  cookTime: 15
+  coinReward: 45
