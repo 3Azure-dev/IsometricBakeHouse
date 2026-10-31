@@ -15,4 +15,4 @@ MonoBehaviour:
   equipmentName: PizzaStone
   icon: {fileID: 0}
   cost: 500
-  unlockLevel: 1
+  unlockLevel: 3
