@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class CustomerController : MonoBehaviour
 {
     [Header("Data assets (drag them into the prefab)")]
@@ -148,6 +149,25 @@ public class CustomerController : MonoBehaviour
         ResetCustomer();
 
         ApplyLook();
+
+        // --- VIP COLOR LOGIC ---
+        // We need to find the bodyRenderer variable first if it's not at the top.
+        // Ensure you have this variable at the top of your class:
+        // [SerializeField] private MeshRenderer bodyRenderer;
+
+        if (bodyRenderer != null)
+        {
+            if (IsVIP)
+            {
+                // Turn Gold for VIPs!
+                bodyRenderer.material.color = new Color(1f, 0.84f, 0.25f);
+            }
+            else
+            {
+                // Reset to White for Normal customers
+                bodyRenderer.material.color = Color.white;
+            }
+        }
 
         // Give this customer a real name. The order board and the Console show it.
         ReleaseName();
@@ -1060,6 +1080,12 @@ public class CustomerController : MonoBehaviour
         {
             orderTimerUI.HideTimer();
         }
+    }
+
+    public UnityEngine.Sprite GetOrderIcon()
+    {
+        // Returns null for now, which tells the bubble to just use text/emojis
+        return null;
     }
 
 }

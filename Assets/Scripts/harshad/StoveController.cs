@@ -1,8 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class StoveController : MonoBehaviour
+public class StoveController : MonoBehaviour, IFoodReadyProvider
 {
+   
+
+    // Add this property 👇
+    public bool IsFoodReady
+    {
+        get { return foodReady; } // ✅ CORRECT: This is the variable FinishCooking() sets to true
+    }
+
     [Header("Recipes (drag SO_RecipeDatabase here)")]
     [SerializeField] private RecipeDatabase recipeDatabase;
 
@@ -157,6 +165,10 @@ public class StoveController : MonoBehaviour
 
         if (BakeryAudioManager.Instance != null)
         {
+            // 1. STOP the looping sizzle FIRST
+            BakeryAudioManager.Instance.StopCookingSound();
+
+            // 2. THEN play the "ding"
             BakeryAudioManager.Instance.PlayCookingDone();
         }
 
@@ -167,7 +179,6 @@ public class StoveController : MonoBehaviour
 
         Debug.Log(currentFood + " is ready on the stove.");
     }
-
     // --------------------------------------------------
     // TAKE FOOD
     // --------------------------------------------------
