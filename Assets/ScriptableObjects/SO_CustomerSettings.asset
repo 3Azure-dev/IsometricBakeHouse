@@ -39,4 +39,5 @@ MonoBehaviour:
   vipCoinMultiplier: 2
   vipDiamondReward: 20
   vipChancePercent: 4
+  vipFirstDay: 3
   vipColor: {r: 1, g: 0.84, b: 0, a: 1}
