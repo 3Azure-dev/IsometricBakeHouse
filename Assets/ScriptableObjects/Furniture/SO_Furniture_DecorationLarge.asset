@@ -20,5 +20,5 @@ MonoBehaviour:
   blueprintDiamonds: 20
   prefab: {fileID: 0}
   materialBoxes: 1
-  itemId: 
+  itemId: Decoration_Large
   materialId: Wood

@@ -20,5 +20,5 @@ MonoBehaviour:
   blueprintDiamonds: 30
   prefab: {fileID: 0}
   materialBoxes: 1
-  itemId: 
+  itemId: Table_Nice
   materialId: Wood
