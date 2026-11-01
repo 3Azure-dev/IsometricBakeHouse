@@ -20,9 +20,14 @@ public class ShopTabController : MonoBehaviour
             levelUpgradeTabButton.onClick.AddListener(ShowLevelUpgrade);
     }
 
+
     private void OnEnable()
     {
-        // Show only the two tabs when the shop opens.
+        ShowTabSelection();
+    }
+
+    public void ShowTabSelection()
+    {
         shopItemsPanel.SetActive(false);
         levelUpgradePanel.SetActive(false);
     }
