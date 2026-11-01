@@ -176,12 +176,22 @@ public class CustomerSpawner : MonoBehaviour
         }
         else
         {
-            // VIP chance comes from SO_CustomerSettings (percent)
-            float randomNumber = Random.Range(0f, 100f);
+            // No VIPs before the first VIP day (SO_CustomerSettings: Vip First Day)
+            int today = DayNightClock.Instance != null ? DayNightClock.Instance.DayNumber : 1;
 
-            type = randomNumber <= settings.vipChancePercent
-                ? CustomerType.VIP
-                : CustomerType.Normal;
+            if (today < settings.vipFirstDay)
+            {
+                type = CustomerType.Normal;
+            }
+            else
+            {
+                // VIP chance comes from SO_CustomerSettings (percent)
+                float randomNumber = Random.Range(0f, 100f);
+
+                type = randomNumber <= settings.vipChancePercent
+                    ? CustomerType.VIP
+                    : CustomerType.Normal;
+            }
         }
 
         GameObject customer = CustomerPool.Instance.GetCustomer(type);

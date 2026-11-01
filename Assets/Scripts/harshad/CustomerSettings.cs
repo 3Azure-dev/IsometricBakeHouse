@@ -66,6 +66,9 @@ public class CustomerSettings : ScriptableObject
              "which is about 4% with 8 customers a day. Replace this once the day counter exists.")]
     public float vipChancePercent = 4f;
 
+    [Tooltip("VIP customers only appear from this in-game day onwards (GDD: day 3).")]
+    [Min(1)] public int vipFirstDay = 3;
+
     [Tooltip("Body colour of a VIP customer (gold)")]
     public Color vipColor = new Color(1f, 0.84f, 0f);
 }
