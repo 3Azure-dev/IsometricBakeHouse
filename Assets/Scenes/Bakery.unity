@@ -9676,6 +9676,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e6f7b4aca12c6e458e86997965465a8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 911328939}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e6f7b4aca12c6e458e86997965465a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 911328941}
   m_SourcePrefab: {fileID: 100100000, guid: 4e6f7b4aca12c6e458e86997965465a8, type: 3}
 --- !u!4 &911328936 stripped
 Transform:
@@ -9718,6 +9721,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.7774172, y: 1.7033175, z: 1.1666749}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &911328941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108864668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf780c89e6fbaae41b7f6dde5b20776f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OvenController
+  recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
+  equipment: {fileID: 11400000, guid: 77cc82b83b181294ba2c34ed02e05b40, type: 2}
 --- !u!1 &929601759
 GameObject:
   m_ObjectHideFlags: 0
