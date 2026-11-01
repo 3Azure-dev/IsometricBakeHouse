@@ -82,7 +82,7 @@ public class DiamondCounterUI : MonoBehaviour
     {
         if (diamondAmountText != null)
         {
-            diamondAmountText.text = "💎 " + amount;
+            diamondAmountText.text = "Diamonds " + amount;
         }
         else
         {

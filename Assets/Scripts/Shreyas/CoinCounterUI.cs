@@ -69,7 +69,7 @@ public class CoinCounterUI : MonoBehaviour
     {
         if (coinAmountText != null)
         {
-            coinAmountText.text = "🪙 " + amount;
+            coinAmountText.text = "Coins " + amount;
         }
         else
         {
