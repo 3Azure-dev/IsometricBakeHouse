@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class StartingStateInitializer : MonoBehaviour
 {
@@ -50,6 +50,9 @@ public class StartingStateInitializer : MonoBehaviour
         Wallet.Instance.SetStartingCoins(
             startingState.startingCoins
         );
+
+        // ✅ ADD THIS LINE: Set starting diamonds (hands the 0 to the Wallet)
+        Wallet.Instance.SetStartingDiamonds(startingState.startingDiamonds);
 
         // Add starting ingredients.
         foreach (StartingIngredient item in startingState.ingredients)

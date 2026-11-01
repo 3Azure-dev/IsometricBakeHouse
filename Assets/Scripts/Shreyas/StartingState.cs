@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +11,9 @@ public class StartingState : ScriptableObject
 {
     [Header("Starting Wallet")]
     public int startingCoins = 0;
+
+    // ✅ ADD THIS LINE: Starting diamonds (defaults to 0 per ticket)
+    public int startingDiamonds = 0;
 
     [Header("Starting Ingredients")]
     public List<StartingIngredient> ingredients =
