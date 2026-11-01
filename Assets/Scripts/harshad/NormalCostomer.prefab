@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 1531115907032819594}
   - component: {fileID: 2251856692566652882}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: NormalCostomer
   m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

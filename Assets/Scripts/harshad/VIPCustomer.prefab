@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 688105558435311707}
   - component: {fileID: 4207966272746511413}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: VIPCustomer
   m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
