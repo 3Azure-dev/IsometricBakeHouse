@@ -6684,7 +6684,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 570176043}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1323568835}
+        m_TargetAssemblyTypeName: StoveUI, Assembly-CSharp
+        m_MethodName: CloseUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &570176043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12945,23 +12957,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngredientShelf
   startingIngredients:
   - ingredient: 0
-    startingAmount: 8
+    startingAmount: 0
   - ingredient: 7
-    startingAmount: 8
+    startingAmount: 0
   - ingredient: 8
-    startingAmount: 8
+    startingAmount: 0
   - ingredient: 3
     startingAmount: 0
   - ingredient: 2
     startingAmount: 0
   - ingredient: 1
-    startingAmount: 5
+    startingAmount: 0
   - ingredient: 6
-    startingAmount: 4
+    startingAmount: 0
   - ingredient: 4
-    startingAmount: 3
+    startingAmount: 0
   - ingredient: 5
-    startingAmount: 2
+    startingAmount: 0
+  knownIngredients:
+  - {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
+  - {fileID: 11400000, guid: c2cac85afad5de249b80048fc6526883, type: 2}
+  - {fileID: 11400000, guid: 8ac8327ad8c39594f8c56e35c7fee2ff, type: 2}
+  - {fileID: 11400000, guid: aee72eed3a5ae7645aece17526ec22f3, type: 2}
+  - {fileID: 11400000, guid: f0331a998412f1542b42b1562f571898, type: 2}
+  - {fileID: 11400000, guid: 2107e02abd71f5541939fde06ea7a62c, type: 2}
+  - {fileID: 11400000, guid: e82d88024f110a247827815e1062b140, type: 2}
+  - {fileID: 11400000, guid: 0ec2288ae06440346845271475c79052, type: 2}
+  - {fileID: 11400000, guid: 0fbda30970162de418f0aee449272f15, type: 2}
 --- !u!114 &1241756151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13578,8 +13600,6 @@ MonoBehaviour:
   stovePanel: {fileID: 1654926681}
   titleText: {fileID: 1904060567}
   breadButton: {fileID: 1499217022}
-  cupcakeButton: {fileID: 0}
-  pizzaButton: {fileID: 0}
   closeButton: {fileID: 570176042}
 --- !u!1 &1330716246
 GameObject:

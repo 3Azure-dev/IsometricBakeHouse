@@ -13,7 +13,14 @@ public class IngredientShelfInteractable : MonoBehaviour
             return;
         }
 
+        int moved = shelf.DepositOncePerVisit();
+
         IngredientShelfUI.Instance.Open(shelf);
+
+        IngredientShelfUI.Instance.ShowMessage(
+            moved > 0
+                ? shelf.LastDepositSummary + ". Press Take to carry what you need."
+                : "Press Take to carry ingredients. Stations cook from your bag.");
     }
 
     private void Awake()
