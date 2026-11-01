@@ -3327,7 +3327,7 @@ GameObject:
   - component: {fileID: 251703565}
   - component: {fileID: 251703566}
   m_Layer: 0
-  m_Name: CounterSpot
+  m_Name: ShelfUIScripts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3483,7 +3483,7 @@ GameObject:
   - component: {fileID: 254516893}
   - component: {fileID: 254516892}
   m_Layer: 5
-  m_Name: Stove
+  m_Name: StoveUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4298,7 +4298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 333380241}
   m_Layer: 0
-  m_Name: Exit
+  m_Name: DoorExit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13640,7 +13640,7 @@ GameObject:
   - component: {fileID: 1255913681}
   - component: {fileID: 1255913685}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: boardOrderUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16316,7 +16316,7 @@ GameObject:
   - component: {fileID: 1491566776}
   - component: {fileID: 1491566775}
   m_Layer: 5
-  m_Name: shelf
+  m_Name: shelfUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18855,7 +18855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1725506042}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: SittingPoint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19340,7 +19340,7 @@ GameObject:
   - component: {fileID: 1768353312}
   - component: {fileID: 1768353311}
   m_Layer: 5
-  m_Name: Worlds
+  m_Name: WorldsUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19440,7 +19440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1784189478}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: SittingPoint2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23022,7 +23022,7 @@ GameObject:
   - component: {fileID: 2037686750}
   - component: {fileID: 2037686749}
   m_Layer: 5
-  m_Name: Oven
+  m_Name: OvenUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
