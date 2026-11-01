@@ -6,7 +6,7 @@ using UnityEngine;
 // A cooking station that reads its recipes from the RecipeData assets (SO_Recipe_*).
 // ONE script for the Oven and the Pizza Stone: set "Equipment" to the right asset.
 // Ingredients come from Inventory1, the same bag the hunts fill and the counters show.
-public class OvenController : MonoBehaviour
+public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Added Interface
 {
     [Header("Data (drag the assets in)")]
     [SerializeField] private RecipeDatabase recipeDatabase;   // SO_RecipeDatabase
@@ -17,6 +17,12 @@ public class OvenController : MonoBehaviour
 
     // True when the dish is finished and waiting for the player to press E
     public bool FoodReady { get; private set; }
+
+    // <-- FIX 2: Interface property so the "E" prompt knows when food is ready
+    public bool IsFoodReady
+    {
+        get { return FoodReady; }
+    }
 
     public string StationName => equipment != null ? equipment.equipmentName : name;
 
@@ -45,7 +51,6 @@ public class OvenController : MonoBehaviour
 
     // ---------------- WHICH RECIPES THIS STATION COOKS ----------------
 
-    // Recipes whose Required Equipment is THIS station and that the player has unlocked
     public List<RecipeData> GetAvailableRecipes()
     {
         List<RecipeData> result = new List<RecipeData>();
@@ -185,7 +190,6 @@ public class OvenController : MonoBehaviour
         return true;
     }
 
-    // "Dough (have 0, need 1), Cheese (have 0, need 1)", or "" if nothing is missing
     private string GetMissingIngredients(RecipeData recipe)
     {
         Dictionary<IngredientData, int> needed = new Dictionary<IngredientData, int>();
@@ -225,6 +229,8 @@ public class OvenController : MonoBehaviour
 
         if (BakeryAudioManager.Instance != null)
         {
+            // <-- FIX 3: STOP the looping sizzle FIRST, THEN play the ding
+            BakeryAudioManager.Instance.StopCookingSound();
             BakeryAudioManager.Instance.PlayCookingDone();
         }
 
@@ -249,8 +255,6 @@ public class OvenController : MonoBehaviour
     }
 
     // ---------------- TEST BUTTON ----------------
-    // Gives 1 of every ingredient this station's recipes need (into Inventory1)
-
     [ContextMenu("TEST: Give ingredients for this station")]
     private void TestGiveIngredients()
     {
