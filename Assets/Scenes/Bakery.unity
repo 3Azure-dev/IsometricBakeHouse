@@ -14111,15 +14111,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14131,7 +14131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 24.7
+      value: -2.42
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_LocalRotation.w
@@ -14151,11 +14151,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1.1
+      value: 0.61
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -32.5
+      value: -0.14
       objectReference: {fileID: 0}
     - target: {fileID: 8172747526564293608, guid: 72de915f67f2a824abff240bd79db928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -14679,7 +14679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca58b2b8c8bf6954d957bcf060bb2610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodReadyPrompt
-  cookingStation: {fileID: 339119777}
+  cookingStation: {fileID: 339119784}
   promptRoot: {fileID: 1367102454}
 --- !u!1 &1412752917
 GameObject:
