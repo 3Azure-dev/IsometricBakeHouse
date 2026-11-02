@@ -89,6 +89,13 @@ public class PlayerLevel : MonoBehaviour
         }
     }
 
+    // Coins to buy a given level (-1 if there is no entry for it)
+    public int GetLevelCost(int level)
+    {
+        LevelData.LevelEntry entry = data != null ? data.GetEntry(level) : null;
+        return entry != null ? entry.coinCost : -1;
+    }
+
     public bool CanBuyNextLevel =>
         !IsMaxLevel &&
         NextLevelCost >= 0 &&
