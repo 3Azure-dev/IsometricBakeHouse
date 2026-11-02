@@ -13,9 +13,12 @@ public class ShopItemRow : MonoBehaviour
     [SerializeField] private Image currencyIcon;
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private Button buyButton;
+    private Color normalPriceColor = Color.white;
 
     private void Awake()
     {
+        if (priceText != null) normalPriceColor = priceText.color;
+
         BuildLayout();
     }
 
@@ -101,9 +104,11 @@ public class ShopItemRow : MonoBehaviour
     }
 
     // canBuy false = the button is greyed out
-    public void SetState(string status, bool canBuy)
+    // canBuy false = the button is greyed out. priceRed = the player cannot afford it
+    public void SetState(string status, bool canBuy, bool priceRed)
     {
         if (statusText != null) statusText.text = status;
         if (buyButton != null) buyButton.interactable = canBuy;
+        if (priceText != null) priceText.color = priceRed ? Color.red : normalPriceColor;
     }
 }
