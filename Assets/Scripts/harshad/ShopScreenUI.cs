@@ -550,37 +550,29 @@ public class ShopScreenUI : MonoBehaviour
 
     private void BuildPlots()
     {
-        // Plot 1: 200 diamonds
+        // Plot 1
         Add("Expansion Plot 1", null, 200, true,
             () => BuyPlot(1),
-            () =>
-            {
-                bool owned = IsPlotUnlocked(1);
-                return Evaluate(owned, 0, 200, true);
-            });
+            () => Evaluate(IsPlotUnlocked(1), 0, 200, true));
 
-        // Plot 2: 250 diamonds (requires Plot 1)
-        Add("Expansion Plot 2", null, 250, true,
+        // Plot 2 (Notice the 'true' at the end of the Add line!)
+        bool plot1Unlocked = IsPlotUnlocked(1);
+        Add("Expansion Plot 2", null, plot1Unlocked ? 250 : 0, true,
             () => BuyPlot(2),
             () =>
             {
-                bool owned = IsPlotUnlocked(2);
-                bool prevUnlocked = IsPlotUnlocked(1);
-                if (!prevUnlocked && !owned)
-                    return new ItemState("BUY PLOT 1 FIRST", false, true);
-                return Evaluate(owned, 0, 250, true);
+                if (!plot1Unlocked) return new ItemState("LOCKED", false, false);
+                return Evaluate(IsPlotUnlocked(2), 0, 250, true);
             });
 
-        // Plot 3: 300 diamonds (requires Plot 2)
-        Add("Expansion Plot 3", null, 300, true,
+        // Plot 3 (Notice the 'true' at the end of the Add line!)
+        bool plot2Unlocked = IsPlotUnlocked(2);
+        Add("Expansion Plot 3", null, plot2Unlocked ? 300 : 0, true,
             () => BuyPlot(3),
             () =>
             {
-                bool owned = IsPlotUnlocked(3);
-                bool prevUnlocked = IsPlotUnlocked(2);
-                if (!prevUnlocked && !owned)
-                    return new ItemState("BUY PLOT 2 FIRST", false, true);
-                return Evaluate(owned, 0, 300, true);
+                if (!plot2Unlocked) return new ItemState("LOCKED", false, false);
+                return Evaluate(IsPlotUnlocked(3), 0, 300, true);
             });
     }
 
@@ -612,6 +604,9 @@ public class ShopScreenUI : MonoBehaviour
 
         Say("Expansion Plot " + plotNumber + " unlocked!");
         Refresh();
+
+        // ADD THIS LINE AT THE VERY BOTTOM:
+        Rebuild();
     }
 
     private bool IsPlotUnlocked(int plotNumber)
