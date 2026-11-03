@@ -76,6 +76,9 @@ public class ShopScreenUI : MonoBehaviour
     [Header("Optional message line")]
     [SerializeField] private TMP_Text messageText;
 
+    [Header("SCRUM-376: Plots Panel")]
+    [SerializeField] private GameObject plotsPanel;
+
     [Header("Purchase events (copy the old BakeryShopUI events here)")]
     [SerializeField] private UnityEvent onOvenPurchased;
     [SerializeField] private UnityEvent onCupcakeRecipePurchased;
@@ -212,6 +215,11 @@ public class ShopScreenUI : MonoBehaviour
         currentSection = section;
         currentTab = 0;
 
+        // Reset UI state: show the list, hide the custom plots panel by default
+        if (rowContainer != null) rowContainer.gameObject.SetActive(true);
+        if (plotsPanel != null) plotsPanel.SetActive(false);
+
+
         Paint(shopItemsButton, section == Section.ShopItems);
         Paint(equipmentButton, section == Section.Equipment);
         Paint(levelUpgradeButton, section == Section.LevelUpgrade);
@@ -280,7 +288,7 @@ public class ShopScreenUI : MonoBehaviour
 
             case Section.LevelUpgrade:
                 if (currentTab == 0) BuildLevels();
-                else Say("Expansion plots are coming soon.");   // SCRUM-376 fills this tab
+                else BuildPlots();
                 break;
         }
 
@@ -536,6 +544,82 @@ public class ShopScreenUI : MonoBehaviour
 
         Say("You reached level " + level.Level + ".");
         Refresh();
+    }
+
+    // ---------------- LEVEL UPGRADE: PLOTS (diamonds, in order) ----------------
+
+    private void BuildPlots()
+    {
+        // Plot 1: 200 diamonds
+        Add("Expansion Plot 1", null, 200, true,
+            () => BuyPlot(1),
+            () =>
+            {
+                bool owned = IsPlotUnlocked(1);
+                return Evaluate(owned, 0, 200, true);
+            });
+
+        // Plot 2: 250 diamonds (requires Plot 1)
+        Add("Expansion Plot 2", null, 250, true,
+            () => BuyPlot(2),
+            () =>
+            {
+                bool owned = IsPlotUnlocked(2);
+                bool prevUnlocked = IsPlotUnlocked(1);
+                if (!prevUnlocked && !owned)
+                    return new ItemState("BUY PLOT 1 FIRST", false, true);
+                return Evaluate(owned, 0, 250, true);
+            });
+
+        // Plot 3: 300 diamonds (requires Plot 2)
+        Add("Expansion Plot 3", null, 300, true,
+            () => BuyPlot(3),
+            () =>
+            {
+                bool owned = IsPlotUnlocked(3);
+                bool prevUnlocked = IsPlotUnlocked(2);
+                if (!prevUnlocked && !owned)
+                    return new ItemState("BUY PLOT 2 FIRST", false, true);
+                return Evaluate(owned, 0, 300, true);
+            });
+    }
+
+    private void BuyPlot(int plotNumber)
+    {
+        // Check if previous plot is unlocked
+        if (plotNumber > 1 && !IsPlotUnlocked(plotNumber - 1))
+        {
+            Say("You must buy Plot " + (plotNumber - 1) + " first!");
+            return;
+        }
+
+        if (IsPlotUnlocked(plotNumber)) return;
+
+        int cost = plotNumber == 1 ? 200 : plotNumber == 2 ? 250 : 300;
+
+        if (wallet == null || !wallet.SpendDiamonds(cost))
+        {
+            Say("Not enough diamonds!");
+            return;
+        }
+
+        // Unlock the plot in your ExpansionPlotManager
+        ExpansionPlotManager plotManager = FindAnyObjectByType<ExpansionPlotManager>();
+        if (plotManager != null)
+        {
+            plotManager.BuyPlot(plotNumber);
+        }
+
+        Say("Expansion Plot " + plotNumber + " unlocked!");
+        Refresh();
+    }
+
+    private bool IsPlotUnlocked(int plotNumber)
+    {
+        ExpansionPlotManager plotManager = FindAnyObjectByType<ExpansionPlotManager>();
+        if (plotManager == null) return false;
+
+        return plotManager.IsPlotUnlocked(plotNumber);
     }
 
     // ---------------- HELPERS ----------------
