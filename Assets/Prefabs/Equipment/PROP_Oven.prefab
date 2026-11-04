@@ -74,9 +74,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd681599f8f2ced468326a01b06bc004, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 518133177811486230}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd681599f8f2ced468326a01b06bc004, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7369345990401911917}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd681599f8f2ced468326a01b06bc004, type: 3}
       insertIndex: -1
@@ -95,23 +92,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cd681599f8f2ced468326a01b06bc004, type: 3}
   m_PrefabInstance: {fileID: 8240504750661438482}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &518133177811486230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9123534975609942339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2480d8a93edca24992d6d2e58072545, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OvenUI
-  ovenPanel: {fileID: 0}
-  recipeButtonContainer: {fileID: 0}
-  recipeButtonPrefab: {fileID: 160411778732997530, guid: 69580837521aa034ab76258d84307205, type: 3}
-  closeButton: {fileID: 0}
-  statusText: {fileID: 0}
 --- !u!114 &7369345990401911917
 MonoBehaviour:
   m_ObjectHideFlags: 0
