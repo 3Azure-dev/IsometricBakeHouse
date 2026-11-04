@@ -4,34 +4,52 @@ using UnityEngine;
 
 public class ExpansionPlotManager : MonoBehaviour
 {
-    // This holds the ScriptableObject (for costs) AND the Scene objects (walls/floors)
     [System.Serializable]
     public class PlotSceneData
     {
-        public PlotDataSO plotData;       // Drag ScriptableObject here
-        public GameObject blocker;        // Drag PlotBlocker here
-        public GameObject expansionFloor; // Drag ExpansionFloor here
+        public PlotDataSO plotData;
+        public GameObject blocker;
+        public GameObject expansionFloor;
+        [Tooltip("Drag the parent group of your new walls here (e.g., Walls_Plot1)")]
+        public GameObject newWalls;
         [HideInInspector] public bool isUnlocked = false;
     }
 
     [Header("Plot Configuration")]
-    [Tooltip("Drag in the 3 ScriptableObjects, Blockers, and Floors")]
+    [Tooltip("Drag in the 3 ScriptableObjects, Blockers, Floors, and New Wall Groups")]
     [SerializeField] private List<PlotSceneData> plots = new List<PlotSceneData>();
 
     private void Awake()
     {
-        // Sort plots by their plot number just in case
+        // SAFETY CHECK: Prevents crashes if Unity wipes the inspector slots
+        if (plots.Count == 0 || plots[0].plotData == null)
+        {
+            Debug.LogWarning("ExpansionPlotManager: Inspector slots are empty! Please re-assign them.");
+            return;
+        }
+
+        // Sort plots by number just in case
         plots.Sort((x, y) => x.plotData.plotNumber.CompareTo(y.plotData.plotNumber));
+
+        // INITIAL SETUP: Hide floors and new walls, ensure blockers are visible
+        foreach (var plot in plots)
+        {
+            if (!plot.isUnlocked)
+            {
+                if (plot.expansionFloor != null) plot.expansionFloor.SetActive(false);
+                if (plot.newWalls != null) plot.newWalls.SetActive(false); // Hides the whole group of walls!
+                if (plot.blocker != null) plot.blocker.SetActive(true);
+            }
+        }
     }
 
-    // Call this when the player buys a plot
     public bool BuyPlot(int plotNumber)
     {
         if (plotNumber < 1 || plotNumber > plots.Count) return false;
 
         PlotSceneData targetPlot = plots[plotNumber - 1];
 
-        // 1. Check if the previous plot is unlocked (Order enforcement)
+        // 1. Check order enforcement
         if (plotNumber > 1 && !plots[plotNumber - 2].isUnlocked)
         {
             Debug.Log($"You must buy Plot {plotNumber - 1} first!");
@@ -39,20 +57,16 @@ public class ExpansionPlotManager : MonoBehaviour
         }
 
         // 2. Check if already unlocked
-        if (targetPlot.isUnlocked)
-        {
-            Debug.Log("Plot already unlocked!");
-            return false;
-        }
+        if (targetPlot.isUnlocked) return false;
 
-        // 3. Spend Diamonds (Notice we use .plotData.costInDiamonds now)
+        // 3. Spend Diamonds
         if (Wallet.Instance == null || !Wallet.Instance.SpendDiamonds(targetPlot.plotData.costInDiamonds))
         {
             Debug.Log("Not enough diamonds!");
             return false;
         }
 
-        // 4. Unlock the plot!
+        // 4. Unlock and Animate!
         UnlockPlot(targetPlot);
         return true;
     }
@@ -63,7 +77,6 @@ public class ExpansionPlotManager : MonoBehaviour
         StartCoroutine(AnimateExpansion(plot));
     }
 
-    // The cool shrinking/growing animation your designer asked for!
     private IEnumerator AnimateExpansion(PlotSceneData plot)
     {
         if (plot.expansionFloor == null || plot.blocker == null) yield break;
@@ -71,44 +84,47 @@ public class ExpansionPlotManager : MonoBehaviour
         Transform floorT = plot.expansionFloor.transform;
         Transform blockerT = plot.blocker.transform;
 
+        // 1. ENABLE the floor and the new walls group
+        plot.expansionFloor.SetActive(true);
+        if (plot.newWalls != null) plot.newWalls.SetActive(true); // Turns on all walls in the group!
+
         Vector3 targetFloorScale = floorT.localScale;
         Vector3 targetBlockerScale = blockerT.localScale;
 
-        // Start floor invisible, wall fully visible
+        // 2. Start floor at ZERO size
         floorT.localScale = Vector3.zero;
 
-        float duration = 0.6f; // Animation takes 0.6 seconds
+        float duration = 0.6f;
         float elapsed = 0f;
 
+        // 3. LERP ANIMATION
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
 
-            // Floor grows from 0 to full size
+            // Floor smoothly grows
             floorT.localScale = Vector3.Lerp(Vector3.zero, targetFloorScale, t);
-
-            // Wall shrinks from full size to 0
+            // Old wall smoothly shrinks
             blockerT.localScale = Vector3.Lerp(targetBlockerScale, Vector3.zero, t);
 
             yield return null;
         }
 
-        // Clean up
+        // 4. Clean up
         floorT.localScale = targetFloorScale;
-        plot.blocker.SetActive(false);
+        plot.blocker.SetActive(false); // Disable old wall physics
 
-        Debug.Log($"Plot {plot.plotData.plotNumber} unlocked! Floor space expanded.");
+        Debug.Log($"Plot {plot.plotData.plotNumber} unlocked! Floor and walls expanded.");
     }
 
-    // Helper for the Shop UI to check if a plot is bought
+    // Helper for the Shop UI
     public bool IsPlotUnlocked(int plotNumber)
     {
         if (plotNumber < 1 || plotNumber > plots.Count) return false;
         return plots[plotNumber - 1].isUnlocked;
     }
 
-    // UI Button Wrappers
     public void BuyPlot1() => BuyPlot(1);
     public void BuyPlot2() => BuyPlot(2);
     public void BuyPlot3() => BuyPlot(3);

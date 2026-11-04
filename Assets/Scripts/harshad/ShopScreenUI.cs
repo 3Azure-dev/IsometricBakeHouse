@@ -335,7 +335,7 @@ public class ShopScreenUI : MonoBehaviour
 
         if (afford) return new ItemState("BUY", true, false);
 
-        return new ItemState(diamonds ? "NEED DIAMONDS" : "NEED COINS", false, true);
+        return new ItemState("", false, false);
     }
 
     // ---------------- SHOP ITEMS: BLUEPRINT (diamonds, not locked by level) ----------------
@@ -548,24 +548,23 @@ public class ShopScreenUI : MonoBehaviour
 
     // ---------------- LEVEL UPGRADE: PLOTS (diamonds, in order) ----------------
 
-       private void BuildPlots()
+    private void BuildPlots()
     {
         // Plot 1
         Add("Expansion Plot 1", null, 200, true,
             () => BuyPlot(1),
             () => Evaluate(IsPlotUnlocked(1), 0, 200, true));
 
-        // Plot 2 (Just shows the price and normal status)
+        // Plot 2
         Add("Expansion Plot 2", null, 250, true,
             () => BuyPlot(2),
             () => Evaluate(IsPlotUnlocked(2), 0, 250, true));
 
-        // Plot 3 (Just shows the price and normal status)
+        // Plot 3
         Add("Expansion Plot 3", null, 300, true,
             () => BuyPlot(3),
             () => Evaluate(IsPlotUnlocked(3), 0, 300, true));
     }
-
     private void BuyPlot(int plotNumber)
     {
         // Check if previous plot is unlocked
