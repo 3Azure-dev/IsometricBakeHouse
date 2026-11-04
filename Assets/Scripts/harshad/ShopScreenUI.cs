@@ -325,7 +325,7 @@ public class ShopScreenUI : MonoBehaviour
     // One place for every rule: owned, locked by level, waiting, can afford
     private ItemState Evaluate(bool owned, int lockedLevel, int price, bool diamonds, string waitText = null)
     {
-        if (owned) return new ItemState("OWNED", false, false);
+        if (owned) return new ItemState("PURCHASED", false, false);
 
         if (lockedLevel > 0) return new ItemState("LOCKED - LEVEL " + lockedLevel, false, false);
 
@@ -344,7 +344,7 @@ public class ShopScreenUI : MonoBehaviour
     {
         foreach (FurnitureData f in furniture)
         {
-            if (f == null) continue;
+            if (IsHidden(f)) continue;
 
             FurnitureData item = f;
 
@@ -387,7 +387,7 @@ public class ShopScreenUI : MonoBehaviour
     {
         foreach (FurnitureData f in furniture)
         {
-            if (f == null) continue;
+            if (IsHidden(f)) continue;
 
             FurnitureData item = f;
 
@@ -518,11 +518,11 @@ public class ShopScreenUI : MonoBehaviour
             int target = lv;
             int price = level.GetLevelCost(target);
 
-            Add("Level " + (target - 1) + " to " + target, null, Mathf.Max(0, price), false,
+            Add("Level " + target, null, Mathf.Max(0, price), false,
                 () => BuyLevel(target),
                 () =>
                 {
-                    if (level.Level >= target) return new ItemState("OWNED", false, false);
+                    if (level.Level >= target) return new ItemState("PURCHASED", false, false);
 
                     bool next = level.Level + 1 == target;
                     string wait = next ? null : "BUY LEVEL " + (target - 1) + " FIRST";
@@ -622,5 +622,10 @@ public class ShopScreenUI : MonoBehaviour
         }
 
         return false;
+    }
+
+    private bool IsHidden(FurnitureData f)
+    {
+        return f == null || f.furnitureName.ToLower().Contains("counter");
     }
 }
