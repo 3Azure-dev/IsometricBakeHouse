@@ -548,32 +548,22 @@ public class ShopScreenUI : MonoBehaviour
 
     // ---------------- LEVEL UPGRADE: PLOTS (diamonds, in order) ----------------
 
-    private void BuildPlots()
+       private void BuildPlots()
     {
         // Plot 1
         Add("Expansion Plot 1", null, 200, true,
             () => BuyPlot(1),
             () => Evaluate(IsPlotUnlocked(1), 0, 200, true));
 
-        // Plot 2 (Notice the 'true' at the end of the Add line!)
-        bool plot1Unlocked = IsPlotUnlocked(1);
-        Add("Expansion Plot 2", null, plot1Unlocked ? 250 : 0, true,
+        // Plot 2 (Just shows the price and normal status)
+        Add("Expansion Plot 2", null, 250, true,
             () => BuyPlot(2),
-            () =>
-            {
-                if (!plot1Unlocked) return new ItemState("LOCKED", false, false);
-                return Evaluate(IsPlotUnlocked(2), 0, 250, true);
-            });
+            () => Evaluate(IsPlotUnlocked(2), 0, 250, true));
 
-        // Plot 3 (Notice the 'true' at the end of the Add line!)
-        bool plot2Unlocked = IsPlotUnlocked(2);
-        Add("Expansion Plot 3", null, plot2Unlocked ? 300 : 0, true,
+        // Plot 3 (Just shows the price and normal status)
+        Add("Expansion Plot 3", null, 300, true,
             () => BuyPlot(3),
-            () =>
-            {
-                if (!plot2Unlocked) return new ItemState("LOCKED", false, false);
-                return Evaluate(IsPlotUnlocked(3), 0, 300, true);
-            });
+            () => Evaluate(IsPlotUnlocked(3), 0, 300, true));
     }
 
     private void BuyPlot(int plotNumber)
