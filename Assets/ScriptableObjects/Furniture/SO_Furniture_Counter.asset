@@ -15,7 +15,7 @@ MonoBehaviour:
   furnitureName: Counter / Bar
   icon: {fileID: 0}
   cost: 160
-  appeal: 0
+  appeal: 2
   seats: 0
   blueprintDiamonds: 25
   prefab: {fileID: 0}

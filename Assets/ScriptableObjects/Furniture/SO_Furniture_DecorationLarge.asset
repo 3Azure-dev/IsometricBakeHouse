@@ -15,7 +15,7 @@ MonoBehaviour:
   furnitureName: DecorationLarge
   icon: {fileID: 0}
   cost: 130
-  appeal: 0
+  appeal: 3
   seats: 0
   blueprintDiamonds: 20
   prefab: {fileID: 0}

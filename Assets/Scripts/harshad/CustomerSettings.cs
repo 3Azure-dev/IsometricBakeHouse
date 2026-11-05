@@ -71,4 +71,17 @@ public class CustomerSettings : ScriptableObject
 
     [Tooltip("Body colour of a VIP customer (gold)")]
     public Color vipColor = new Color(1f, 0.84f, 0f);
+
+    [Header("Appeal and Tips (SCRUM-382)")]
+    [Tooltip("Tip chance added for each appeal point (GDD: 0.02 = 2%)")]
+    public float tipChancePerPoint = 0.02f;
+
+    [Tooltip("Highest possible tip chance (GDD: 0.3 = 30%)")]
+    [Range(0f, 1f)] public float maxTipChance = 0.3f;
+
+    [Tooltip("Tip = this share of the dish price (GDD: 0.2 = 20%)")]
+    [Range(0f, 1f)] public float tipSize = 0.2f;
+
+    [Tooltip("Drag ALL furniture assets here, so built items can be turned into appeal points")]
+    public FurnitureData[] furnitureList;
 }
