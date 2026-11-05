@@ -38,6 +38,6 @@ MonoBehaviour:
   vipOrderTimer: 240
   vipCoinMultiplier: 2
   vipDiamondReward: 20
-  vipChancePercent: 4
+  vipChancePercent: 20
   vipFirstDay: 3
   vipColor: {r: 1, g: 0.84, b: 0, a: 1}
