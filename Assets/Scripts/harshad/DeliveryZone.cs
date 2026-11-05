@@ -8,6 +8,9 @@ public class DeliveryZone : MonoBehaviour
 {
     [Header("Box (leave empty to use a cube until Pravin's model is in, SCRUM-357)")]
     [SerializeField] private GameObject boxPrefab;
+
+    [Tooltip("Size of the spawned box. Leave 0,0,0 to keep the prefab's own size. The model is tiny, so try 1,1,1 or higher.")]
+    [SerializeField] private Vector3 boxScale = Vector3.zero;
     [SerializeField] private Vector3 cubeSize = new Vector3(0.6f, 0.6f, 0.6f);
 
     [Header("Layout (boxes are placed in rows along this object's right/forward)")]
@@ -71,6 +74,9 @@ public class DeliveryZone : MonoBehaviour
         if (boxPrefab != null)
         {
             box = Instantiate(boxPrefab, position, transform.rotation);
+
+            if (boxScale != Vector3.zero)
+                box.transform.localScale = boxScale;
         }
         else
         {
