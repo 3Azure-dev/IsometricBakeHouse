@@ -1,22 +1,18 @@
 using UnityEngine;
 
-/// Shows a plate icon + "E" prompt above dirty tables.
-/// Automatically hides when plates are cleared.
-public class DirtyPlatePrompt : MonoBehaviour
+// Shows the [E] prompt above the table while it has dirty plates and the player is close enough.
+public class DirtyPlatePrompt : ProximityPromptBase
 {
     [Header("References")]
-    [SerializeField] private BakeryTable table;       // Table this prompt hangs over
-    [SerializeField] private GameObject promptRoot;   // The visual prompt (has WorldSpaceBillboard)
+    [SerializeField] private BakeryTable table;
 
-    private void Update()
+    protected override bool ConditionMet => table != null && table.HasDirtyPlates;
+
+    protected override void Awake()
     {
-        // Check if the table has dirty plates
-        bool hasDirtyPlates = table != null && table.HasDirtyPlates;
+        base.Awake();
 
-        // Show/hide the prompt based on dirty plates status
-        if (promptRoot != null)
-        {
-            promptRoot.SetActive(hasDirtyPlates);
-        }
+        if (table == null)
+            Debug.LogError("DirtyPlatePrompt: Table is NOT assigned in Inspector!", this);
     }
 }
