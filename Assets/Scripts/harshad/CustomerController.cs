@@ -817,6 +817,14 @@ public class CustomerController : MonoBehaviour
 
         Wallet.Instance.AddCoins(coins);
 
+        // SCRUM-382: a satisfied customer may leave a tip (20% of the dish price, not the VIP price)
+        int tip = BakeryAppeal.RollTip(settings, recipe.coinReward);
+
+        if (tip > 0)
+        {
+            Wallet.Instance.AddCoins(tip);
+        }
+
         // Only a VIP gives diamonds, and only when served correctly.
         if (IsVIP)
         {
