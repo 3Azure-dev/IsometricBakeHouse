@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SO_DayNightSettings
   m_EditorClassIdentifier: Assembly-CSharp::DayNightSettings
   dayLengthSeconds: 600
-  nightLengthSeconds: 500
+  nightLengthSeconds: 300
