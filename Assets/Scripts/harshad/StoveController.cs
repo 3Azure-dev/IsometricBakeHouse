@@ -26,7 +26,7 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
 
     private FoodType currentFood;
     private float cookingTimer;
-
+    private float menuBlockedUntil;
     // The recipe asset for the dish being cooked (cook time comes from here)
     private RecipeData currentRecipe;
 
@@ -64,6 +64,11 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
         if (foodReady)
         {
             TakeFood();
+            return;
+        }
+
+        if (Time.time < menuBlockedUntil)
+        {
             return;
         }
 
@@ -220,6 +225,13 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
         foodReady = false;
         currentRecipe = null;
 
+        menuBlockedUntil = Time.time + 0.3f;
+
         Debug.Log("Player took " + currentFood + " from the stove.");
+    }
+
+    public bool IsCooking
+    {
+        get { return isCooking; }
     }
 }

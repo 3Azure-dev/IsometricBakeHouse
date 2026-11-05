@@ -6,6 +6,7 @@ using UnityEngine.UI;
 // Shared logic for "world-space E prompt" behaviours.
 // A prompt is shown only when:  ConditionMet (game state)  AND  player is within range.
 // Pressing the interact key while it is showing fires onInteract.
+// The label text can change while the prompt is visible (override CurrentLabel).
 public abstract class ProximityPromptBase : MonoBehaviour
 {
     [Header("Prompt")]
@@ -21,13 +22,16 @@ public abstract class ProximityPromptBase : MonoBehaviour
     [SerializeField] private UnityEvent onInteract;     // Wire the existing "take food" / "clean plates" method here
 
     [Header("Debug")]
-    [SerializeField] private bool debugForceShow;       // Replaces the old temporary 'T' key test
+    [SerializeField] private bool debugForceShow;
 
     private PromptPopper popper;
     private bool isShowing;
-
+    
     // Each prompt says when its game-state condition is true.
     protected abstract bool ConditionMet { get; }
+
+    // Text shown in the label pill. Override to change it with the game state.
+    protected virtual string CurrentLabel => labelText;
 
     protected virtual void Awake()
     {
@@ -66,11 +70,13 @@ public abstract class ProximityPromptBase : MonoBehaviour
         if (shouldShow && !isShowing) Show();
         else if (!shouldShow && isShowing) Hide();
 
-        if (isShowing && Input.GetKeyDown(interactKey))
-            onInteract.Invoke();
+        if (isShowing)
+        {
+            RefreshLabel();
 
-        if (Time.frameCount % 30 == 0)
-            Debug.Log($"{name}: condition={ConditionMet}, inRange={IsPlayerInRange()}", this);
+            if (Input.GetKeyDown(interactKey))
+                onInteract.Invoke();
+        }
     }
 
     private bool IsPlayerInRange()
@@ -86,8 +92,9 @@ public abstract class ProximityPromptBase : MonoBehaviour
     {
         isShowing = true;
 
-        if (label != null && !string.IsNullOrEmpty(labelText))
-            label.text = labelText;
+        string text = CurrentLabel;
+        if (label != null && !string.IsNullOrEmpty(text))
+            label.text = text;
 
         promptRoot.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(promptRoot.GetComponent<RectTransform>());
@@ -102,6 +109,18 @@ public abstract class ProximityPromptBase : MonoBehaviour
         // PromptPopper deactivates the canvas itself once the pop-out finishes.
         if (popper != null) popper.PopOut();
         else promptRoot.SetActive(false);
+    }
+
+    // Updates the text while the prompt stays on screen (e.g. "Cook" -> "Take food").
+    private void RefreshLabel()
+    {
+        if (label == null) return;
+
+        string text = CurrentLabel;
+        if (string.IsNullOrEmpty(text) || label.text == text) return;
+
+        label.text = text;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(promptRoot.GetComponent<RectTransform>());
     }
 
     // Kept public so existing code can still call it.

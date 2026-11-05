@@ -1015,10 +1015,12 @@ public class CustomerController : MonoBehaviour
     // RESET CUSTOMER
     // --------------------------------------------------
 
+    // --------------------------------------------------
+    // RESET CUSTOMER
+    // --------------------------------------------------
+
     private void ResetCustomer()
     {
-        // Reset the bell so it can play for the next customer
-        // when this customer object is reused from the pool.
         arrivalBellPlayed = false;
 
         if (thinkingBubble != null)
@@ -1027,17 +1029,11 @@ public class CustomerController : MonoBehaviour
         }
 
         mySeat = null;
-
         myOrder = null;
-
         timer = 0f;
-
         orderTimeLeft = 0f;
-
         reaction = CustomerReaction.None;
-
         chosenFood = FoodType.Bread;
-
         state = CustomerState.GoingToDoor;
 
         if (agent == null)
@@ -1045,10 +1041,26 @@ public class CustomerController : MonoBehaviour
             agent = GetComponent<NavMeshAgent>();
         }
 
-        if (agent != null)
+        // --- 🌟 ONLY USE THIS SAFE VERSION 🌟 ---
+        if (agent != null && agent.isOnNavMesh && agent.enabled)
         {
             agent.ResetPath();
         }
+        else if (agent != null)
+        {
+            // Fallback: If they spawned off the grid, try to snap them to it immediately
+            if (NavMesh.SamplePosition(agent.transform.position, out NavMeshHit hit, 3f, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position);
+                agent.ResetPath();
+                Debug.Log("Customer was warped to the nearest NavMesh.");
+            }
+            else
+            {
+                Debug.LogWarning("Customer Agent is NOT on the NavMesh! Check Spawn Point Y position and ensure NavMesh is baked.");
+            }
+        }
+        // ----------------------------------------
 
         HideOrderTimerUI();
     }

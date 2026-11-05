@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.AI; // <-- ADDED THIS FOR NAVMESH FUNCTIONS
 
 public class CustomerSpawner : MonoBehaviour
 {
@@ -52,7 +53,6 @@ public class CustomerSpawner : MonoBehaviour
 
         if (shopSign != null)
         {
-            // Read the current sign state and listen for the player flipping it
             shopIsOpen = shopSign.IsOpen;
             shopSign.OnShopStateChanged += OnShopStateChanged;
         }
@@ -73,7 +73,6 @@ public class CustomerSpawner : MonoBehaviour
             : "CustomerSpawner: shop closed. No new customers.");
     }
 
-    // The clock outlives this scene, so unsubscribe when the spawner is destroyed
     private void OnDestroy()
     {
         if (shopSign != null)
@@ -108,7 +107,7 @@ public class CustomerSpawner : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // SPAWNING (a coroutine: code that can wait)
+    // SPAWNING
     // --------------------------------------------------
 
     private IEnumerator SpawnLoop()
@@ -121,13 +120,9 @@ public class CustomerSpawner : MonoBehaviour
 
         while (true)
         {
-            // 1. Wait until it is day, the shop is open, and a whole batch fits at the door
             yield return new WaitUntil(CanSpawnBatch);
-
-            // 2. Wait the spawn delay (5 sec from the settings asset)
             yield return new WaitForSeconds(settings.doorSpawnDelay);
 
-            // 3. Things may have changed while we waited (the day may have ended), so check again
             if (CanSpawnBatch())
             {
                 for (int i = 0; i < settings.customersPerBatch; i++)
@@ -140,27 +135,15 @@ public class CustomerSpawner : MonoBehaviour
 
     private bool CanSpawnBatch()
     {
-        if (!dayIsOpen || !ShopIsOpen())
-        {
-            return false;
-        }
-
-        if (CustomerManager.Instance == null)
-        {
-            return false;
-        }
+        if (!dayIsOpen || !ShopIsOpen()) return false;
+        if (CustomerManager.Instance == null) return false;
 
         return CustomerManager.Instance.DoorFreeSpots >= settings.customersPerBatch;
     }
 
-    // Asks the shop sign: "is the shop open?" (no sign assigned = always open)
     private bool ShopIsOpen()
     {
-        if (shopSign == null)
-        {
-            return true;
-        }
-
+        if (shopSign == null) return true;
         return shopIsOpen;
     }
 
@@ -170,13 +153,11 @@ public class CustomerSpawner : MonoBehaviour
 
         if (nextIsVip)
         {
-            // Test switch is on: force a VIP once
             type = CustomerType.VIP;
             nextIsVip = false;
         }
         else
         {
-            // No VIPs before the first VIP day (SO_CustomerSettings: Vip First Day)
             int today = DayNightClock.Instance != null ? DayNightClock.Instance.DayNumber : 1;
 
             if (today < settings.vipFirstDay)
@@ -185,26 +166,33 @@ public class CustomerSpawner : MonoBehaviour
             }
             else
             {
-                // VIP chance comes from SO_CustomerSettings (percent)
                 float randomNumber = Random.Range(0f, 100f);
-
-                type = randomNumber <= settings.vipChancePercent
-                    ? CustomerType.VIP
-                    : CustomerType.Normal;
+                type = randomNumber <= settings.vipChancePercent ? CustomerType.VIP : CustomerType.Normal;
             }
         }
 
         GameObject customer = CustomerPool.Instance.GetCustomer(type);
+        if (customer == null) return;
 
-        if (customer == null)
-            return;
+        // --- 🌟 NAVMESH SAFE SPAWN FIX 🌟 ---
+        // This guarantees the customer snaps to the nearest valid walkable floor, 
+        // even if the spawnPoint is floating slightly in the air!
+        Vector3 safeSpawnPos = spawnPoint.position;
 
-        customer.transform.position = spawnPoint.position;
+        if (NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+        {
+            safeSpawnPos = hit.position; // Snap to the blue NavMesh grid
+        }
+        else
+        {
+            Debug.LogWarning("CustomerSpawner: Could not find valid NavMesh near spawn point! Lower the spawn point Y position.");
+        }
 
+        customer.transform.position = safeSpawnPos;
         customer.transform.rotation = spawnPoint.rotation;
+        // ------------------------------------
 
         CustomerController controller = customer.GetComponent<CustomerController>();
-
         controller.StartCustomer(type);
     }
 }

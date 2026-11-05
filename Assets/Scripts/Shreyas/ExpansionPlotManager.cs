@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+
 
 public class ExpansionPlotManager : MonoBehaviour
 {
@@ -111,9 +113,18 @@ public class ExpansionPlotManager : MonoBehaviour
             yield return null;
         }
 
+        // ... existing code ...
+
         // 4. Clean up
         floorT.localScale = targetFloorScale;
-        plot.blocker.SetActive(false); // Disable old wall physics
+        plot.blocker.SetActive(false);
+
+        // --- ADD THIS: Rebuild NavMesh so customers can walk into the new area ---
+        NavMeshSurface surface = FindAnyObjectByType<NavMeshSurface>();
+        if (surface != null)
+        {
+            surface.BuildNavMesh();
+        }
 
         Debug.Log($"Plot {plot.plotData.plotNumber} unlocked! Floor and walls expanded.");
     }
