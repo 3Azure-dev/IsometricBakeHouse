@@ -26391,7 +26391,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeliveryZone
   boxPrefab: {fileID: 919132149155446097, guid: dba0bb5866b8a6344a16113b7f44ecd5, type: 3}
-  cubeSize: {x: 0.6, y: 0.6, z: 0.6}
+  boxScale: {x: 0.5, y: 0.5, z: 0.5}
+  cubeSize: {x: 1, y: 1, z: 1}
   spacing: 0.9
   boxesPerRow: 4
 --- !u!4 &2092706399
