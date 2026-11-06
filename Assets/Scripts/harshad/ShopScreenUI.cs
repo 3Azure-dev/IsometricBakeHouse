@@ -315,6 +315,8 @@ public class ShopScreenUI : MonoBehaviour
     {
         if (button == null) return;
         Transform dot = button.transform.Find("NewDot");
+        // Add this debug line:
+        Debug.Log($"[SetVerticalNewDot] Button: {button.name}, Found NewDot: {dot != null}, Show: {show}");
         if (dot != null) dot.gameObject.SetActive(show);
     }
 
@@ -325,23 +327,11 @@ public class ShopScreenUI : MonoBehaviour
         if (dot != null) dot.gameObject.SetActive(show);
     }
 
-    // Helper to show/hide the red "New" dot on a specific tab
-    private void SetNewDot(int tabIndex, bool show)
-    {
-        // Safety check
-        if (tabIndex < 0 || tabIndex >= tabButtons.Length) return;
-        if (tabButtons[tabIndex] == null) return;
+    
 
-        // Find the "NewDot" child object inside the button
-        Transform dot = tabButtons[tabIndex].transform.Find("NewDot");
 
-        if (dot != null)
-        {
-            dot.gameObject.SetActive(show);
-        }
-    }
 
-    private void Rebuild()
+private void Rebuild()
     {
         foreach (Transform child in rowContainer)
         {
@@ -714,8 +704,10 @@ public class ShopScreenUI : MonoBehaviour
     private void CheckForNewUnlocks()
     {
         if (level == null) return;
-        int currentLevel = level.Level;
 
+        // Declare currentLevel ONLY ONCE here:
+        int currentLevel = level.Level;
+        Debug.Log($"[SHOP UI] Checking unlocks! Current Level: {currentLevel}");
         // 1. Check Recipes (Horizontal Tab 2 of Shop Items)
         bool newRecipe = currentLevel > lastViewedLevelRecipe;
         SetHorizontalNewDot(2, newRecipe);
