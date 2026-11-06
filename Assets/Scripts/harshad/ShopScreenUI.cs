@@ -567,7 +567,7 @@ public class ShopScreenUI : MonoBehaviour
     }
     private void BuyPlot(int plotNumber)
     {
-        // Check if previous plot is unlocked
+        // 1. Check if previous plot is unlocked
         if (plotNumber > 1 && !IsPlotUnlocked(plotNumber - 1))
         {
             Say("You must buy Plot " + (plotNumber - 1) + " first!");
@@ -576,25 +576,30 @@ public class ShopScreenUI : MonoBehaviour
 
         if (IsPlotUnlocked(plotNumber)) return;
 
-        int cost = plotNumber == 1 ? 200 : plotNumber == 2 ? 250 : 300;
-
-        if (wallet == null || !wallet.SpendDiamonds(cost))
-        {
-            Say("Not enough diamonds!");
-            return;
-        }
-
-        // Unlock the plot in your ExpansionPlotManager
+        // 2. Let the ExpansionPlotManager handle the diamonds and unlocking!
         ExpansionPlotManager plotManager = FindAnyObjectByType<ExpansionPlotManager>();
+
         if (plotManager != null)
         {
-            plotManager.BuyPlot(plotNumber);
+            // The Manager will try to spend diamonds and unlock the plot
+            bool success = plotManager.BuyPlot(plotNumber);
+
+            if (success)
+            {
+                Say("Expansion Plot " + plotNumber + " unlocked!");
+            }
+            else
+            {
+                Say("Not enough diamonds or plot already bought!");
+            }
+        }
+        else
+        {
+            Say("Plot Manager not found!");
         }
 
-        Say("Expansion Plot " + plotNumber + " unlocked!");
+        // 3. Refresh the UI
         Refresh();
-
-        // ADD THIS LINE AT THE VERY BOTTOM:
         Rebuild();
     }
 
