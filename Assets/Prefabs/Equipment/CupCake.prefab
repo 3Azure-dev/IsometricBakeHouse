@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 955756045643986298}
   - component: {fileID: 8892134574119448012}
   m_Layer: 0
-  m_Name: CupCake
+  m_Name: Cupcake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

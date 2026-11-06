@@ -20747,7 +20747,7 @@ GameObject:
   - component: {fileID: 1677296671}
   - component: {fileID: 1677296670}
   m_Layer: 5
-  m_Name: CoinCounter
+  m_Name: CoinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22014,7 +22014,7 @@ GameObject:
   - component: {fileID: 1770698586}
   - component: {fileID: 1770698588}
   m_Layer: 5
-  m_Name: DiamondCounter
+  m_Name: DiamondText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

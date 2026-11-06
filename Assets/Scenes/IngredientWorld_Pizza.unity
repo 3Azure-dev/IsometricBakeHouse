@@ -1555,7 +1555,7 @@ GameObject:
   - component: {fileID: 446972425}
   - component: {fileID: 446972424}
   m_Layer: 5
-  m_Name: IngreidentSackCounter
+  m_Name: IngredientsSackCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

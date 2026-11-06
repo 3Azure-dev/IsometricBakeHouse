@@ -324,7 +324,7 @@ GameObject:
   - component: {fileID: 7151511401375972635}
   - component: {fileID: 1790371750475453760}
   m_Layer: 5
-  m_Name: OrderBubbwidget
+  m_Name: OrderBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

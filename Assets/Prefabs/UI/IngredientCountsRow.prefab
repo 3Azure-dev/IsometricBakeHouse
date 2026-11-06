@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 6489960278063277593}
   - component: {fileID: 3930676005073060314}
   m_Layer: 5
-  m_Name: IngreidentCountsRow
+  m_Name: IngredientCountsRow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 7521453161096105087}
   - component: {fileID: 217144023403832172}
   m_Layer: 5
-  m_Name: E_Canvas
+  m_Name: EPrompt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

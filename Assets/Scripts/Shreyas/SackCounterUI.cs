@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class SackCounterUI1 : MonoBehaviour
+public class SackCounterUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text sackCountText;
 
