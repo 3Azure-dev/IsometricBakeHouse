@@ -2243,56 +2243,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1081810181}
   m_CullTransparentMesh: 1
---- !u!1 &1104873488
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1104873489}
-  - component: {fileID: 1104873490}
-  m_Layer: 0
-  m_Name: DunkAimBarFakeDriver
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1104873489
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1104873488}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 259.1989, y: 285.29697, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1104873490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1104873488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 584e933d2a71e534596403d90e60123e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DunkAimBarFakeDriver
-  aimBarUI: {fileID: 820800840}
-  fakeHitZoneCenter: 0.7
-  fakeHitZoneSize: 0.2
-  startingSpeed: 0.4
-  speedIncrease: 1
-  speedIncreaseInterval: 2
 --- !u!1 &1158201575
 GameObject:
   m_ObjectHideFlags: 0
@@ -10791,5 +10741,4 @@ SceneRoots:
   - {fileID: 7013722857909632473}
   - {fileID: 5698691410535007901}
   - {fileID: 353467421}
-  - {fileID: 1104873489}
   - {fileID: 2129854581}
