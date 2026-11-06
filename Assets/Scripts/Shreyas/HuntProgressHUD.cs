@@ -112,7 +112,8 @@ public class HuntProgressHUD : MonoBehaviour
     {
         if (creaturesText != null)
         {
-            creaturesText.text = $"Creatures Left {creaturesAlive}";
+            creaturesText.text = $"Creatures Left: {creaturesAlive}";
+            Debug.Log($"[DEBUG] Creatures Left text set to: '{creaturesText.text}' | creaturesAlive value: {creaturesAlive}");
         }
     }
 

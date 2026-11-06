@@ -876,7 +876,7 @@ GameObject:
   - component: {fileID: 77122143}
   - component: {fileID: 77122142}
   m_Layer: 5
-  m_Name: Panel (8)
+  m_Name: CheesePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1507,7 +1507,7 @@ GameObject:
   - component: {fileID: 118613478}
   - component: {fileID: 118613477}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: ShelfPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1979,7 +1979,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TomatoSauce
+  m_text: 'Tomato Sauce
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3674,7 +3676,7 @@ GameObject:
   - component: {fileID: 253772791}
   - component: {fileID: 253772790}
   m_Layer: 5
-  m_Name: Panel (4)
+  m_Name: ButterPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5427,7 +5429,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Seed
+  m_text: Seeds
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6159,7 +6161,7 @@ GameObject:
   - component: {fileID: 436454470}
   - component: {fileID: 436454469}
   m_Layer: 5
-  m_Name: Panel (1)
+  m_Name: SeedsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8891,7 +8893,7 @@ GameObject:
   - component: {fileID: 657598121}
   - component: {fileID: 657598120}
   m_Layer: 5
-  m_Name: Button
+  m_Name: TakeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9447,7 +9449,7 @@ GameObject:
   - component: {fileID: 711787818}
   - component: {fileID: 711787817}
   m_Layer: 5
-  m_Name: ShopPanel
+  m_Name: EggPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10348,7 +10350,7 @@ GameObject:
   - component: {fileID: 860184667}
   - component: {fileID: 860184666}
   m_Layer: 5
-  m_Name: Button
+  m_Name: CloseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10759,7 +10761,7 @@ GameObject:
   - component: {fileID: 896269863}
   - component: {fileID: 896269862}
   m_Layer: 5
-  m_Name: Panel (7)
+  m_Name: TomatoSaucePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13509,7 +13511,7 @@ GameObject:
   - component: {fileID: 1070272657}
   - component: {fileID: 1070272656}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: FlourPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19735,7 +19737,7 @@ GameObject:
   - component: {fileID: 1638357206}
   - component: {fileID: 1638357205}
   m_Layer: 5
-  m_Name: Panel (3)
+  m_Name: SugarPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22745,7 +22747,7 @@ GameObject:
   - component: {fileID: 1843111201}
   - component: {fileID: 1843111200}
   m_Layer: 5
-  m_Name: Panel (6)
+  m_Name: DoughPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22823,7 +22825,7 @@ GameObject:
   - component: {fileID: 1849699272}
   - component: {fileID: 1849699271}
   m_Layer: 5
-  m_Name: Panel (2)
+  m_Name: YeastPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
