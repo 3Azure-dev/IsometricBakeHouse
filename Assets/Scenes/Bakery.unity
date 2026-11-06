@@ -129,7 +129,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 728102101863830890, guid: 00f6edc0603033d429359a2257198df9, type: 3}
       propertyPath: m_fontSize
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 728102101863830890, guid: 00f6edc0603033d429359a2257198df9, type: 3}
       propertyPath: m_fontSizeMax
@@ -141,7 +141,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 728102101863830890, guid: 00f6edc0603033d429359a2257198df9, type: 3}
       propertyPath: m_fontSizeBase
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 728102101863830890, guid: 00f6edc0603033d429359a2257198df9, type: 3}
       propertyPath: m_enableAutoSizing
@@ -225,11 +225,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7388556904148286411, guid: 00f6edc0603033d429359a2257198df9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1.03
+      value: 1.51
       objectReference: {fileID: 0}
     - target: {fileID: 7388556904148286411, guid: 00f6edc0603033d429359a2257198df9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.38
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 7578917195484830748, guid: 00f6edc0603033d429359a2257198df9, type: 3}
       propertyPath: m_Camera
@@ -1677,7 +1677,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.6972, y: -1.45}
+  m_AnchoredPosition: {x: 0.88, y: -1.45}
   m_SizeDelta: {x: 1.3944, y: 1.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &91636368
