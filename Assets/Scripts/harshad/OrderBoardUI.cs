@@ -20,6 +20,12 @@ public class OrderBoardUI : MonoBehaviour
 
     private CustomerController currentCustomer;
 
+    [Header("Walk away")]
+    [Tooltip("If the player gets farther than this from the customer, the board closes (world units)")]
+    [SerializeField] private float closeDistance = 3f;
+
+    private Transform player;
+
 
     private void Awake()
     {
@@ -39,6 +45,51 @@ public class OrderBoardUI : MonoBehaviour
 
         acceptButton.onClick.AddListener(AcceptOrder);
         rejectButton.onClick.AddListener(RejectOrder);
+    }
+
+
+    private void Update()
+    {
+        // Nothing to do while the board is closed
+        if (currentCustomer == null || !orderPanel.activeSelf)
+        {
+            return;
+        }
+
+        if (player == null)
+        {
+            GameObject p = GameObject.FindWithTag("Player");
+
+            if (p == null)
+            {
+                return;
+            }
+
+            player = p.transform;
+        }
+
+        // Distance on the floor only (ignore height)
+        Vector3 a = player.position;
+        Vector3 b = currentCustomer.transform.position;
+        a.y = 0f;
+        b.y = 0f;
+
+        if ((a - b).sqrMagnitude > closeDistance * closeDistance)
+        {
+            CloseWithoutAnswer();
+        }
+    }
+
+    // The player walked away: close the board, the order is still open
+    private void CloseWithoutAnswer()
+    {
+        Debug.Log("Order board closed: the player walked away from " + currentCustomer.name);
+
+        // Back to "waiting for the player", so E works again
+        currentCustomer.CancelOrdering();
+
+        orderPanel.SetActive(false);
+        currentCustomer = null;
     }
 
 
