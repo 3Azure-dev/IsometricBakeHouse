@@ -75,6 +75,7 @@ public class Bolt1 : MonoBehaviour
         if (other.TryGetComponent(out IngredientCreature1 creature))
         {
             creature.Stun();
+            if (HuntFX.Instance != null) HuntFX.Instance.Sparks(transform.position);
             Despawn();
             return;
         }

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class IngredientRowUI : MonoBehaviour
 {
@@ -11,6 +12,13 @@ public class IngredientRowUI : MonoBehaviour
 
     private IngredientData ingredientData;
     private Inventory1 subscribedInventory;
+
+    [Header("Pop when the count goes up")]
+    [SerializeField] private float popScale = 1.3f;
+    [SerializeField] private float popTime = 0.1f;
+
+    private int lastCount = -1;
+    private Coroutine popRoutine;
 
     public void Initialize(IngredientData data)
     {
@@ -90,6 +98,9 @@ public class IngredientRowUI : MonoBehaviour
         {
             countText.text = amount.ToString();
 
+            if (lastCount >= 0 && amount > lastCount) Pop();
+            lastCount = amount;
+
             Debug.Log(
                 $"COUNT DISPLAY UPDATED | " +
                 $"Row: {ingredientData.ingredientName} | " +
@@ -119,5 +130,31 @@ public class IngredientRowUI : MonoBehaviour
     private void OnDestroy()
     {
         Unsubscribe();
+    }
+
+    private void Pop()
+    {
+        if (popRoutine != null) StopCoroutine(popRoutine);
+        popRoutine = StartCoroutine(PopRoutine());
+    }
+
+    private IEnumerator PopRoutine()
+    {
+        Transform t = countText.transform;
+        Vector3 big = Vector3.one * popScale;
+
+        for (float e = 0f; e < popTime; e += Time.unscaledDeltaTime)
+        {
+            t.localScale = Vector3.Lerp(Vector3.one, big, e / popTime);
+            yield return null;
+        }
+        for (float e = 0f; e < popTime; e += Time.unscaledDeltaTime)
+        {
+            t.localScale = Vector3.Lerp(big, Vector3.one, e / popTime);
+            yield return null;
+        }
+
+        t.localScale = Vector3.one;
+        popRoutine = null;
     }
 }

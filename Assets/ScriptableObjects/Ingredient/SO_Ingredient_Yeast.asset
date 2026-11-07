@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngredientData
   ingredientName: Yeast
   icon: {fileID: 0}
+  fxColor: {r: 0.9490196, g: 0.83137256, b: 0.36078432, a: 1}
   fleeSpeed: 6
   jumpForce: 9
   gravityScale: 0.4
@@ -22,6 +23,17 @@ MonoBehaviour:
   stunDuration: 2
   catchRange: 1.5
   ingredientsPerCatch: 1
-  hoverHeight: 3
-  bobAmount: 0.3
-  bobSpeed: 2
+  dropInterval: 0.8
+  slowMultiplier: 0.5
+  slowDuration: 1
+  puddleLifetime: 4
+  dropletsPerDrop: 2
+  dropletBackSpeed: 4
+  dropletUpSpeed: 5
+  dropletLifetime: 4
+  extraCooldown: 3
+  debuffTime: 8
+  popUpTime: 0.8
+  rumbleTime: 0.5
+  hideTime: 0.6
+  popUpCount: 3

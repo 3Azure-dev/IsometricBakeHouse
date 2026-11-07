@@ -57,7 +57,7 @@ MonoBehaviour:
   _holeProbeDepth: 6
   _state: 0
   _shellPrefab: {fileID: 8012802590155420348, guid: 283d9c9e78439714da2d2596cad34691, type: 3}
-  _throwInterval: 1.2
+  _throwInterval: 4
   _shellSpeed: 10
   _playerStunTime: 1.5
   _shellLifetime: 3

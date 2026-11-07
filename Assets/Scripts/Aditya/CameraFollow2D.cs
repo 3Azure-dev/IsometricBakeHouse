@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class CameraFollow2D : MonoBehaviour
 {
+    public static CameraFollow2D Instance { get; private set; }
+
     [Header("Target")]
     [SerializeField] private Transform _target;
     [SerializeField] private Vector2 _offset = new Vector2(0f, 1.5f);
@@ -15,6 +17,15 @@ public class CameraFollow2D : MonoBehaviour
     [SerializeField] private float _minY = 0f;
 
     private Vector3 _velocity;
+    private Vector3 _followPos;   // smooth follow position, without shake
+    private float _shakeTime;
+    private float _shakeStrength;
+
+    private void Awake()
+    {
+        Instance = this;
+        _followPos = transform.position;
+    }
 
     void LateUpdate()
     {
@@ -23,11 +34,26 @@ public class CameraFollow2D : MonoBehaviour
         Vector3 goal = new Vector3(
             _target.position.x + _offset.x,
             _target.position.y + _offset.y,
-            transform.position.z);
+            _followPos.z);
 
         goal.x = Mathf.Clamp(goal.x, _minX, _maxX);
         goal.y = Mathf.Max(goal.y, _minY);
 
-        transform.position = Vector3.SmoothDamp(transform.position, goal, ref _velocity, _smoothTime);
+        _followPos = Vector3.SmoothDamp(_followPos, goal, ref _velocity, _smoothTime);
+
+        Vector3 shake = Vector3.zero;
+        if (_shakeTime > 0f)
+        {
+            _shakeTime -= Time.deltaTime;
+            shake = Random.insideUnitCircle * _shakeStrength;
+        }
+
+        transform.position = _followPos + shake;
+    }
+
+    public void Shake(float time, float strength)
+    {
+        _shakeTime = time;
+        _shakeStrength = strength;
     }
 }

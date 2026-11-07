@@ -7,6 +7,9 @@ public class IngredientData : ScriptableObject
     public string ingredientName;
     public Sprite icon;
 
+    [Tooltip("Colour of the puff when this creature is caught")]
+    public Color fxColor = Color.white;
+
     [Header("Hunting - Movement")]
     [Tooltip("How fast this creature runs from the player")]
     public float fleeSpeed = 4f;

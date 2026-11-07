@@ -106,13 +106,5 @@ public class WandFire1 : MonoBehaviour
     {
         _sauceExtra = extraCooldown;
         _sauceUntil = Time.time + duration; // restarts, doesn't stack
-        Debug.Log($"Wand sticky: +{extraCooldown}s cooldown for {duration}s");
-
-        // THIS adds 3 seconds to the actual timer
-        _nextFireTime += 3f;
-
-        // THIS expands the UI bar so the +3s is visible
-        // (It is perfectly fine to READ CooldownRemaining here, just don't assign to it)
-        CooldownMax = Mathf.Max(CooldownMax, CooldownRemaining);
     }
 }

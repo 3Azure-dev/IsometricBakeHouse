@@ -124,6 +124,7 @@ public class DoughCreature : IngredientCreature1
     {
         if (_blasted) return;
         _blasted = true;
+        if (HuntFX.Instance != null) HuntFX.Instance.Blast(transform.position);
 
         if (_player != null && DistanceToPlayer() < _blastRange
             && _player.TryGetComponent(out PlayerController player))
@@ -132,5 +133,12 @@ public class DoughCreature : IngredientCreature1
             player.Knockback(new Vector2(dir * _blastForce, _blastUp), _blastTime);
         }
         Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D hit)
+    {
+        if (!_isClone || _fusing || _blasted) return;
+        if (hit.collider.CompareTag("Player"))
+            StartCoroutine(Fuse());
     }
 }
