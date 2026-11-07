@@ -403,12 +403,12 @@ MonoBehaviour:
   creatureStunned: {fileID: 8300000, guid: a16a02640a975c64b8bf4ab7c187d5cc, type: 3}
   creatureCaught: {fileID: 8300000, guid: cd0d78371f2c5cc43985b33569376990, type: 3}
   mouldPlaced: {fileID: 8300000, guid: cd3b5b4eb8fe00447b7bf19ad280aa4a, type: 3}
-  eggshellThrow: {fileID: 8300000, guid: 54695beb1a4a1684c8d5cd8ad0ff2597, type: 3}
-  eggshellHit: {fileID: 8300000, guid: 0695bb51660396749a43b312d537c8a0, type: 3}
-  sugarDash: {fileID: 8300000, guid: 07afec5ea4b05314d859c4782edea1ef, type: 3}
-  butterTrail: {fileID: 8300000, guid: b7d0e0e6054eec2418ebf0fb7211eede, type: 3}
-  pizzaCreatureStunned: {fileID: 8300000, guid: c874b71aaba2c064da948dd26fcbea6b, type: 3}
-  pizzaCreatureCaught: {fileID: 8300000, guid: 5a2955fad49fdf447a05824a36d98e12, type: 3}
+  eggshellThrow: {fileID: 8300000, guid: f4b6a1acb7d3c1042a2214b39e587fe6, type: 3}
+  eggshellHit: {fileID: 8300000, guid: 759bd47a1c9a6d94c96d1f8708b80f41, type: 3}
+  sugarDash: {fileID: 8300000, guid: 4b9fe11e4b50b99488765e46899413f2, type: 3}
+  butterTrail: {fileID: 8300000, guid: c6c49ac8bd881dc41b1bdf7e6649b0fe, type: 3}
+  pizzaCreatureStunned: {fileID: 8300000, guid: e9b8f8f5353903c47afadb86ecde4c21, type: 3}
+  pizzaCreatureCaught: {fileID: 8300000, guid: d14d140427b81ab4b8c4320c4a9d789a, type: 3}
 --- !u!4 &165504243
 Transform:
   m_ObjectHideFlags: 0
