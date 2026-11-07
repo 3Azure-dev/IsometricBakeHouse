@@ -14,7 +14,7 @@ public class PlayerLevel : MonoBehaviour
     private BakeryProgress subscribedProgress;
 
     public int Level => BakeryProgress.Instance != null ? BakeryProgress.Instance.Level : 1;
-    public int MaxLevel => data != null ? data.maxLevel : 3;
+    public int MaxLevel => data != null ? data.maxLevel : 4;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void CreateOnStart()
@@ -188,6 +188,9 @@ public class PlayerLevel : MonoBehaviour
 
     [ContextMenu("TEST: Buy Next Level")]
     private void TestBuyNext() => BuyNextLevel();
+
+    [ContextMenu("TEST: Set Level 4")]
+    private void TestLevel4() => SetLevelForTest(4);
 
     // Sets any level for demos. No coins are spent.
     public void SetLevelForTest(int level)

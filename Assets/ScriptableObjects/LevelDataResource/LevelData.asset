@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c10c598bfceb4e40b3b35ac5ce7fad1, type: 3}
   m_Name: LevelData
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  maxLevel: 3
+  maxLevel: 4
   levels:
   - level: 1
     coinCost: 0
@@ -31,4 +31,10 @@ MonoBehaviour:
     unlocksRecipe: 1
     recipe: 2
     unlocksEquipment: 1
+    equipment: 2
+  - level: 4
+    coinCost: 3000
+    unlocksRecipe: 0
+    recipe: 2
+    unlocksEquipment: 0
     equipment: 2
