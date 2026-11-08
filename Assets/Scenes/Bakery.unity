@@ -779,7 +779,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1733776321}
-  - {fileID: 2018885211}
   m_Father: {fileID: 1814846369}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -4385,9 +4384,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShopUnlockNotifier
   rules:
   - requiredLevel: 1
-    targetTab: {fileID: 629927165}
+    targetTab: {fileID: 0}
   - requiredLevel: 1
-    targetTab: {fileID: 1880128877}
+    targetTab: {fileID: 0}
   - requiredLevel: 3
     targetTab: {fileID: 1692965879}
 --- !u!1 &275489775
@@ -7285,81 +7284,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 455102267}
   m_CullTransparentMesh: 1
---- !u!1 &457827276
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 457827279}
-  - component: {fileID: 457827278}
-  - component: {fileID: 457827277}
-  m_Layer: 5
-  m_Name: NewDot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &457827277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457827276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.9433962, g: 0.050433062, b: 0.050433062, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &457827278
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457827276}
-  m_CullTransparentMesh: 1
---- !u!224 &457827279
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457827276}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1880128873}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -5.300003, y: -4.4}
-  m_SizeDelta: {x: 15, y: 15}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &458041514
 GameObject:
   m_ObjectHideFlags: 0
@@ -9578,7 +9502,6 @@ GameObject:
   - component: {fileID: 629927164}
   - component: {fileID: 629927163}
   - component: {fileID: 629927162}
-  - component: {fileID: 629927165}
   m_Layer: 5
   m_Name: Tab
   m_TagString: Untagged
@@ -9599,7 +9522,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 85774499}
-  - {fileID: 770503304}
   m_Father: {fileID: 1940976140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -9650,19 +9572,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 629927163}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 629927165}
-        m_TargetAssemblyTypeName: TabNewIndicator, Assembly-CSharp
-        m_MethodName: HideDot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &629927163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9701,19 +9611,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629927160}
   m_CullTransparentMesh: 1
---- !u!114 &629927165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629927160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 450369f7969f1ba489791865e2fdb875, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TabNewIndicator
-  newDot: {fileID: 770503301}
 --- !u!1 &647308738
 GameObject:
   m_ObjectHideFlags: 0
@@ -10980,81 +10877,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 755161890}
   m_CullTransparentMesh: 1
---- !u!1 &770503301
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 770503304}
-  - component: {fileID: 770503303}
-  - component: {fileID: 770503302}
-  m_Layer: 5
-  m_Name: NewDot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &770503302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770503301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.9245283, g: 0.06686832, b: 0.06686832, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &770503303
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770503301}
-  m_CullTransparentMesh: 1
---- !u!224 &770503304
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770503301}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 629927161}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -2.0999985, y: -2}
-  m_SizeDelta: {x: 16.899994, y: 15}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &770799405
 GameObject:
   m_ObjectHideFlags: 0
@@ -13455,12 +13277,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: range
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1001104578}
     - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
       propertyPath: labelText
       value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: middleZone
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
       propertyPath: plateIndex
@@ -13471,8 +13305,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1798761399}
     - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: isPrioritized
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1420079501}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CleanSpecificPlate
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BakeryTable, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956833261954824442, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
+      propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8206791959637217596, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
       propertyPath: m_IsActive
@@ -13516,9 +13378,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8428612895311178717, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2121745707}
-    - targetCorrespondingSourceObject: {fileID: 8428612895311178717, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2121745708}
     - targetCorrespondingSourceObject: {fileID: 1419124681739823497, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1644159905}
@@ -16798,11 +16657,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
---- !u!1 &1175974365 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7151220762723386124, guid: e89bf597f6df7094282d35ff3b96ba75, type: 3}
-  m_PrefabInstance: {fileID: 937608828}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1203837496
 GameObject:
   m_ObjectHideFlags: 0
@@ -25945,7 +25799,6 @@ GameObject:
   - component: {fileID: 1880128876}
   - component: {fileID: 1880128875}
   - component: {fileID: 1880128874}
-  - component: {fileID: 1880128877}
   m_Layer: 5
   m_Name: Tab2
   m_TagString: Untagged
@@ -25966,7 +25819,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1351667622}
-  - {fileID: 457827279}
   m_Father: {fileID: 1940976140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -26017,19 +25869,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1880128875}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1880128877}
-        m_TargetAssemblyTypeName: TabNewIndicator, Assembly-CSharp
-        m_MethodName: HideDot
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1880128875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26068,19 +25908,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1880128872}
   m_CullTransparentMesh: 1
---- !u!114 &1880128877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1880128872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 450369f7969f1ba489791865e2fdb875, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TabNewIndicator
-  newDot: {fileID: 457827276}
 --- !u!1 &1882370347
 GameObject:
   m_ObjectHideFlags: 0
@@ -28578,81 +28405,6 @@ RectTransform:
   m_AnchoredPosition: {x: -20.6, y: -51.1}
   m_SizeDelta: {x: 55.168, y: 18.044}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &2018885210
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2018885211}
-  - component: {fileID: 2018885213}
-  - component: {fileID: 2018885212}
-  m_Layer: 5
-  m_Name: NewDot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &2018885211
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2018885210}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 65771688}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55.9, y: 35.6}
-  m_SizeDelta: {x: 15, y: 15}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2018885212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2018885210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.9308176, g: 0.061468955, b: 0.061468955, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &2018885213
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2018885210}
-  m_CullTransparentMesh: 1
 --- !u!1 &2025496106
 GameObject:
   m_ObjectHideFlags: 0
@@ -29795,34 +29547,29 @@ MonoBehaviour:
   labelText: None
   player: {fileID: 1001104578}
   rangeCenter: {fileID: 10090131}
-  range: 2
+  range: 3
   interactKey: 101
   onInteract:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1420079501}
+        m_TargetAssemblyTypeName: BakeryTable, Assembly-CSharp
+        m_MethodName: CleanSpecificPlate
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   debugForceShow: 0
   table: {fileID: 1420079501}
   plateIndex: 1
---- !u!114 &2121745708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2121745700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9d0acb1e0939f1429ac49dc23761323, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DirtyPlatePromptManager
-  platePromptObjects:
-  - {fileID: 1175974365}
-  - {fileID: 531398475}
-  dirtyPlates:
-  - {fileID: 1798761399}
-  - {fileID: 10090131}
-  promptRange: 3
-  player: {fileID: 1001104578}
+  onlyNearestPlate: 1
+  useFacing: 1
+  middleZone: 1.5
 --- !u!1 &2143762724
 GameObject:
   m_ObjectHideFlags: 0

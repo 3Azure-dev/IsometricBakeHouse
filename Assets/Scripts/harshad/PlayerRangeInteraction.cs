@@ -156,6 +156,8 @@ public class PlayerRangeInteraction : MonoBehaviour
         }
 
         // TABLE: only if it has dirty plates to clear
+        // COMMENTED OUT - DirtyPlatePrompt now handles table interactions
+        /*
         BakeryTable table =
             target.GetComponentInParent<BakeryTable>();
 
@@ -169,6 +171,7 @@ public class PlayerRangeInteraction : MonoBehaviour
             table.Interact();
             return true;
         }
+        */
 
         // STOVE
         StoveController stove =

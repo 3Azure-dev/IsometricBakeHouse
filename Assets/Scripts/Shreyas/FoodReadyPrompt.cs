@@ -24,7 +24,7 @@ public class FoodReadyPrompt : ProximityPromptBase
     private int lastIndex = -1;
 
     // Only while the dish is ready. Idle and cooking stay hidden.
-    public override bool ConditionMet
+    protected override bool ConditionMet
     {
         get
         {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -19,9 +19,12 @@ public class ShopScreenUI : MonoBehaviour
     private enum Section { ShopItems, Equipment, LevelUpgrade }
 
     // Track the last level the player viewed for each category to show "New" dots
+    // GDD: nothing unlocks after Level 3 → Level 4+ never triggers dots
+    private const int MaxUnlockLevel = 3;
+
     private int lastViewedLevelRecipe = 1;
     private int lastViewedLevelEquipment = 1;
-    private int lastViewedLevelLevels = 1;
+
     [Serializable]
     public class EquipmentEntry
     {
@@ -179,23 +182,19 @@ public class ShopScreenUI : MonoBehaviour
         progress = BakeryProgress.Instance;
         delivery = DeliverySystem.Instance;
 
+        // Load saved "viewed" levels — never allowed below 1
+        lastViewedLevelRecipe = Mathf.Max(1, PlayerPrefs.GetInt("LastViewedLevel_Recipe", 1));
+        lastViewedLevelEquipment = Mathf.Max(1, PlayerPrefs.GetInt("LastViewedLevel_Equipment", 1));
+
         if (wallet != null)
         {
-            wallet.CoinsChanged += OnNumberChanged;
-            wallet.DiamondsChanged += OnNumberChanged;
+            wallet.CoinsChanged += OnWalletChanged;      // prices only, NO dots
+            wallet.DiamondsChanged += OnWalletChanged;   // prices only, NO dots
         }
-
-        if (level != null) level.LevelChanged += OnNumberChanged;
+        if (level != null) level.LevelChanged += OnLevelChanged;  // dots ONLY here
         if (progress != null) progress.Changed += OnProgressChanged;
         if (delivery != null) delivery.ItemOrdered += OnItemOrdered;
 
-        // --- ADD THESE LINES AT THE END OF OnEnable ---
-        lastViewedLevelRecipe = PlayerPrefs.GetInt("LastViewedLevel_Recipe", 1);
-        lastViewedLevelEquipment = PlayerPrefs.GetInt("LastViewedLevel_Equipment", 1);
-        lastViewedLevelLevels = PlayerPrefs.GetInt("LastViewedLevel_Levels", 1);
-
-
-        // Every time the shop opens it starts on Shop Items > Blueprint
         ShowSection(Section.ShopItems);
     }
 
@@ -203,24 +202,21 @@ public class ShopScreenUI : MonoBehaviour
     {
         if (wallet != null)
         {
-            wallet.CoinsChanged -= OnNumberChanged;
-            wallet.DiamondsChanged -= OnNumberChanged;
+            wallet.CoinsChanged -= OnWalletChanged;
+            wallet.DiamondsChanged -= OnWalletChanged;
         }
-
-        if (level != null) level.LevelChanged -= OnNumberChanged;
+        if (level != null) level.LevelChanged -= OnLevelChanged;
         if (progress != null) progress.Changed -= OnProgressChanged;
         if (delivery != null) delivery.ItemOrdered -= OnItemOrdered;
 
         wallet = null; level = null; progress = null; delivery = null;
     }
 
-    private void OnNumberChanged(int value)
-    {
-        Refresh();
-        CheckForNewUnlocks(); // This ensures dots appear immediately when you level up!
-    }
-    private void OnProgressChanged(ProgressChange change) { Refresh(); }
-    private void OnItemOrdered(DeliveryItem item) { Refresh(); }
+    // Event handlers - Cleaned up, no duplicates!
+    private void OnWalletChanged(int v) { Refresh(); }
+    private void OnLevelChanged(int v) { Refresh(); CheckForNewUnlocks(); }
+    private void OnProgressChanged(ProgressChange c) { Refresh(); }
+    private void OnItemOrdered(DeliveryItem i) { Refresh(); }
 
     // ---------------- SECTIONS AND TABS ----------------
 
@@ -232,7 +228,6 @@ public class ShopScreenUI : MonoBehaviour
         // Reset UI state: show the list, hide the custom plots panel by default
         if (rowContainer != null) rowContainer.gameObject.SetActive(true);
         if (plotsPanel != null) plotsPanel.SetActive(false);
-
 
         Paint(shopItemsButton, section == Section.ShopItems);
         Paint(equipmentButton, section == Section.Equipment);
@@ -261,43 +256,27 @@ public class ShopScreenUI : MonoBehaviour
     private void ShowTab(int index)
     {
         currentTab = index;
+        for (int i = 0; i < tabButtons.Length; i++) Paint(tabButtons[i], i == index);
 
-        for (int i = 0; i < tabButtons.Length; i++)
+        if (level != null)
         {
-            Paint(tabButtons[i], i == index);
-        }
+            int lv = Mathf.Max(1, level.Level);
 
-        // --- CLEAR DOTS AND UPDATE LAST VIEWED LEVEL ---
-        if (currentSection == Section.ShopItems)
-        {
-            SetHorizontalNewDot(index, false); // Clear horizontal dot
-
-            if (index == 2) // Recipe Tab
+            if (currentSection == Section.ShopItems && index == 2)   // viewed Recipe
             {
-                lastViewedLevelRecipe = level != null ? level.Level : 1;
-                PlayerPrefs.SetInt("LastViewedLevel_Recipe", lastViewedLevelRecipe);
+                lastViewedLevelRecipe = lv;
+                PlayerPrefs.SetInt("LastViewedLevel_Recipe", lv);
+                SetVerticalNewDot(shopItemsButton, false);
             }
-            SetVerticalNewDot(shopItemsButton, false); // Clear vertical dot too
-        }
-        else if (currentSection == Section.Equipment)
-        {
-            lastViewedLevelEquipment = level != null ? level.Level : 1;
-            PlayerPrefs.SetInt("LastViewedLevel_Equipment", lastViewedLevelEquipment);
-            SetVerticalNewDot(equipmentButton, false);
-        }
-        else if (currentSection == Section.LevelUpgrade)
-        {
-            SetHorizontalNewDot(index, false); // Clear horizontal dot
-
-            if (index == 0) // Levels Tab
+            else if (currentSection == Section.Equipment)            // viewed Equipment
             {
-                lastViewedLevelLevels = level != null ? level.Level : 1;
-                PlayerPrefs.SetInt("LastViewedLevel_Levels", lastViewedLevelLevels);
+                lastViewedLevelEquipment = lv;
+                PlayerPrefs.SetInt("LastViewedLevel_Equipment", lv);
+                SetVerticalNewDot(equipmentButton, false);
             }
-            SetVerticalNewDot(levelUpgradeButton, false); // Clear vertical dot too
         }
-        // -----------------------------------------------
 
+        RefreshHorizontalDots();
         Rebuild();
     }
 
@@ -306,16 +285,13 @@ public class ShopScreenUI : MonoBehaviour
         if (button == null || button.targetGraphic == null) return;
 
         button.targetGraphic.color = selected ? selectedColor : normalColor;
-
     }
 
-    // --- ADD THESE TWO HELPER METHODS ---
     // --- HELPER METHODS FOR NEW DOTS ---
     private void SetVerticalNewDot(Button button, bool show)
     {
         if (button == null) return;
         Transform dot = button.transform.Find("NewDot");
-        // Add this debug line:
         Debug.Log($"[SetVerticalNewDot] Button: {button.name}, Found NewDot: {dot != null}, Show: {show}");
         if (dot != null) dot.gameObject.SetActive(show);
     }
@@ -327,11 +303,7 @@ public class ShopScreenUI : MonoBehaviour
         if (dot != null) dot.gameObject.SetActive(show);
     }
 
-    
-
-
-
-private void Rebuild()
+    private void Rebuild()
     {
         foreach (Transform child in rowContainer)
         {
@@ -633,6 +605,7 @@ private void Rebuild()
             () => BuyPlot(3),
             () => Evaluate(IsPlotUnlocked(3), 0, 300, true));
     }
+
     private void BuyPlot(int plotNumber)
     {
         // 1. Check if previous plot is unlocked
@@ -701,25 +674,42 @@ private void Rebuild()
         return f == null || f.furnitureName.ToLower().Contains("counter");
     }
 
+    // ---------------- NEW DOT LOGIC ----------------
+
     private void CheckForNewUnlocks()
     {
         if (level == null) return;
 
-        // Declare currentLevel ONLY ONCE here:
-        int currentLevel = level.Level;
-        Debug.Log($"[SHOP UI] Checking unlocks! Current Level: {currentLevel}");
-        // 1. Check Recipes (Horizontal Tab 2 of Shop Items)
-        bool newRecipe = currentLevel > lastViewedLevelRecipe;
-        SetHorizontalNewDot(2, newRecipe);
-        SetVerticalNewDot(shopItemsButton, newRecipe);
+        // Level 4, 5, 6... all behave like Level 3 for dots
+        int dotLevel = Mathf.Min(level.Level, MaxUnlockLevel);
 
-        // 2. Check Equipment (Vertical Tab 1)
-        bool newEquipment = currentLevel > lastViewedLevelEquipment;
+        bool newRecipe = dotLevel > lastViewedLevelRecipe;
+        bool newEquipment = dotLevel > lastViewedLevelEquipment;
+
+        Debug.Log($"[DOTS] level={level.Level} dotLevel={dotLevel} lastRecipe={lastViewedLevelRecipe} lastEquip={lastViewedLevelEquipment} recipe={newRecipe} equip={newEquipment}");
+
+        SetVerticalNewDot(shopItemsButton, newRecipe);
         SetVerticalNewDot(equipmentButton, newEquipment);
 
-        // 3. Check Level Up itself (Horizontal Tab 0 of Level Upgrade)
-        bool newLevel = currentLevel > lastViewedLevelLevels;
-        SetHorizontalNewDot(0, newLevel);
-        SetVerticalNewDot(levelUpgradeButton, newLevel);
+        RefreshHorizontalDots();
+    }
+
+    private void RefreshHorizontalDots()
+    {
+        if (currentSection == Section.ShopItems && level != null)
+        {
+            int dotLevel = Mathf.Min(level.Level, MaxUnlockLevel);
+            bool newRecipe = dotLevel > lastViewedLevelRecipe;
+
+            SetHorizontalNewDot(0, false);      // Blueprint
+            SetHorizontalNewDot(1, false);      // Material
+            SetHorizontalNewDot(2, newRecipe);  // Recipe
+        }
+        else
+        {
+            SetHorizontalNewDot(0, false);      // Levels
+            SetHorizontalNewDot(1, false);      // Plots
+            SetHorizontalNewDot(2, false);
+        }
     }
 }
