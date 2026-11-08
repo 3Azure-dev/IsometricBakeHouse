@@ -3,7 +3,9 @@ using UnityEngine.UI;
 
 public class StoveController : MonoBehaviour, IFoodReadyProvider
 {
-   
+
+    public event System.Action FoodTaken;
+
 
     // Add this property 👇
     public bool IsFoodReady
@@ -228,7 +230,13 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
         menuBlockedUntil = Time.time + 0.3f;
 
         Debug.Log("Player took " + currentFood + " from the stove.");
+
+        if (FoodTaken != null)
+        {
+            FoodTaken();
+        }
     }
+
 
     public bool IsCooking
     {

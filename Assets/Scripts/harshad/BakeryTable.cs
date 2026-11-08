@@ -174,4 +174,10 @@ public class BakeryTable : MonoBehaviour
             LeaveDirtyPlate(seats[0]);
         }
     }
+
+    // True while a dirty plate is showing at this index (same order as the Seats list)
+    public bool IsPlateDirty(int index)
+    {
+        return plateOnSeat != null && index >= 0 && index < plateOnSeat.Length && plateOnSeat[index];
+    }
 }

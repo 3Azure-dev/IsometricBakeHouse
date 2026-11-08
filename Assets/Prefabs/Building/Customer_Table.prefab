@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1272073213064349698}
+  - component: {fileID: 148977787677611241}
   m_Layer: 0
   m_Name: Customer_Table
   m_TagString: Untagged
@@ -32,6 +33,27 @@ Transform:
   - {fileID: 9201877035989660007}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &148977787677611241
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 778395679965470573}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.064502, y: 2.3146434, z: 2.9841537}
+  m_Center: {x: 0.0065512657, y: 0.657322, z: -0.40917253}
 --- !u!1001 &1802738584173168714
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84,7 +106,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PROP_CustomerTable
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6157317746552553231, guid: a0b5c660cd162d34e811df56a8ca5277, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

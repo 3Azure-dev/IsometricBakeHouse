@@ -26,9 +26,9 @@ public abstract class ProximityPromptBase : MonoBehaviour
 
     private PromptPopper popper;
     private bool isShowing;
-    
+
     // Each prompt says when its game-state condition is true.
-    protected abstract bool ConditionMet { get; }
+    public virtual bool ConditionMet => false;
 
     // Text shown in the label pill. Override to change it with the game state.
     protected virtual string CurrentLabel => labelText;
