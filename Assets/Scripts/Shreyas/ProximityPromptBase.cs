@@ -56,7 +56,8 @@ public abstract class ProximityPromptBase : MonoBehaviour
         popper = promptRoot.GetComponent<PromptPopper>();
         promptRoot.SetActive(false);
 
-        if (player == null)
+        // A prefab file is not the real player (built tables spawn with this), so find the scene one.
+        if (player == null || !player.gameObject.scene.IsValid())
         {
             GameObject p = GameObject.FindWithTag("Player");
             if (p != null) player = p.transform;
