@@ -12,6 +12,8 @@ public static class BakeryAppeal
 
         int total = 0;
 
+        Debug.Log("APPEAL DEBUG: built items = " + BakeryProgress.Instance.GetBuiltItems().Count);
+
         foreach (BuiltItem built in BakeryProgress.Instance.GetBuiltItems())
         {
             foreach (FurnitureData data in settings.furnitureList)

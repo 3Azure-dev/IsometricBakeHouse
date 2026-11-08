@@ -22,7 +22,7 @@ public class BakeryProgress : MonoBehaviour
 {
     public static BakeryProgress Instance { get; private set; }
 
-    public const int MaxLevel = 3;
+    public const int MaxLevel = 4;
     public const int MaxPlots = 3;
 
     // UI and scene objects listen to this. It says WHAT changed.

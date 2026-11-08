@@ -24,7 +24,10 @@ public class BuildPlacer : MonoBehaviour
     private Material currentGhostMat;
     private Bounds ghostBounds;
     private bool canPlace;
+    [SerializeField] private KeyCode rotateKey = KeyCode.R;
+    [SerializeField] private float rotateStep = 90f;
 
+    private float currentYaw;   // 0, 90, 180, 270
     // State: Placing while a ghost exists, Idle otherwise
     public bool IsPlacing => ghost != null;
 

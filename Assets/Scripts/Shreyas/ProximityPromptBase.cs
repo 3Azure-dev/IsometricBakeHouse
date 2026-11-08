@@ -6,12 +6,12 @@ using UnityEngine.UI;
 // Shared logic for "world-space E prompt" behaviours.
 // A prompt is shown only when:  ConditionMet (game state)  AND  player is within range.
 // Pressing the interact key while it is showing fires onInteract.
-// The label text can change while the prompt is visible (override CurrentLabel).
+// ConditionMet is PROTECTED in every prompt script (do not make it public).
 public abstract class ProximityPromptBase : MonoBehaviour
 {
     [Header("Prompt")]
     [SerializeField] protected GameObject promptRoot;   // The world-space Canvas (must NOT be this same GameObject)
-    [SerializeField] private TMP_Text label;            // Optional: the label text inside the pill
+    [SerializeField] private TMP_Text label;            // Optional: leave empty for pins without words
     [SerializeField] private string labelText = "Interact";
 
     [Header("Interaction")]
@@ -19,19 +19,22 @@ public abstract class ProximityPromptBase : MonoBehaviour
     [SerializeField] private Transform rangeCenter;     // Leave empty to measure from this object
     [SerializeField] private float range = 2f;          // World units, measured on the ground plane (XZ)
     [SerializeField] private KeyCode interactKey = KeyCode.E;
-    [SerializeField] private UnityEvent onInteract;     // Wire the existing "take food" / "clean plates" method here
+    [SerializeField] private UnityEvent onInteract;
 
     [Header("Debug")]
     [SerializeField] private bool debugForceShow;
 
     private PromptPopper popper;
     private bool isShowing;
-    
+
     // Each prompt says when its game-state condition is true.
     protected abstract bool ConditionMet { get; }
 
-    // Text shown in the label pill. Override to change it with the game state.
+    // Text shown in the label. Override to change it with the game state.
     protected virtual string CurrentLabel => labelText;
+
+    // For subclasses that need the player (e.g. "am I the nearest plate?")
+    protected Transform PlayerTransform => player;
 
     protected virtual void Awake()
     {
@@ -53,7 +56,8 @@ public abstract class ProximityPromptBase : MonoBehaviour
         popper = promptRoot.GetComponent<PromptPopper>();
         promptRoot.SetActive(false);
 
-        if (player == null)
+        // A prefab file is not the real player (built tables spawn with this), so find the scene one.
+        if (player == null || !player.gameObject.scene.IsValid())
         {
             GameObject p = GameObject.FindWithTag("Player");
             if (p != null) player = p.transform;
@@ -111,7 +115,6 @@ public abstract class ProximityPromptBase : MonoBehaviour
         else promptRoot.SetActive(false);
     }
 
-    // Updates the text while the prompt stays on screen (e.g. "Cook" -> "Take food").
     private void RefreshLabel()
     {
         if (label == null) return;
@@ -128,6 +131,23 @@ public abstract class ProximityPromptBase : MonoBehaviour
     {
         if (promptRoot == null || !isShowing) return;
         Hide();
+    }
+
+    [ContextMenu("Debug: print state")]
+    private void DebugPrintState()
+    {
+        float d = -1f;
+        if (player != null && rangeCenter != null)
+        {
+            Vector3 a = player.position, b = rangeCenter.position;
+            a.y = 0f; b.y = 0f;
+            d = Vector3.Distance(a, b);
+        }
+
+        Debug.Log($"{name} | condition={ConditionMet} | distance={d:F2} / range={range} | " +
+                  $"rangeCenter={(rangeCenter ? rangeCenter.name : "NULL")} | " +
+                  $"player={(player ? player.name : "NULL")} | " +
+                  $"promptRoot={(promptRoot ? promptRoot.name + " active=" + promptRoot.activeSelf : "NULL")}", this);
     }
 
     private void OnDrawGizmosSelected()
