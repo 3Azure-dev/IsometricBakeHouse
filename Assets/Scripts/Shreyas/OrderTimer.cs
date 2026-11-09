@@ -63,6 +63,10 @@ public class OrderTimer : MonoBehaviour
     [SerializeField] private Sprite sadSprite;
     [SerializeField] private Sprite angrySprite;
 
+    [Header("Icon sizes")]
+    [SerializeField] private float whiteboxIconSize = 58f;   // coloured disc with a letter
+    [SerializeField] private float realIconSize = 46f;       // real sprite, stays inside the dark disc
+
     // food timer (started by CustomerController.OrderAccepted)
     private float timeLimit;
     private float timeLeft;
@@ -328,6 +332,10 @@ public class OrderTimer : MonoBehaviour
     {
         if (centerIcon != null)
         {
+            float size = sprite != null ? realIconSize : whiteboxIconSize;
+            centerIcon.rectTransform.sizeDelta = new Vector2(size, size);
+            centerIcon.rectTransform.anchoredPosition = Vector2.zero;
+
             if (sprite != null)
             {
                 centerIcon.sprite = sprite;

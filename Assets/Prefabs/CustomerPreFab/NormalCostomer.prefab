@@ -305,6 +305,8 @@ MonoBehaviour:
   happySprite: {fileID: 273176778510993788, guid: 4f7ac4cb3d6d62643897da93393caa6e, type: 3}
   sadSprite: {fileID: -1819305438889049100, guid: 104f43e2d3653784b8000684d9f76f56, type: 3}
   angrySprite: {fileID: -2797960391154386745, guid: 83ec350e2ca54ea49917f65969bc0f9f, type: 3}
+  whiteboxIconSize: 58
+  realIconSize: 40
 --- !u!1 &4508749778617280989
 GameObject:
   m_ObjectHideFlags: 0
