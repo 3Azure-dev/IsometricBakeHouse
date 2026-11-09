@@ -851,10 +851,31 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7670275039693272555, guid: 1b226a00626f7a64984b501d46b68a62, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5019646077739951971}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2840711053689908905, guid: 1b226a00626f7a64984b501d46b68a62, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5639247862944533476}
   m_SourcePrefab: {fileID: 100100000, guid: 1b226a00626f7a64984b501d46b68a62, type: 3}
 --- !u!224 &3994036708385551523 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7670275039693272555, guid: 1b226a00626f7a64984b501d46b68a62, type: 3}
   m_PrefabInstance: {fileID: 6710330166994174280}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8823635912936189921 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2840711053689908905, guid: 1b226a00626f7a64984b501d46b68a62, type: 3}
+  m_PrefabInstance: {fileID: 6710330166994174280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5639247862944533476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8823635912936189921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7172d58ba3b054bb58114e2900953f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldSpaceBillboard
+  cam: {fileID: 0}
