@@ -103,6 +103,12 @@ public class CustomerController : MonoBehaviour
         get { return state == CustomerState.WaitingAtDoor; }
     }
 
+    // Read-only info for the Customer Ring (SCRUM-529). Changes nothing.
+    public bool IsThinking { get { return state == CustomerState.Thinking; } }
+    public bool IsWaitingForPlayer { get { return state == CustomerState.WaitingForPlayer; } }
+    public bool IsOrdering { get { return state == CustomerState.Ordering; } }
+    public float PatienceSeconds { get { return settings != null ? settings.orderPatience : 0f; } }
+
     // How many seconds the order timer should run for this customer.
     // Normal and VIP durations come from SO_CustomerSettings.
     public float GetOrderTimerSeconds()
