@@ -11,6 +11,8 @@ public class ButterCreature : IngredientCreature1
 
     private float _dropTimer;
 
+    private ButterData Butter => (ButterData)_data;
+
     protected override void UpdateFleeing()
     {
         if (DistanceToPlayer() > _data.safeRange && IsGrounded())
@@ -46,7 +48,7 @@ public class ButterCreature : IngredientCreature1
     {
         _dropTimer -= Time.fixedDeltaTime;
         if (_dropTimer > 0f) return;
-        _dropTimer = _data.dropInterval;
+        _dropTimer = Butter.dropInterval;
 
         // spawn at the creature's feet first
         Vector2 feet = new Vector2(_col.bounds.center.x, _col.bounds.min.y);
@@ -60,7 +62,7 @@ public class ButterCreature : IngredientCreature1
             trail.transform.position += Vector3.up * gap;
         }
 
-        trail.Setup(direction, _data.puddleLifetime);
+        trail.Setup(direction, Butter.puddleLifetime);
 
         // Play the sound when the Butter trail is created.
         if (BreadSFX.Instance != null)

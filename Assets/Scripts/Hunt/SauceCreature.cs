@@ -14,6 +14,8 @@ public class SauceCreature : IngredientCreature1
 
     private float _dropTimer;
 
+    private SauceData Sauce => (SauceData)_data;
+
     protected override void UpdateFleeing()
     {
         base.UpdateFleeing();
@@ -24,7 +26,7 @@ public class SauceCreature : IngredientCreature1
         _dropTimer -= Time.fixedDeltaTime;
         if (_dropTimer > 0f) return;
 
-        _dropTimer = _data.dropInterval;
+        _dropTimer = Sauce.dropInterval;
         DropDroplets();
     }
 
@@ -50,16 +52,16 @@ public class SauceCreature : IngredientCreature1
     {
         float runDir = Mathf.Sign(transform.position.x - _player.position.x);
 
-        for (int i = 0; i < _data.dropletsPerDrop; i++)
+        for (int i = 0; i < Sauce.dropletsPerDrop; i++)
         {
             SauceDroplet drop = Instantiate(_dropletPrefab, transform.position, Quaternion.identity);
             Physics2D.IgnoreCollision(drop.GetComponent<Collider2D>(), _col);
 
             Vector2 velocity = new Vector2(
-                -runDir * _data.dropletBackSpeed * Random.Range(0.7f, 1.3f),
-                _data.dropletUpSpeed * Random.Range(0.8f, 1.2f));
+                -runDir * Sauce.dropletBackSpeed * Random.Range(0.7f, 1.3f),
+                Sauce.dropletUpSpeed * Random.Range(0.8f, 1.2f));
 
-            drop.Launch(velocity, _data.extraCooldown, _data.debuffTime, _data.dropletLifetime);
+            drop.Launch(velocity, Sauce.extraCooldown, Sauce.debuffTime, Sauce.dropletLifetime);
         }
     }
 }

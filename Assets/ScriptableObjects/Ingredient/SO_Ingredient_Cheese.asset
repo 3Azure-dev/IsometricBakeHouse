@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3521f21f2e6254a4d858692dd208d79e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d1e612f6c347cb4da487ac8850ad0b3, type: 3}
   m_Name: SO_Ingredient_Cheese
   m_EditorClassIdentifier: Assembly-CSharp::IngredientData
   ingredientName: Cheese
