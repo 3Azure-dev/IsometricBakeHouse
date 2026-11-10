@@ -35,41 +35,4 @@ public class IngredientData : ScriptableObject
 
     [Tooltip("How many ingredients the player gets for one catch")]
     [Min(1)] public int ingredientsPerCatch = 1;
-
-    [Header("Slow Trail - only used by creatures that drop puddles")]
-    [Tooltip("Seconds between each puddle while running away")]
-    public float dropInterval = 0.8f;
-
-    [Tooltip("Player speed inside a puddle. 0.5 = half speed")]
-    [Range(0.1f, 1f)] public float slowMultiplier = 0.5f;
-
-    [Tooltip("Seconds the player stays slow after leaving a puddle")]
-    public float slowDuration = 1f;
-
-    [Tooltip("Seconds before a puddle disappears")]
-    public float puddleLifetime = 4f;
-
-    [Header("Sauce Droplets - only used by Tomato Sauce")]
-    [Min(1)] public int dropletsPerDrop = 2;
-    public float dropletBackSpeed = 4f;   // how fast they fly back at the player
-    public float dropletUpSpeed = 5f;
-    public float dropletLifetime = 4f;
-
-    [Tooltip("Seconds added to the wand cooldown when a droplet hits")]
-    public float extraCooldown = 3f;
-
-    [Tooltip("How long the sticky wand lasts. A new hit restarts it")]
-    public float debuffTime = 8f;
-
-    [Header("Cheese Holes - only used by Cheese")]
-    [Tooltip("Seconds Cheese stays out of a hole")]
-    public float popUpTime = 0.8f;
-    [Tooltip("Seconds the hole shakes before Cheese pops out")]
-    public float rumbleTime = 0.5f;
-
-    [Tooltip("Seconds hidden between pop-ups")]
-    public float hideTime = 0.6f;
-
-    [Tooltip("Pop-ups before it escapes for good")]
-    [Min(1)] public int popUpCount = 3;
 }

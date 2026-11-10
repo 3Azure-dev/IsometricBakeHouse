@@ -14,6 +14,8 @@ public class CheeseCreature : IngredientCreature1
     private bool _poppedUp;
     private Vector3 _normalScale;
 
+    private CheeseData Cheese => (CheeseData)_data;
+
     protected override void Awake()
     {
         base.Awake();
@@ -58,9 +60,9 @@ public class CheeseCreature : IngredientCreature1
         SetVisible(false);
         transform.localScale = _normalScale;
 
-        for (int i = 0; i < _data.popUpCount; i++)
+        for (int i = 0; i < Cheese.popUpCount; i++)
         {
-            yield return new WaitForSeconds(_data.hideTime);
+            yield return new WaitForSeconds(Cheese.hideTime);
             
             Transform popHole = group.RandomHole();
             yield return Rumble(popHole);
@@ -69,7 +71,7 @@ public class CheeseCreature : IngredientCreature1
             SetVisible(true);
             _poppedUp = true;
 
-            yield return new WaitForSeconds(_data.popUpTime);
+            yield return new WaitForSeconds(Cheese.popUpTime);
 
             _poppedUp = false;
             SetVisible(false);
@@ -83,7 +85,7 @@ public class CheeseCreature : IngredientCreature1
     {
         Vector3 start = hole.localPosition;
 
-        for (float t = 0f; t < _data.rumbleTime; t += Time.deltaTime)
+        for (float t = 0f; t < Cheese.rumbleTime; t += Time.deltaTime)
         {
             hole.localPosition = start + (Vector3)Random.insideUnitCircle * _rumbleAmount;
             yield return null;
