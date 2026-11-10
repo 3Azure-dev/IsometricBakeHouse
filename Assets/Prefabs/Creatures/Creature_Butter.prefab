@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1110111097688326356
+--- !u!1 &235784587522559263
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,63 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2174463132433567821}
-  - component: {fileID: 132538017071407229}
-  - component: {fileID: 7827816144222173230}
-  - component: {fileID: 7547551640763400215}
-  - component: {fileID: 7221062605650769358}
-  - component: {fileID: -6164289807251716286}
+  - component: {fileID: 5226642274254570036}
+  - component: {fileID: 3498360637982207801}
+  - component: {fileID: 1268106782240491141}
   m_Layer: 0
-  m_Name: Creature_Butter
+  m_Name: VisualRoot
   m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2174463132433567821
+--- !u!4 &5226642274254570036
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110111097688326356}
+  m_GameObject: {fileID: 235784587522559263}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -52.1, y: 2.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2439542781829841003}
-  m_Father: {fileID: 0}
+  m_Children: []
+  m_Father: {fileID: 2174463132433567821}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &132538017071407229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110111097688326356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63af71d3fa2f93147b45c3701d9bdc2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButterCreature
-  _data: {fileID: 11400000, guid: f0331a998412f1542b42b1562f571898, type: 2}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  _lookAhead: 0.3
-  _state: 0
-  _trailPrefab: {fileID: 8447274935965317989, guid: 844e641c6665c8b4f84400ba15c7b72a, type: 3}
-  _slideGrip: 10
---- !u!212 &7827816144222173230
+--- !u!212 &3498360637982207801
 SpriteRenderer:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110111097688326356}
+  m_GameObject: {fileID: 235784587522559263}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -117,6 +93,86 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!95 &1268106782240491141
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235784587522559263}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 2483480bf4cdf5a46b237e7b49ef365c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1110111097688326356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2174463132433567821}
+  - component: {fileID: 132538017071407229}
+  - component: {fileID: 7547551640763400215}
+  - component: {fileID: 7221062605650769358}
+  - component: {fileID: -6164289807251716286}
+  m_Layer: 0
+  m_Name: Creature_Butter
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2174463132433567821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110111097688326356}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -52.1, y: 2.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2439542781829841003}
+  - {fileID: 5226642274254570036}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &132538017071407229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110111097688326356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63af71d3fa2f93147b45c3701d9bdc2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButterCreature
+  _data: {fileID: 11400000, guid: f0331a998412f1542b42b1562f571898, type: 2}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _lookAhead: 0.3
+  _holeProbeDepth: 6
+  _state: 0
+  _trailPrefab: {fileID: 8447274935965317989, guid: 844e641c6665c8b4f84400ba15c7b72a, type: 3}
+  _slideGrip: 10
 --- !u!50 &7547551640763400215
 Rigidbody2D:
   serializedVersion: 5

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AOC_Sugar
+  m_Controller: {fileID: 9100000, guid: 34c77b7cecaf7c14ab9d26b221fcde90, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: c12b7973e8d0f054c835989eb93c5519, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 844e7721796dc3547b66c92ead6e2490, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cdb32bfe082c9c94a9d4dffbcdcae83a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f9948a32ab35b074d9a25e3f07e3d146, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 85636a654b7a616428c590b18d56a73c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b2587dc439a3b6f4ea273c5a61c0c9de, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 336fe9432f4e4a34aad7d34810336386, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9fe88a8ec2b911c488da5774db920d1a, type: 2}

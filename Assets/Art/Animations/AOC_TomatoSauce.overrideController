@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AOC_TomatoSauce
+  m_Controller: {fileID: 9100000, guid: 34c77b7cecaf7c14ab9d26b221fcde90, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: c12b7973e8d0f054c835989eb93c5519, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c5f2d947bb0d3ee428c08abb37543278, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cdb32bfe082c9c94a9d4dffbcdcae83a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c13f5e4963fecf845822a0fb0b0f5f3c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 85636a654b7a616428c590b18d56a73c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e90223e2ef84c914c9337b06ca727870, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 336fe9432f4e4a34aad7d34810336386, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 84fcbb2b63d50f34b9472b02c2632311, type: 2}

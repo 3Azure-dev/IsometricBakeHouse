@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AOC_Butter
+  m_Controller: {fileID: 9100000, guid: 34c77b7cecaf7c14ab9d26b221fcde90, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: c12b7973e8d0f054c835989eb93c5519, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c829c49984f04ef40ac3dd959333e685, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cdb32bfe082c9c94a9d4dffbcdcae83a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 195e3b6d22cf3dc4b8527593fc6103dd, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 85636a654b7a616428c590b18d56a73c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e0d5688d561c7884e87eb9a2024e9327, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 336fe9432f4e4a34aad7d34810336386, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f51ad4d5762ed7448baf81635f2dd93f, type: 2}

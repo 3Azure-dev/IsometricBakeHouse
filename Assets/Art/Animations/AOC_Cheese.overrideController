@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AOC_Cheese
+  m_Controller: {fileID: 9100000, guid: 34c77b7cecaf7c14ab9d26b221fcde90, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: c12b7973e8d0f054c835989eb93c5519, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 1beb38d90a334e14cbbdaa1a03539760, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cdb32bfe082c9c94a9d4dffbcdcae83a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e4685971d55827842822bb2909a8527b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 85636a654b7a616428c590b18d56a73c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 15add038606bc8c40bed4ae5b44f0386, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 336fe9432f4e4a34aad7d34810336386, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d5a76d9ba2621fc40a4f8f1a7dbae268, type: 2}
