@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3521f21f2e6254a4d858692dd208d79e, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ed832d24f514724a8b89a539834c3d0, type: 3}
   m_Name: SO_Ingredient_Seeds
   m_EditorClassIdentifier: Assembly-CSharp::IngredientData
   ingredientName: Seeds
