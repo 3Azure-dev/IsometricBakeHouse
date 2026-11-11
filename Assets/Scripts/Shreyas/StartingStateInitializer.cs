@@ -9,6 +9,12 @@ public class StartingStateInitializer : MonoBehaviour
     // during the same Play session.
     private static bool initialized;
 
+    // Used by SaveSystem: a loaded save must not be replaced by the starting state
+    public static void MarkInitialized()
+    {
+        initialized = true;
+    }
+
     [RuntimeInitializeOnLoadMethod(
         RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetInitialization()

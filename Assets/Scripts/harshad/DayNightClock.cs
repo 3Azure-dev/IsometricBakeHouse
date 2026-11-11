@@ -53,6 +53,13 @@ public class DayNightClock : MonoBehaviour
     private bool inHunt;
     private int lastWholeSecond;
 
+
+    // Used by SaveSystem to restore the day number
+    public void SetDayNumber(int day)
+    {
+        DayNumber = Mathf.Max(1, day);
+    }
+
     // --------------------------------------------------
     // SETUP
     // --------------------------------------------------
