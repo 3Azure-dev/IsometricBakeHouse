@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SO_Ingredient_Cheese
   m_EditorClassIdentifier: Assembly-CSharp::IngredientData
   ingredientName: Cheese
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 6842b35d388f9604d85c62728dfbbd28, type: 3}
   fxColor: {r: 1, g: 0.7019608, b: 0, a: 1}
   fleeSpeed: 6
   jumpForce: 8
@@ -23,16 +23,6 @@ MonoBehaviour:
   stunDuration: 2
   catchRange: 1.5
   ingredientsPerCatch: 1
-  dropInterval: 0.8
-  slowMultiplier: 0.5
-  slowDuration: 1
-  puddleLifetime: 4
-  dropletsPerDrop: 2
-  dropletBackSpeed: 4
-  dropletUpSpeed: 5
-  dropletLifetime: 4
-  extraCooldown: 3
-  debuffTime: 8
   popUpTime: 0.8
   rumbleTime: 0.5
   hideTime: 0.6
