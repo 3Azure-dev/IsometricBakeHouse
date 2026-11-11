@@ -30,6 +30,7 @@ public class IngredientCreature1 : MonoBehaviour
     protected Collider2D _col;
     protected Transform _player;
     protected float _stunTimer;
+    CreatureAnimationDriver _anim;
 
     public State CurrentState => _state;
 
@@ -85,6 +86,32 @@ public class IngredientCreature1 : MonoBehaviour
         if (newState == _state) return;
         _state = newState;
         Debug.Log($"{name} -> {newState}");
+        UpdateAnimation(newState);
+    }
+
+    private void UpdateAnimation(State s)
+    {
+        if (_anim == null) _anim = GetComponent<CreatureAnimationDriver>();
+        if (_anim == null) return;
+
+        switch (s)
+        {
+            case State.Idle:
+                _anim.SetStunned(false);
+                _anim.SetRunning(false);
+                break;
+            case State.Fleeing:
+                _anim.SetStunned(false);
+                _anim.SetRunning(true);
+                break;
+            case State.Stunned:
+                _anim.SetRunning(false);
+                _anim.SetStunned(true);
+                break;
+            case State.Caught:
+                _anim.PlayCaught();
+                break;
+        }
     }
 
     public virtual void Stun()
@@ -132,7 +159,8 @@ public class IngredientCreature1 : MonoBehaviour
             }
         }
 
-        gameObject.SetActive(false);
+       
+        StartCoroutine(HideAfterCaught(0.5f));
     }
 
     public void ReturnToSpawn()
@@ -296,5 +324,11 @@ public class IngredientCreature1 : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, _data.safeRange);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _data.catchRange);
+    }
+
+    private System.Collections.IEnumerator HideAfterCaught(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(false);
     }
 }

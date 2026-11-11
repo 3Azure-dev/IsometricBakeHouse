@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7547551640763400215}
   - component: {fileID: 7221062605650769358}
   - component: {fileID: -6164289807251716286}
+  - component: {fileID: 306136016685194699}
   m_Layer: 0
   m_Name: Creature_Yeast
   m_TagString: Untagged
@@ -136,6 +137,18 @@ MonoBehaviour:
   player: {fileID: 6385492026105941563, guid: 6c47f4c898b12e943957f0205c40313f, type: 3}
   interactionDistance: 5
   promptOffset: {x: 0, y: 2, z: 0}
+--- !u!114 &306136016685194699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110111097688326356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fab1c6f85ea36544b8caa8f99f85dc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreatureAnimationDriver
 --- !u!1 &8669587119892832737
 GameObject:
   m_ObjectHideFlags: 0
