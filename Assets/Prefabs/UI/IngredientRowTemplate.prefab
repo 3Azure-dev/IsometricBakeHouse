@@ -121,6 +121,8 @@ MonoBehaviour:
   ingredientIcon: {fileID: 6722506398110415833}
   ingredientNameText: {fileID: 2905501863659366243}
   countText: {fileID: 8618025462238662363}
+  popScale: 1.3
+  popTime: 0.1
 --- !u!1 &1778475228500040213
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,7 +511,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

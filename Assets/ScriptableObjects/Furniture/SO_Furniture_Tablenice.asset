@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SO_Furniture_Tablenice
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureData
   furnitureName: TableNice
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 900017a0dceec8a4683eca3142b28a28, type: 3}
   cost: 200
   appeal: 2
   seats: 2
