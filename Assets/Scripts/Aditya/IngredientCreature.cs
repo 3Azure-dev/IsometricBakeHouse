@@ -31,7 +31,7 @@ public class IngredientCreature1 : MonoBehaviour
     protected Transform _player;
     protected float _stunTimer;
     CreatureAnimationDriver _anim;
-
+    
     public State CurrentState => _state;
 
     public IngredientData Data => _data;
@@ -41,6 +41,7 @@ public class IngredientCreature1 : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<Collider2D>();
         _spawnPoint = transform.position;
+        GetComponent<CreatureAnimationDriver>().PlaySpecial();
     }
 
     private void Start()
