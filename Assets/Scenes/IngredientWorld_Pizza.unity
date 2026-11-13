@@ -2540,6 +2540,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -818.4
       objectReference: {fileID: 0}
+    - target: {fileID: 6522141573484857905, guid: 3af4c41b376953a4db269708347a0df0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -774
+      objectReference: {fileID: 0}
     - target: {fileID: 7420422031706857573, guid: 3af4c41b376953a4db269708347a0df0, type: 3}
       propertyPath: m_Name
       value: HUD
@@ -14917,7 +14921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7761961012945094200, guid: e9fb8599af5354f498c9a3722649afd7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 493
+      value: 527
       objectReference: {fileID: 0}
     - target: {fileID: 7761961012945094200, guid: e9fb8599af5354f498c9a3722649afd7, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -15138,7 +15142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 458.4
+      value: 496
       objectReference: {fileID: 0}
     - target: {fileID: 6484461361666484374, guid: afc6dd53a8a69b440956d4fd500af499, type: 3}
       propertyPath: m_AnchoredPosition.y
