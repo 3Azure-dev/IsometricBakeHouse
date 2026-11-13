@@ -11,7 +11,7 @@ public class HuntProgressHUD : MonoBehaviour
     [SerializeField] private TMP_Text exitStatusText;
 
     [Header("Zones Progress Bar")]
-    [SerializeField] private Image zonesFill;
+    [SerializeField] private SlicedBarFill zonesFill;
 
     private int zonesUsed;
     private int creaturesAlive;
@@ -102,7 +102,7 @@ public class HuntProgressHUD : MonoBehaviour
         // Fill the bar according to the number of zones used.
         if (zonesFill != null)
         {
-            zonesFill.fillAmount = totalZones > 0
+            zonesFill.FillAmount = totalZones > 0
                 ? Mathf.Clamp01((float)zonesUsed / totalZones)
                 : 0f;
         }
