@@ -36,7 +36,7 @@ public class LevelTracker : MonoBehaviour
     private void Start()
     {
         // every child of a zone is a hole
-        foreach (MouldZone zone in FindObjectsByType<MouldZone>(FindObjectsSortMode.None))
+        foreach (MouldZone zone in FindObjectsByType<MouldZone>())
             _holesLeft += zone.transform.childCount;
 
         Debug.Log($"LevelTracker: {_holesLeft} holes in this level");

@@ -9,6 +9,7 @@ public class DunkAimBarUI : MonoBehaviour
     [SerializeField] private Slider aimSlider;
     [SerializeField] private RectTransform hitZone;
     [SerializeField] private TMP_Text resultText;
+    [SerializeField] private DunkResultBadge resultBadge; // the ResultBadge object
 
     [Header("Result")]
     [SerializeField] private float resultDuration = 1.2f;
@@ -39,6 +40,8 @@ public class DunkAimBarUI : MonoBehaviour
             resultText.gameObject.SetActive(false);
 
         HidePanel();
+
+       
     }
 
     private void Update()
@@ -64,6 +67,9 @@ public class DunkAimBarUI : MonoBehaviour
             resultText.text = "";
             resultText.gameObject.SetActive(false);
         }
+
+        if (resultBadge != null)
+            resultBadge.Hide();
 
         SetHitZone(zoneCenter, zoneSize);
         SetAimValue(0.5f);
@@ -121,16 +127,7 @@ public class DunkAimBarUI : MonoBehaviour
     // Called when the player throws.
 
     // Used by the fake driver during testing.
-    public void RegisterThrow()
-    {
-        if (!dunkActive || resultShowing)
-            return;
 
-        float distance = Mathf.Abs(aimValue - hitZoneCenter);
-        bool hit = distance <= hitZoneSize * 0.5f;
-
-        RegisterThrow(hit);
-    }
 
     // Used by the real Grandfather dunk.
     public void RegisterThrow(bool hit)
@@ -138,6 +135,10 @@ public class DunkAimBarUI : MonoBehaviour
         if (!dunkActive || resultShowing)
             return;
 
+        if (resultBadge != null)
+            resultBadge.Show(hit);
+
+        // Optional: keep the text too, or delete this block to use the badge only.
         if (resultText != null)
         {
             resultText.text = hit ? "x2!" : "Miss";
@@ -152,6 +153,9 @@ public class DunkAimBarUI : MonoBehaviour
     {
         dunkActive = false;
         resultShowing = false;
+
+        if (resultBadge != null)
+            resultBadge.Hide();
 
         HidePanel();
     }
@@ -175,4 +179,6 @@ public class DunkAimBarUI : MonoBehaviour
         panelGroup.interactable = false;
         panelGroup.blocksRaycasts = false;
     }
+
+   
 }

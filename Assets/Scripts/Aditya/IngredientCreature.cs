@@ -31,7 +31,7 @@ public class IngredientCreature1 : MonoBehaviour
     protected Transform _player;
     protected float _stunTimer;
     CreatureAnimationDriver _anim;
-    
+   
     public State CurrentState => _state;
 
     public IngredientData Data => _data;
@@ -81,7 +81,7 @@ public class IngredientCreature1 : MonoBehaviour
         if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
             Catch();
     }
-
+  
     protected virtual void ChangeState(State newState)
     {
         if (newState == _state) return;
