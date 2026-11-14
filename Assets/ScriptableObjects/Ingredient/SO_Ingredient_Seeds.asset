@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ed832d24f514724a8b89a539834c3d0, type: 3}
+  m_Name: SO_Ingredient_Seeds
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientData
+  ingredientName: Seeds
+  icon: {fileID: 21300000, guid: 8e3a6204a2bc1f147873b5d0ae679648, type: 3}
+  fxColor: {r: 0.54509807, g: 0.3529412, b: 0.16862746, a: 1}
+  fleeSpeed: 6
+  jumpForce: 8
+  gravityScale: 1
+  detectRange: 2.5
+  safeRange: 7
+  stunDuration: 2
+  catchRange: 1.5
+  ingredientsPerCatch: 1
+  dropInterval: 0.8
+  slowMultiplier: 0.5
+  slowDuration: 1
+  puddleLifetime: 3

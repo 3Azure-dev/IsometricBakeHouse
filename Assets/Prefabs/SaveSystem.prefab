@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6710588060292138524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8886400812775515657}
+  - component: {fileID: 6495282355366415773}
+  m_Layer: 0
+  m_Name: SaveSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8886400812775515657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6710588060292138524}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 604.05536, y: 0.00001, z: 7525.738}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6495282355366415773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6710588060292138524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eeaf1e3513b9f84f83f297b450a1757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveSystem
+  allIngredients:
+  - {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
+  - {fileID: 11400000, guid: 8ac8327ad8c39594f8c56e35c7fee2ff, type: 2}
+  - {fileID: 11400000, guid: c2cac85afad5de249b80048fc6526883, type: 2}
+  - {fileID: 11400000, guid: 2107e02abd71f5541939fde06ea7a62c, type: 2}
+  - {fileID: 11400000, guid: aee72eed3a5ae7645aece17526ec22f3, type: 2}
+  - {fileID: 11400000, guid: f0331a998412f1542b42b1562f571898, type: 2}
+  - {fileID: 11400000, guid: e82d88024f110a247827815e1062b140, type: 2}
+  - {fileID: 11400000, guid: 0ec2288ae06440346845271475c79052, type: 2}
+  - {fileID: 11400000, guid: 0fbda30970162de418f0aee449272f15, type: 2}
+  bakerySceneName: Bakery
+  shelfCacheSeconds: 2

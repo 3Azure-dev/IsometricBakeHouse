@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4de579caacdb8841b1ae598f27b8259, type: 3}
+  m_Name: SO_CustomerSettings
+  m_EditorClassIdentifier: Assembly-CSharp::CustomerSettings
+  thinkingTimeMin: 3
+  thinkingTimeMax: 5
+  orderPatience: 20
+  orderTimer: 180
+  wrongDishDisappoints: 1
+  eatingTime: 12
+  maxCustomersAtDoor: 4
+  customersPerBatch: 2
+  doorSpawnDelay: 5
+  seatsPerTable: 2
+  customerNames:
+  - Harshad
+  - Pravin
+  - Shreyas
+  - Aditya
+  - Vijay
+  - Mohan
+  - Rahul
+  - Priya
+  - Neha
+  - Karan
+  - Anjali
+  - Rohan
+  vipOrderTimer: 240
+  vipCoinMultiplier: 2
+  vipDiamondReward: 20
+  vipChancePercent: 4
+  vipFirstDay: 3
+  vipColor: {r: 1, g: 0.84, b: 0, a: 1}
+  tipChancePerPoint: 0.02
+  maxTipChance: 0.3
+  tipSize: 0.2
+  furnitureList:
+  - {fileID: 11400000, guid: ac70ec757d4262847b31caf29aecfa9a, type: 2}
+  - {fileID: 11400000, guid: a8056b5e4c75a54479f502dd228da7f4, type: 2}
+  - {fileID: 11400000, guid: 871636c126d59504a8ae7634bfc7549a, type: 2}
+  - {fileID: 11400000, guid: 8d8ff45e9d416d046b3679adbce87335, type: 2}
+  - {fileID: 11400000, guid: a6fdfae4275423f439ccbd5702d2a5ef, type: 2}
