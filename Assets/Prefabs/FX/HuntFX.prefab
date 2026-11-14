@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1725686118517801271
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4196907664291958977}
+  - component: {fileID: 6069829554044822616}
+  m_Layer: 0
+  m_Name: HuntFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4196907664291958977
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725686118517801271}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -48.46791, y: 0.94112, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6069829554044822616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725686118517801271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea6f4ab598fa57e4cab6ca3ef40eaa4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HuntFX
+  _sparks: {fileID: 2876739058288227102, guid: 0366ade0d1fca304aa7b45f197261ebf, type: 3}
+  _puff: {fileID: 2876739058288227102, guid: 11e8c8a87f2d3b44db87fe23f899a04b, type: 3}
+  _blast: {fileID: 2876739058288227102, guid: 171689b3696318d479724f468f2602d3, type: 3}
+  _blastShakeTime: 0.25
+  _blastShakeStrength: 0.3
