@@ -10,6 +10,7 @@ public class BakeryTable : MonoBehaviour
 
     [Tooltip("One dirty plate object for each seat. They start hidden and show when a customer leaves.")]
     [SerializeField] private GameObject[] dirtyPlates;
+   
 
     private readonly List<Transform> takenSeats = new List<Transform>();
 
@@ -153,14 +154,26 @@ public class BakeryTable : MonoBehaviour
             return;
         }
 
+        bool hadPlate = false;
+
         for (int i = 0; i < plateOnSeat.Length; i++)
         {
+            if (plateOnSeat[i])
+            {
+                hadPlate = true;
+            }
+
             plateOnSeat[i] = false;
 
             if (dirtyPlates != null && i < dirtyPlates.Length && dirtyPlates[i] != null)
             {
                 dirtyPlates[i].SetActive(false);
             }
+        }
+
+        if (hadPlate && BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayDirtyPlatePickup();
         }
 
         Debug.Log(name + ": plates cleared. The table is clear.");
@@ -316,6 +329,11 @@ public class BakeryTable : MonoBehaviour
         if (dirtyPlates != null && plateIndex < dirtyPlates.Length && dirtyPlates[plateIndex] != null)
         {
             dirtyPlates[plateIndex].SetActive(false);
+        }
+
+        if (BakeryAudioManager.Instance != null)
+        {
+            BakeryAudioManager.Instance.PlayDirtyPlatePickup();
         }
 
         Debug.Log(name + ": cleaned plate at index " + plateIndex + ".");

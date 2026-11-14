@@ -17,7 +17,8 @@ public class BakeryAudioManager : MonoBehaviour
     [SerializeField] private AudioClip dishServed;
     [SerializeField] private AudioClip coinsEarned;
     [SerializeField] private AudioClip customerArrives;
-
+    [SerializeField] private AudioClip dirtyPlatePickup;
+    [Range(0f, 2f)][SerializeField] private float dirtyPlatePickupVolume = 1f;
     [Header("Individual Volume")]
     [Range(0f, 1f)][SerializeField] private float cookingStartVolume = 0.7f;
     [Range(0f, 1f)][SerializeField] private float cookingDoneVolume = 0.8f;
@@ -112,6 +113,10 @@ public class BakeryAudioManager : MonoBehaviour
         PlaySound(customerArrives, customerArrivesVolume);
     }
 
+    public void PlayDirtyPlatePickup()
+    {
+        PlaySound(dirtyPlatePickup, dirtyPlatePickupVolume);
+    }
     private void PlaySound(AudioClip clip, float volume)
     {
         if (clip == null)
