@@ -145,6 +145,8 @@ public class GrandfatherDunk : MonoBehaviour
     {
         if (_state != State.Aiming) return;
 
+        if (Time.timeScale == 0f) return;
+
         // PingPong goes 0 -> 1 -> 0 -> 1 forever
         _phase += Time.deltaTime * _speed / _data.swingTime;
         _aim = Mathf.PingPong(_phase, 1f);
