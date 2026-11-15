@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: de93eced33479c3449b82862bbe1e77b
+guid: c81044a3dca5afc4ea5a7ea6dd1cabf3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5050086423452486233
-    second: ICON_Thinking 1_0
+      213: 2364585893391413112
+    second: ICON_Thinking_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,7 +102,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ICON_Thinking 1_0
+      name: ICON_Thinking_0
       rect:
         serializedVersion: 2
         x: 0
@@ -117,8 +117,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7a57715872d7ae9b0800000000000000
-      internalID: -5050086423452486233
+      spriteID: 87fae788752b0d020800000000000000
+      internalID: 2364585893391413112
       vertices: []
       indices: 
       edges: []
