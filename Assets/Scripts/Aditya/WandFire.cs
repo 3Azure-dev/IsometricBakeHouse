@@ -60,7 +60,7 @@ public class WandFire1 : MonoBehaviour
 
     private void Update()
     {
-       
+        if (Time.timeScale == 0f) return;
 
         if (_wandSprite != null) _wandSprite.color = IsSticky ? _sauceColor : _normalColor;
 
