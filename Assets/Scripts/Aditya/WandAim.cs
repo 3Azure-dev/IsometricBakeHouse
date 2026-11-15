@@ -15,6 +15,9 @@ public class WandAim : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale == 0f) return;
+
+        
         if (Mouse.current == null) return;
 
         // mouse is in screen pixels -> convert to world position
