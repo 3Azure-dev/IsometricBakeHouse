@@ -16228,6 +16228,10 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4288666484464407087, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
+      propertyPath: _mixer
+      value: 
+      objectReference: {fileID: 24100000, guid: f7457cbc38fa6874ca3464934983b4a1, type: 2}
     - target: {fileID: 7640310456307106565, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
       propertyPath: m_Name
       value: PauseMenu

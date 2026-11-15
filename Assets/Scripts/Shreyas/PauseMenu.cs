@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pausePanel;
+    [SerializeField] private AudioMixer _mixer; // this scene's mixer
 
     private bool isPaused = false;
 
@@ -11,6 +13,7 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         pausePanel.SetActive(false);
+        OptionsMenu.ApplySaved(_mixer);
     }
 
     void Update()

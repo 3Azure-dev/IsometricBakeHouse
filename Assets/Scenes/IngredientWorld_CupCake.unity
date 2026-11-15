@@ -15292,6 +15292,10 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4288666484464407087, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
+      propertyPath: _mixer
+      value: 
+      objectReference: {fileID: 24100000, guid: 8984cb163460f144eb5114fcff0e0124, type: 2}
     - target: {fileID: 7634000832668134610, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
       propertyPath: m_UiScaleMode
       value: 1
@@ -15379,7 +15383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682608149860734389, guid: 4d0ed4115e450d34cb00de0cd50436fd, type: 3}
       propertyPath: _alwaysCome
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8682608149860734389, guid: 4d0ed4115e450d34cb00de0cd50436fd, type: 3}
       propertyPath: _alwaysGrandfatherDay
