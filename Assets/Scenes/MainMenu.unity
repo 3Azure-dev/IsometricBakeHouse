@@ -1143,6 +1143,7 @@ GameObject:
   - component: {fileID: 568409042}
   - component: {fileID: 568409041}
   - component: {fileID: 568409040}
+  - component: {fileID: 568409043}
   m_Layer: 0
   m_Name: New Game
   m_TagString: Untagged
@@ -1214,9 +1215,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1543191957}
-        m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
-        m_MethodName: NewGame
+      - m_Target: {fileID: 568409043}
+        m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
+        m_MethodName: Press
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1276,6 +1277,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 568409038}
   m_CullTransparentMesh: 1
+--- !u!114 &568409043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568409038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be27b5387a42b8642a7f12f155b8c57b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewGameButton
 --- !u!1 &768982532
 GameObject:
   m_ObjectHideFlags: 0
@@ -2355,17 +2368,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328434148}
   m_CullTransparentMesh: 1
---- !u!114 &1543191957 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6495282355366415773, guid: d8bb9060dd0414047ba34fbed420cd97, type: 3}
-  m_PrefabInstance: {fileID: 1187442276}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3eeaf1e3513b9f84f83f297b450a1757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SaveSystem
 --- !u!1 &1575178882
 GameObject:
   m_ObjectHideFlags: 0
