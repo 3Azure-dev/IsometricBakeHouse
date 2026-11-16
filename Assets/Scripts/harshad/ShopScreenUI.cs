@@ -153,8 +153,8 @@ public class ShopScreenUI : MonoBehaviour
         VerticalLayoutGroup list = rowContainer.GetComponent<VerticalLayoutGroup>();
         if (list == null) list = rowContainer.gameObject.AddComponent<VerticalLayoutGroup>();
 
-        list.spacing = 10f;
-        list.padding = new RectOffset(10, 10, 10, 10);
+        list.spacing = 16f;
+        list.padding = new RectOffset(16, 16, 16, 16);
         list.childControlWidth = true;
         list.childControlHeight = true;
         list.childForceExpandWidth = true;
