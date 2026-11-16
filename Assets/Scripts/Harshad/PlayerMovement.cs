@@ -35,9 +35,8 @@ public class PlayerMovement : MonoBehaviour
                 turnSpeed * Time.fixedDeltaTime
             );
         }
-
-        rb.MovePosition(
-            rb.position + movement * moveSpeed * Time.fixedDeltaTime
-        );
+        Vector3 velocity = movement * moveSpeed;
+        velocity.y = rb.linearVelocity.y;   // keep gravity working
+        rb.linearVelocity = velocity;
     }
 }

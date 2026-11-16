@@ -449,7 +449,7 @@ public class CustomerController : MonoBehaviour
                 // When the customer reaches the table, begin thinking.
                 if (reachedSeat)
                 {
-                    if (bodyCollider != null) bodyCollider.isTrigger = true;
+                    
 
                     state = CustomerState.Thinking;
                     timer = 0f;
