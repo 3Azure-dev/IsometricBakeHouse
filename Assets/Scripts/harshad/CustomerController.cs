@@ -31,6 +31,7 @@ public class CustomerController : MonoBehaviour
     private NavMeshAgent agent;
     private Transform mySeat;
     private CustomerState state;
+    private Collider bodyCollider;
 
     // The name shown on the order board (Harshad, Pravin, ...)
     private string displayName;
@@ -123,6 +124,9 @@ public class CustomerController : MonoBehaviour
 
     private void Awake()
     {
+
+        bodyCollider = GetComponent<Collider>();
+
         if (settings == null)
         {
             Debug.LogError(
@@ -445,6 +449,8 @@ public class CustomerController : MonoBehaviour
                 // When the customer reaches the table, begin thinking.
                 if (reachedSeat)
                 {
+                    
+
                     state = CustomerState.Thinking;
                     timer = 0f;
 
@@ -1035,6 +1041,10 @@ public class CustomerController : MonoBehaviour
 
     private void ResetCustomer()
     {
+
+        if (bodyCollider == null) bodyCollider = GetComponent<Collider>();
+        if (bodyCollider != null) bodyCollider.isTrigger = false;
+
         arrivalBellPlayed = false;
 
         if (thinkingBubble != null)

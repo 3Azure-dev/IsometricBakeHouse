@@ -13,6 +13,10 @@ public class ShopItemRow : MonoBehaviour
     [SerializeField] private Image currencyIcon;
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private Button buyButton;
+
+    [Header("Size")]
+    [Tooltip("1 = the old small size. 1.6 = bigger rows for the 1920x1080 canvas")]
+    [SerializeField] private float scale = 1.6f;
     private Color normalPriceColor = Color.white;
 
     private void Awake()
@@ -24,15 +28,19 @@ public class ShopItemRow : MonoBehaviour
 
     private void BuildLayout()
     {
+        float s = scale;
+
         // Row height
         LayoutElement rowSize = GetOrAdd<LayoutElement>(gameObject);
-        rowSize.minHeight = 80f;
-        rowSize.preferredHeight = 80f;
+        rowSize.minHeight = 80f * s;
+        rowSize.preferredHeight = 80f * s;
 
         // Left to right
         HorizontalLayoutGroup group = GetOrAdd<HorizontalLayoutGroup>(gameObject);
-        group.spacing = 10f;
-        group.padding = new RectOffset(10, 10, 5, 5);
+        group.spacing = 10f * s;
+        group.padding = new RectOffset(
+            Mathf.RoundToInt(10f * s), Mathf.RoundToInt(10f * s),
+            Mathf.RoundToInt(5f * s), Mathf.RoundToInt(5f * s));
         group.childAlignment = TextAnchor.MiddleLeft;
         group.childControlWidth = true;
         group.childControlHeight = true;
@@ -40,16 +48,16 @@ public class ShopItemRow : MonoBehaviour
         group.childForceExpandHeight = true;
 
         // Fixed widths, and the name takes all the space that is left
-        SetWidth(iconImage, 50f, 0f);
+        SetWidth(iconImage, 50f * s, 0f);
         SetWidth(nameText, 0f, 1f);
-        SetWidth(priceText, 50f, 0f);
-        SetWidth(currencyIcon, 30f, 0f);
-        SetWidth(statusText, 150f, 0f);
-        SetWidth(buyButton, 90f, 0f);
+        SetWidth(priceText, 50f * s, 0f);
+        SetWidth(currencyIcon, 30f * s, 0f);
+        SetWidth(statusText, 150f * s, 0f);
+        SetWidth(buyButton, 90f * s, 0f);
 
-        FitText(nameText, 14f, 24f);
-        FitText(priceText, 14f, 24f);
-        FitText(statusText, 12f, 18f);
+        FitText(nameText, 14f * s, 24f * s);
+        FitText(priceText, 14f * s, 24f * s);
+        FitText(statusText, 12f * s, 18f * s);
     }
 
     private static void SetWidth(Component part, float preferred, float flexible)

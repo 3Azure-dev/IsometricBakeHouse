@@ -40,6 +40,10 @@ public class SaveSystem : MonoBehaviour
     [Tooltip("How often the shelf stock is remembered (seconds), so a quit during a hunt still saves it")]
     [SerializeField] private float shelfCacheSeconds = 2f;
 
+    // new, next to the other fields
+    public static event Action GameReset;
+    private DayNightClock subscribedClock;
+
     private bool scheduled;      // a load is already planned
     private bool skipLoad;       // New Game was pressed
     private bool ready;          // the bakery has started, so saving is safe
@@ -94,7 +98,13 @@ public class SaveSystem : MonoBehaviour
 
     private void TryScheduleLoad(Scene scene)
     {
-        if (scheduled || scene.name != bakerySceneName) return;
+        if (scene.name != bakerySceneName) return;
+
+        if (scheduled)
+        {
+            StartCoroutine(ResubscribeNextFrame());   // Bakery reloaded: hook up the new clock
+            return;
+        }
 
         scheduled = true;
         StartCoroutine(LoadNextFrame());
@@ -112,25 +122,34 @@ public class SaveSystem : MonoBehaviour
         SubscribeToClock();
     }
 
-    private void SubscribeToClock()
+    private IEnumerator ResubscribeNextFrame()
     {
-        if (subscribedToClock || DayNightClock.Instance == null) return;
-
-        // Autosave at every new day, so a crash loses at most one day
-        DayNightClock.Instance.NightEnded += Save;
-        subscribedToClock = true;
+        yield return null;
+        SubscribeToClock();
     }
 
-    // ---------------- NEW GAME ----------------
+    private void SubscribeToClock()
+    {
+        DayNightClock clock = DayNightClock.Instance;
+        if (clock == null || clock == subscribedClock) return;
 
-    // Hook this to the New Game button (before it loads the Bakery)
+        if (subscribedClock != null) subscribedClock.NightEnded -= Save;
+        clock.NightEnded += Save;
+        subscribedClock = clock;
+    }
+
     public void NewGame()
     {
         if (File.Exists(SavePath))
             File.Delete(SavePath);
 
+        shelfCache.Clear();
+        ready = false;        // nothing may be saved until the new bakery has started
+        scheduled = false;    // the next Bakery load starts a fresh game
         skipLoad = true;
-        Debug.Log("SaveSystem: save deleted. New game.");
+
+        if (GameReset != null) GameReset();
+        Debug.Log("SaveSystem: new game. Save deleted and stats reset.");
     }
 
     // ---------------- SAVE ----------------
