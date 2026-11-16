@@ -17,6 +17,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (BlocksPlayerWhileOpen.IsBlocked)
+        {
+            movement = Vector3.zero;
+            return;
+        }
+
+
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 

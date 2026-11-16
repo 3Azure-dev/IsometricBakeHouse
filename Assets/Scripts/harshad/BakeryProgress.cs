@@ -61,6 +61,20 @@ public class BakeryProgress : MonoBehaviour
         equipment.Add(EquipmentType.Stove);
         unlockedRecipes.Add(FoodType.Bread);
     }
+    private void OnEnable() { SaveSystem.GameReset += ResetForNewGame; }
+    private void OnDisable() { SaveSystem.GameReset -= ResetForNewGame; }
+
+    private void ResetForNewGame()
+    {
+        equipment.Clear(); unlockedRecipes.Clear(); builtItems.Clear(); plots.Clear();
+        deliveryBox.Clear(); blueprints.Clear(); materials.Clear();
+        Level = 1;
+        equipment.Add(EquipmentType.Stove);       // same as Awake: what you own at the start
+        unlockedRecipes.Add(FoodType.Bread);
+
+        foreach (ProgressChange change in System.Enum.GetValues(typeof(ProgressChange)))
+            if (Changed != null) Changed(change);  // so the UI updates
+    }
 
     // ---------------- EQUIPMENT ----------------
 

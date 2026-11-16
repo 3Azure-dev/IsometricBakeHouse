@@ -29,12 +29,16 @@ public class IngredientShelf : MonoBehaviour
 
     private Dictionary<IngredientType, int> stock;
 
+    private static void ClearStockOnNewGame() { savedStock = null; }  // Awake rebuilds the starting amounts
+
     // New scene load = new visit, so this resets after every hunt
     private bool depositedThisVisit;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetSavedStock()
     {
+        SaveSystem.GameReset -= ClearStockOnNewGame;
+        SaveSystem.GameReset += ClearStockOnNewGame;
         savedStock = null;
         dataByType = new Dictionary<IngredientType, IngredientData>();
     }
