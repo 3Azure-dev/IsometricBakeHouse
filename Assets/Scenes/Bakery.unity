@@ -17078,11 +17078,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngredientShelf
   startingIngredients:
   - ingredient: 0
-    startingAmount: 0
+    startingAmount: 8
   - ingredient: 7
-    startingAmount: 0
+    startingAmount: 8
   - ingredient: 8
-    startingAmount: 0
+    startingAmount: 8
   - ingredient: 3
     startingAmount: 0
   - ingredient: 2
@@ -27156,7 +27156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BakeryAudioManager
   audioSource: {fileID: 1989588314}
   cookingLoopSource: {fileID: 0}
-  cookingStart: {fileID: 8300000, guid: d6a5189af21a0764abad995f4cd54c93, type: 3}
+  cookingStart: {fileID: 8300000, guid: b0c26720a03b02541b63b61e6cc44714, type: 3}
   cookingDone: {fileID: 8300000, guid: 2956e5388e466f645a30446cedff0e5f, type: 3}
   dishServed: {fileID: 8300000, guid: 52a9d593eba95f946854dae313f3230f, type: 3}
   coinsEarned: {fileID: 8300000, guid: 81c58e93bd67bb943a5fa3e16f467f65, type: 3}
