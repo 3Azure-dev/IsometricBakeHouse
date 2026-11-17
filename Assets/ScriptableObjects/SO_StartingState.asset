@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edcf6aa373cd7f343a23f548c5a829ce, type: 3}
   m_Name: SO_StartingState
   m_EditorClassIdentifier: Assembly-CSharp::StartingState
-  startingCoins: 0
+  startingCoins: 1000
+  startingDiamonds: 100
   ingredients:
   - ingredient: {fileID: 11400000, guid: 8ae0aa0e3972be64780f0e92c01783b0, type: 2}
     amount: 8

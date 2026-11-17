@@ -25,6 +25,19 @@ public class Inventory1 : MonoBehaviour
         DontDestroyOnLoad(gameObject); // survive scene changes
     }
 
+    private void OnEnable() { SaveSystem.GameReset += ResetForNewGame; }
+    private void OnDisable() { SaveSystem.GameReset -= ResetForNewGame; }
+
+    // New Game: empty the bag and tell the UI every count is 0
+    private void ResetForNewGame()
+    {
+        List<IngredientData> keys = new List<IngredientData>(counts.Keys);
+        counts.Clear();
+
+        foreach (IngredientData ingredient in keys)
+            OnChanged?.Invoke(ingredient, 0);
+    }
+
     public void Add(IngredientData ingredient, int amount = 1)
     {
         counts[ingredient] = GetCount(ingredient) + amount;

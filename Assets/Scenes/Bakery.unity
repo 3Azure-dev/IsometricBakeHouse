@@ -27224,6 +27224,8 @@ MonoBehaviour:
   dishServed: {fileID: 8300000, guid: 52a9d593eba95f946854dae313f3230f, type: 3}
   coinsEarned: {fileID: 8300000, guid: 81c58e93bd67bb943a5fa3e16f467f65, type: 3}
   customerArrives: {fileID: 8300000, guid: 0faa60cb01fb40143bd0fe758e503b37, type: 3}
+  dirtyPlatePickup: {fileID: 0}
+  dirtyPlatePickupVolume: 1
   cookingStartVolume: 0.8
   cookingDoneVolume: 0.8
   dishServedVolume: 0.8
