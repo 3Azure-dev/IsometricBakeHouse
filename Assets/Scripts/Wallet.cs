@@ -37,6 +37,16 @@ public class Wallet : MonoBehaviour
         Coins = _startingCoins;
     }
 
+    private void OnEnable() { SaveSystem.GameReset += ResetForNewGame; }
+    private void OnDisable() { SaveSystem.GameReset -= ResetForNewGame; }
+
+    // New Game: back to the starting coins and no diamonds
+    private void ResetForNewGame()
+    {
+        SetStartingCoins(_startingCoins);
+        SetStartingDiamonds(0);
+    }
+
     public void SetStartingCoins(int amount)
     {
         Coins = Mathf.Max(0, amount);
