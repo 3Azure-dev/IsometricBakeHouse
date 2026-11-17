@@ -226,29 +226,33 @@ MonoBehaviour:
   settings: {fileID: 0}
   startAutomatically: 0
   customer: {fileID: 1531115907032819594}
-  faceCamera: 0
+  faceCameraTarget: {fileID: 0}
   ringColor: {r: 0.96, g: 0.9, b: 0.77, a: 1}
   vipRingColor: {r: 1, g: 0.82, b: 0.25, a: 1}
   useWarningColours: 0
   warningOrange: {r: 0.95, g: 0.6, b: 0.15, a: 1}
   warningRed: {r: 0.85, g: 0.2, b: 0.2, a: 1}
   reactionSeconds: 2
+  popDuration: 0.25
+  popOvershoot: 1.2
   thinkingColor: {r: 0.55, g: 0.56, b: 0.6, a: 1}
+  ideaColor: {r: 1, g: 0.82, b: 0.25, a: 1}
   breadColor: {r: 0.85, g: 0.63, b: 0.31, a: 1}
   cupcakeColor: {r: 0.91, g: 0.54, b: 0.69, a: 1}
   pizzaColor: {r: 0.91, g: 0.38, b: 0.24, a: 1}
   happyColor: {r: 0.24, g: 0.67, b: 0.31, a: 1}
   sadColor: {r: 0.94, g: 0.63, b: 0.19, a: 1}
   angryColor: {r: 0.85, g: 0.23, b: 0.23, a: 1}
+  whiteboxIconSize: 58
+  realIconSize: 40
   thinkingSprite: {fileID: 21300000, guid: c81044a3dca5afc4ea5a7ea6dd1cabf3, type: 3}
+  ideaSprite: {fileID: 21300000, guid: c87acd4684312af48a7d8b4b2ea120cf, type: 3}
   breadSprite: {fileID: -1660761858345613354, guid: ad625819ef3011d4f91f65b731927a6f, type: 3}
   cupcakeSprite: {fileID: 21300000, guid: be81553335dacee45983a0228543955e, type: 3}
   pizzaSprite: {fileID: 21300000, guid: cdac961008967cf439507116ae0a92d2, type: 3}
   happySprite: {fileID: 21300000, guid: 2c7061c5f7b6865448b7c8f13f9cc740, type: 3}
   sadSprite: {fileID: 21300000, guid: f7904c78421a72e469c23d2d3f2cfee7, type: 3}
   angrySprite: {fileID: 21300000, guid: a1ae33a34faef4b43a2d27df35e7e571, type: 3}
-  whiteboxIconSize: 58
-  realIconSize: 40
 --- !u!1 &4493806806237267463
 GameObject:
   m_ObjectHideFlags: 0

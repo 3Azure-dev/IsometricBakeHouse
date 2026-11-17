@@ -3,14 +3,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // SCRUM-529 Customer Ring.
-// Goes on the customer's TimerCanvas (it must stay ACTIVE, so NOT on the ring itself).
+// Goes on the customer root or TimerCanvas (it must stay ACTIVE, so NOT on the ring itself).
 // One ring + one icon above the customer. It reads the customer every frame:
-//   Thinking                 -> grey dots, no ring
-//   Waiting to take order    -> dish icon, ring empties over the patience time
-//   Ordering (order board)   -> same dish, ring paused (the patience timer is paused too)
-//   Waiting for food         -> same dish, ring empties over the food timer (StartTimer seconds: 180, VIP 240)
+//   Thinking                   -> ICON_Thinking ("..."), no ring
+//   Decided (waiting for you)  -> ICON_Idea (light bulb), POPS in, ring empties over the patience time
+//   Order board open           -> still the light bulb, ring paused (the patience timer is paused too)
+//   Order ACCEPTED, food wait  -> the recipe icon (bread / cupcake / pizza), POPS in,
+//                                 ring empties over the food timer (StartTimer seconds: 180, VIP 240)
 //   Right dish / wrong dish / timer ran out / walked out -> happy / sad / angry face for 2 sec, no ring
-//   Walking, eating, leaving -> nothing
+//   Walking, eating, leaving   -> nothing
+// So the recipe icon only shows for orders the player has accepted.
 // VIP ring is always gold. Warning colours (orange at half, red at a quarter) are a switch, off by default.
 public class OrderTimer : MonoBehaviour
 {
@@ -30,8 +32,8 @@ public class OrderTimer : MonoBehaviour
     [Header("Customer")]
     [Tooltip("Leave empty: it is found in the parents.")]
     [SerializeField] private CustomerController customer;
-    [Tooltip("Turn on only if the ring does not face the camera and nothing else turns it.")]
-    [SerializeField] private bool faceCamera = false;
+    [Tooltip("Optional: the canvas to turn towards the camera (e.g. OrderBubbwidget). Leave empty if something else already does it. Never put the customer itself here.")]
+    [SerializeField] private Transform faceCameraTarget;
 
     [Header("Ring colours")]
     [SerializeField] private Color ringColor = new Color(0.96f, 0.90f, 0.77f);      // cream
@@ -45,8 +47,14 @@ public class OrderTimer : MonoBehaviour
     [Header("Reaction face")]
     [SerializeField] private float reactionSeconds = 2f;
 
+    [Header("Pop transition (light bulb and recipe icon)")]
+    [Tooltip("Scale 0 -> a bit bigger than normal -> normal. About 0.2 to 0.3 seconds.")]
+    [SerializeField] private float popDuration = 0.25f;
+    [SerializeField] private float popOvershoot = 1.2f;
+
     [Header("Whitebox icon colours")]
     [SerializeField] private Color thinkingColor = new Color(0.55f, 0.56f, 0.60f);
+    [SerializeField] private Color ideaColor = new Color(1f, 0.82f, 0.25f);
     [SerializeField] private Color breadColor = new Color(0.85f, 0.63f, 0.31f);
     [SerializeField] private Color cupcakeColor = new Color(0.91f, 0.54f, 0.69f);
     [SerializeField] private Color pizzaColor = new Color(0.91f, 0.38f, 0.24f);
@@ -54,18 +62,19 @@ public class OrderTimer : MonoBehaviour
     [SerializeField] private Color sadColor = new Color(0.94f, 0.63f, 0.19f);
     [SerializeField] private Color angryColor = new Color(0.85f, 0.23f, 0.23f);
 
-    [Header("Real icons (drag the sprites in later, the letters disappear by themselves)")]
-    [SerializeField] private Sprite thinkingSprite;
+    [Header("Icon sizes")]
+    [SerializeField] private float whiteboxIconSize = 58f;   // coloured disc with a letter
+    [SerializeField] private float realIconSize = 46f;       // real sprite, stays inside the dark disc
+
+    [Header("Real icons (drag the sprites in, the letters disappear by themselves)")]
+    [SerializeField] private Sprite thinkingSprite;   // ICON_Thinking
+    [SerializeField] private Sprite ideaSprite;       // ICON_Idea (light bulb)
     [SerializeField] private Sprite breadSprite;
     [SerializeField] private Sprite cupcakeSprite;
     [SerializeField] private Sprite pizzaSprite;
     [SerializeField] private Sprite happySprite;
     [SerializeField] private Sprite sadSprite;
     [SerializeField] private Sprite angrySprite;
-
-    [Header("Icon sizes")]
-    [SerializeField] private float whiteboxIconSize = 58f;   // coloured disc with a letter
-    [SerializeField] private float realIconSize = 46f;       // real sprite, stays inside the dark disc
 
     // food timer (started by CustomerController.OrderAccepted)
     private float timeLimit;
@@ -76,6 +85,11 @@ public class OrderTimer : MonoBehaviour
     private CustomerReaction lastReaction = CustomerReaction.None;
     private CustomerReaction shownReaction = CustomerReaction.None;
     private float reactionTimeLeft;
+
+    // pop transition (1 = finished)
+    private float popProgress = 1f;
+    private Vector3 iconBaseScale = Vector3.one;
+    private Vector3 letterBaseScale = Vector3.one;
 
     private Sprite defaultIconSprite;
     private int shownKey = -1;
@@ -95,6 +109,12 @@ public class OrderTimer : MonoBehaviour
         if (centerIcon != null)
         {
             defaultIconSprite = centerIcon.sprite;
+            iconBaseScale = centerIcon.transform.localScale;
+        }
+
+        if (iconLetter != null)
+        {
+            letterBaseScale = iconLetter.transform.localScale;
         }
 
         // No numbers on the ring any more.
@@ -107,7 +127,7 @@ public class OrderTimer : MonoBehaviour
             (timerVisualRoot == gameObject || transform.IsChildOf(timerVisualRoot.transform)))
         {
             Debug.LogError(
-                name + ": OrderTimer is on (or inside) the ring. Put it on the canvas, " +
+                name + ": OrderTimer is on (or inside) the ring. Put it on the canvas or the customer, " +
                 "otherwise it switches itself off.", this);
         }
 
@@ -120,6 +140,8 @@ public class OrderTimer : MonoBehaviour
         lastReaction = customer != null ? customer.Reaction : CustomerReaction.None;
         reactionTimeLeft = 0f;
         shownKey = -1;
+        popProgress = 1f;
+        ApplyIconScale(1f);
     }
 
     private void Start()
@@ -201,59 +223,58 @@ public class OrderTimer : MonoBehaviour
             }
         }
 
+        // SetRoot(true) comes first in each branch: when the ring appears again, the icon pops in again.
         if (reactionTimeLeft > 0f)
         {
             reactionTimeLeft -= Time.deltaTime;
+
+            SetRoot(true);
             ShowReactionFace(shownReaction);
             SetRing(false, 0f);
-            SetRoot(true);
-            return;
         }
-
-        // Waiting for food: ring empties over the food timer.
-        if (running || customer.IsWaitingForFood)
+        else if (running || customer.IsWaitingForFood)
         {
+            // Order ACCEPTED: the recipe icon, ring empties over the food timer.
+            SetRoot(true);
             ShowDish();
             SetRing(true, timeLimit > 0f ? timeLeft / timeLimit : 1f);
-            SetRoot(true);
-            return;
         }
-
-        // Waiting to take the order (or ordering): ring empties over the patience time.
-        // While ordering, the customer's patience timer does not move, so the ring is paused.
-        if (customer.IsWaitingForPlayer || customer.IsOrdering)
+        else if (customer.IsWaitingForPlayer || customer.IsOrdering)
         {
+            // Customer DECIDED, not accepted yet: the light bulb, ring empties over the patience time.
+            // While the order board is open the patience timer does not move, so the ring is paused.
             float patience = customer.PatienceSeconds;
             float fill = patience > 0f ? 1f - Mathf.Clamp01(customer.timer / patience) : 1f;
 
-            ShowDish();
-            SetRing(true, fill);
             SetRoot(true);
-            return;
+            ShowIdea();
+            SetRing(true, fill);
         }
-
-        if (customer.IsThinking)
+        else if (customer.IsThinking)
         {
+            SetRoot(true);
             ShowThinking();
             SetRing(false, 0f);
-            SetRoot(true);
-            return;
+        }
+        else
+        {
+            // Walking, eating, leaving: nothing.
+            SetRoot(false);
         }
 
-        // Walking, eating, leaving: nothing.
-        SetRoot(false);
+        UpdatePop();
     }
 
     private void LateUpdate()
     {
-        if (!faceCamera)
+        if (faceCameraTarget == null)
             return;
 
         if (cam == null)
             cam = Camera.main;
 
         if (cam != null)
-            transform.rotation = cam.transform.rotation;
+            faceCameraTarget.rotation = cam.transform.rotation;
     }
 
     // --------------------------------------------------
@@ -266,7 +287,16 @@ public class OrderTimer : MonoBehaviour
             return;
 
         shownKey = 1;
-        SetIcon("...", thinkingColor, thinkingSprite);
+        SetIcon("...", thinkingColor, thinkingSprite, false);
+    }
+
+    private void ShowIdea()
+    {
+        if (shownKey == 2)
+            return;
+
+        shownKey = 2;
+        SetIcon("!", ideaColor, ideaSprite, true);   // light bulb pops in
     }
 
     private void ShowDish()
@@ -282,22 +312,23 @@ public class OrderTimer : MonoBehaviour
         string foodName = food.ToString();
         string letter = foodName.Length > 0 ? foodName.Substring(0, 1).ToUpperInvariant() : "?";
 
+        // the recipe icon pops in
         switch (foodName.ToLowerInvariant())
         {
             case "bread":
-                SetIcon(letter, breadColor, breadSprite);
+                SetIcon(letter, breadColor, breadSprite, true);
                 break;
 
             case "cupcake":
-                SetIcon(letter, cupcakeColor, cupcakeSprite);
+                SetIcon(letter, cupcakeColor, cupcakeSprite, true);
                 break;
 
             case "pizza":
-                SetIcon(letter, pizzaColor, pizzaSprite);
+                SetIcon(letter, pizzaColor, pizzaSprite, true);
                 break;
 
             default:
-                SetIcon(letter, thinkingColor, null);
+                SetIcon(letter, thinkingColor, null, true);
                 break;
         }
     }
@@ -314,28 +345,24 @@ public class OrderTimer : MonoBehaviour
         switch (reaction)
         {
             case CustomerReaction.Satisfied:
-                SetIcon(":)", happyColor, happySprite);
+                SetIcon(":)", happyColor, happySprite, false);
                 break;
 
             case CustomerReaction.Disappointed:
-                SetIcon(":(", sadColor, sadSprite);
+                SetIcon(":(", sadColor, sadSprite, false);
                 break;
 
             default:   // Furious and WalkedOut both show the angry face
-                SetIcon(">:(", angryColor, angrySprite);
+                SetIcon(">:(", angryColor, angrySprite, false);
                 break;
         }
     }
 
     // A real sprite replaces the coloured disc and hides the letter.
-    private void SetIcon(string letter, Color discColor, Sprite sprite)
+    private void SetIcon(string letter, Color discColor, Sprite sprite, bool pop)
     {
         if (centerIcon != null)
         {
-            float size = sprite != null ? realIconSize : whiteboxIconSize;
-            centerIcon.rectTransform.sizeDelta = new Vector2(size, size);
-            centerIcon.rectTransform.anchoredPosition = Vector2.zero;
-
             if (sprite != null)
             {
                 centerIcon.sprite = sprite;
@@ -354,7 +381,58 @@ public class OrderTimer : MonoBehaviour
             iconLetter.gameObject.SetActive(sprite == null);
             iconLetter.text = letter;
         }
+
+        if (pop)
+        {
+            popProgress = 0f;
+            ApplyIconScale(0f);   // start at 0 right now, so the new icon never flashes at full size
+        }
+        else
+        {
+            popProgress = 1f;
+            ApplyIconScale(1f);   // an icon without a pop must never stay half-scaled from an earlier pop
+        }
     }
+
+    // --------------------------------------------------
+    // POP: scale 0 -> popOvershoot -> 1
+    // --------------------------------------------------
+
+    private void UpdatePop()
+    {
+        if (popProgress >= 1f)
+            return;
+
+        popProgress = Mathf.Min(1f, popProgress + (popDuration > 0f ? Time.deltaTime / popDuration : 1f));
+
+        float k = popProgress;
+        float s;
+
+        if (k < 0.6f)
+        {
+            float t = k / 0.6f;
+            s = popOvershoot * (1f - (1f - t) * (1f - t));      // grow fast, a bit past normal size
+        }
+        else
+        {
+            s = Mathf.Lerp(popOvershoot, 1f, (k - 0.6f) / 0.4f); // settle back to normal size
+        }
+
+        ApplyIconScale(s);
+    }
+
+    private void ApplyIconScale(float s)
+    {
+        if (centerIcon != null)
+            centerIcon.transform.localScale = iconBaseScale * s;
+
+        if (iconLetter != null)
+            iconLetter.transform.localScale = letterBaseScale * s;
+    }
+
+    // --------------------------------------------------
+    // RING
+    // --------------------------------------------------
 
     private void SetRing(bool visible, float fill)
     {
@@ -391,9 +469,14 @@ public class OrderTimer : MonoBehaviour
 
     private void SetRoot(bool visible)
     {
-        if (timerVisualRoot != null && timerVisualRoot.activeSelf != visible)
+        if (timerVisualRoot == null || timerVisualRoot.activeSelf == visible)
+            return;
+
+        timerVisualRoot.SetActive(visible);
+
+        if (visible)
         {
-            timerVisualRoot.SetActive(visible);
+            shownKey = -1;   // the ring appears again: the icon pops in again
         }
     }
 }
