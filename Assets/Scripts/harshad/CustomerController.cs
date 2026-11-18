@@ -310,6 +310,7 @@ public class CustomerController : MonoBehaviour
                     "FURIOUS!",
                     new Color(0.9f, 0.15f, 0.15f)
                 );
+                if (BakeryFX.Instance != null) BakeryFX.Instance.AngryPuff(transform.position);   // NEW
                 break;
 
             case CustomerReaction.WalkedOut:
@@ -317,6 +318,7 @@ public class CustomerController : MonoBehaviour
                     "Walked out",
                     new Color(0.6f, 0.6f, 0.6f)
                 );
+                if (BakeryFX.Instance != null) BakeryFX.Instance.AngryPuff(transform.position);   // NEW
                 break;
         }
     }
@@ -872,6 +874,8 @@ public class CustomerController : MonoBehaviour
         myOrder = null;
 
         ShowReaction(CustomerReaction.Satisfied);
+        if (BakeryFX.Instance != null)
+            BakeryFX.Instance.CoinSparkle(mySeat != null ? mySeat.position : transform.position);
 
         state = CustomerState.Eating;
 

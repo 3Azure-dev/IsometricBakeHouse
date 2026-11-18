@@ -202,6 +202,7 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
         }
 
         Debug.Log(currentFood + " is ready on the stove.");
+        if (BakeryFX.Instance != null) BakeryFX.Instance.Steam(transform.position);
     }
     // --------------------------------------------------
     // TAKE FOOD
