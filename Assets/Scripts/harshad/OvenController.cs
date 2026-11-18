@@ -235,6 +235,7 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
         }
 
         SetStatus(CurrentFood + " is ready! Press E at the " + StationName + " to take it.");
+        if (BakeryFX.Instance != null) BakeryFX.Instance.Steam(transform.position);
 
         OnCookingStateChanged?.Invoke();
     }

@@ -60,6 +60,7 @@ public class Blueprint : MonoBehaviour, IInteractable
             BakeryProgress.Instance.AddBuiltItem(Data.itemId, transform.position, transform.rotation);
 
         Built?.Invoke(Data, built);
+        if (BakeryFX.Instance != null) BakeryFX.Instance.Dust(transform.position);
         Destroy(gameObject);
     }
 

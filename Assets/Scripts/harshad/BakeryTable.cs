@@ -176,6 +176,8 @@ public class BakeryTable : MonoBehaviour
             BakeryAudioManager.Instance.PlayDirtyPlatePickup();
         }
 
+        if (BakeryFX.Instance != null) BakeryFX.Instance.PlatePuff(transform.position);
+
         Debug.Log(name + ": plates cleared. The table is clear.");
     }
 
