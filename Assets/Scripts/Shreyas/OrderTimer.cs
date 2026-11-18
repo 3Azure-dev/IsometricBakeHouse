@@ -363,6 +363,10 @@ public class OrderTimer : MonoBehaviour
     {
         if (centerIcon != null)
         {
+            // real art is smaller so it stays inside the dark disc; the coloured whitebox disc keeps its size
+            float size = sprite != null ? realIconSize : whiteboxIconSize;
+            centerIcon.rectTransform.sizeDelta = new Vector2(size, size);
+
             if (sprite != null)
             {
                 centerIcon.sprite = sprite;

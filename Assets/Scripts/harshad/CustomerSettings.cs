@@ -16,6 +16,11 @@ public class CustomerSettings : ScriptableObject
     [Tooltip("How long (seconds) a customer waits for the player to take their order.")]
     public float orderPatience = 20f;
 
+    [Header("Accept / Reject screen")]
+    [Range(1f, 5f)]
+    [Tooltip("How many times SLOWER the patience timer runs while the Accept/Reject screen is open. 1 = no slow-down, 2.5 = 2.5x slower. It never stops.")]
+    public float orderBoardSlowdown = 2.5f;
+
     [Tooltip("Order timer (seconds) for a NORMAL customer. Starts when the player takes the order.")]
     public float orderTimer = 180f;
 

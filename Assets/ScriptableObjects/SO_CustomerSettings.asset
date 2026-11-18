@@ -15,6 +15,7 @@ MonoBehaviour:
   thinkingTimeMin: 3
   thinkingTimeMax: 5
   orderPatience: 20
+  orderBoardSlowdown: 2.5
   orderTimer: 180
   wrongDishDisappoints: 1
   eatingTime: 12

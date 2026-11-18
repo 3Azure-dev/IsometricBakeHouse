@@ -516,6 +516,21 @@ public class CustomerController : MonoBehaviour
 
             case CustomerState.Ordering:
 
+                // The Accept/Reject screen is open. The patience timer does NOT stop:
+                // it runs slower (SO_CustomerSettings > Order Board Slowdown).
+                timer += Time.deltaTime / Mathf.Max(1f, settings.orderBoardSlowdown);
+
+                if (timer >= settings.orderPatience)
+                {
+                    ShowReaction(CustomerReaction.WalkedOut);
+
+                    state = CustomerState.Leaving;
+
+                    Debug.Log(
+                        name + " ran out of patience while the order screen was open and is leaving."
+                    );
+                }
+
                 break;
 
             case CustomerState.WaitingForFood:
