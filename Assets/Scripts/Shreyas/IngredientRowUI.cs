@@ -26,12 +26,9 @@ public class IngredientRowUI : MonoBehaviour
         Unsubscribe();
 
         ingredientData = data;
-        Debug.Log(
-    $"DYNAMIC ROW INITIALIZED | " +
-    $"Row: {name} | " +
-    $"Asset: {ingredientData.name} | " +
-    $"Ingredient: {ingredientData.ingredientName}"
-);
+
+      
+
 
         if (ingredientData == null)
         {
@@ -80,12 +77,7 @@ public class IngredientRowUI : MonoBehaviour
     IngredientData changedIngredient,
     int newCount)
     {
-        Debug.Log(
-            $"DYNAMIC ROW EVENT | " +
-            $"Row ingredient: {ingredientData.ingredientName} | " +
-            $"Changed ingredient: {changedIngredient.ingredientName} | " +
-            $"New count: {newCount}"
-        );
+       
 
         if (changedIngredient != ingredientData)
             return;
@@ -101,13 +93,7 @@ public class IngredientRowUI : MonoBehaviour
             if (lastCount >= 0 && amount > lastCount) Pop();
             lastCount = amount;
 
-            Debug.Log(
-                $"COUNT DISPLAY UPDATED | " +
-                $"Row: {ingredientData.ingredientName} | " +
-                $"Text Object: {countText.name} | " +
-                $"Displayed Value: {countText.text}",
-                this
-            );
+          
         }
         else
         {
