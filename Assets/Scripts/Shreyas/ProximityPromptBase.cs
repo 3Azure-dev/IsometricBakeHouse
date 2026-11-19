@@ -67,6 +67,13 @@ public abstract class ProximityPromptBase : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale == 0f)
+        {
+            // Paused: hide any prompt that is already showing, and block E.
+            if (isShowing) Hide();
+            return;
+        }
+
         if (promptRoot == null || player == null || rangeCenter == null) return;
 
         bool shouldShow = debugForceShow || (ConditionMet && IsPlayerInRange());

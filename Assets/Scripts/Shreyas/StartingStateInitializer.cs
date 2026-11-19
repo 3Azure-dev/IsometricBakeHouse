@@ -15,13 +15,18 @@ public class StartingStateInitializer : MonoBehaviour
         initialized = true;
     }
 
-    [RuntimeInitializeOnLoadMethod(
-        RuntimeInitializeLoadType.SubsystemRegistration)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetInitialization()
     {
         initialized = false;
+        SaveSystem.GameReset -= OnGameReset;   // avoids double-subscribe if domain reload is off
+        SaveSystem.GameReset += OnGameReset;
     }
 
+    private static void OnGameReset()
+    {
+        initialized = false;
+    }
     // Called when the player interacts with the Shelf.
     // Called whenever the player interacts with the Shelf.
     public void ApplyStartingStateOnce()
