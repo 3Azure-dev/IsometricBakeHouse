@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 149.7, y: 78.5}
-  m_SizeDelta: {x: 64, y: 64}
+  m_AnchoredPosition: {x: 149.7, y: 150}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6464378969477267138
 CanvasRenderer:
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouldCooldownUI
   cooldownFill: {fileID: 5469088729807036918}
-  mouldSprite: {fileID: 0}
+  mouldSprite: {fileID: 21300000, guid: 1d193472158ee074c893715a36297fe5, type: 3}
   iconSize: {x: 48, y: 48}
   iconGap: 8
 --- !u!1 &2631618879094070673
@@ -230,8 +230,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 149.20001, y: 79.29999}
-  m_SizeDelta: {x: 64, y: 64}
+  m_AnchoredPosition: {x: 149.20001, y: 150.79996}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3150641613233500841
 CanvasRenderer:
