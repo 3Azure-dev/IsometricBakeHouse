@@ -28,7 +28,7 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
 
     public event Action<string> OnStatusChanged;
     public event Action OnCookingStateChanged;
-
+    public event Action FoodTaken;
     private Coroutine cookingCoroutine;
 
     public void Interact()
@@ -127,6 +127,7 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
         SetStatus("You took the " + CurrentFood + ".");
 
         OnCookingStateChanged?.Invoke();
+        FoodTaken?.Invoke();   // <-- new
     }
 
     // ---------------- START COOKING ----------------

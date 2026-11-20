@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // SCRUM-519 stove / oven prompt.
 // The green pin shows ONLY while the dish is ready (and the player is in range).
 // After the dish is taken the pin pops out and ONE of the pickup sounds plays.
-// Needs StoveController.FoodTaken.
+// Works with StoveController and OvenController (both implement IFoodReadyProvider).
 public class FoodReadyPrompt : ProximityPromptBase
 {
     public enum PickupSoundMode
@@ -13,7 +14,8 @@ public class FoodReadyPrompt : ProximityPromptBase
     }
 
     [Header("References")]
-    [SerializeField] private StoveController stoveController;
+    [FormerlySerializedAs("stoveController")]
+    [SerializeField] private MonoBehaviour foodProvider;   // StoveController or OvenController
 
     [Header("Pickup sounds (one is played each time the dish is taken)")]
     [SerializeField] private AudioClip[] pickupSounds;
@@ -21,37 +23,33 @@ public class FoodReadyPrompt : ProximityPromptBase
     [Range(0f, 1f)]
     [SerializeField] private float pickupVolume = 1f;
 
+    private IFoodReadyProvider provider;
     private int lastIndex = -1;
 
     // Only while the dish is ready. Idle and cooking stay hidden.
     protected override bool ConditionMet
     {
-        get
-        {
-            // If the stove isn't assigned, return false so it doesn't crash
-            if (stoveController == null) return false;
-
-            // Return true only if the stove says food is ready
-            return stoveController.IsFoodReady;
-        }
+        get { return provider != null && provider.IsFoodReady; }
     }
 
     protected override void Awake()
     {
         base.Awake();
 
-        if (stoveController == null)
-            Debug.LogError("FoodReadyPrompt: Stove Controller is NOT assigned in Inspector!", this);
+        provider = foodProvider as IFoodReadyProvider;
+
+        if (provider == null)
+            Debug.LogError("FoodReadyPrompt: Food Provider is missing or doesn't implement IFoodReadyProvider!", this);
     }
 
     private void OnEnable()
     {
-        if (stoveController != null) stoveController.FoodTaken += OnFoodTaken;
+        if (provider != null) provider.FoodTaken += OnFoodTaken;
     }
 
     private void OnDisable()
     {
-        if (stoveController != null) stoveController.FoodTaken -= OnFoodTaken;
+        if (provider != null) provider.FoodTaken -= OnFoodTaken;
     }
 
     private void OnFoodTaken()
