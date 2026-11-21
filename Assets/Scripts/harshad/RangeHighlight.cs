@@ -9,8 +9,8 @@ public class RangeHighlight : MonoBehaviour
 
     private readonly HashSet<Collider> playerColliders = new HashSet<Collider>();
     private MaterialPropertyBlock block;
-    private int colorProperty;
-    private Color originalColor;
+    private int[] colorProperties;   // one colour property per material
+    private Color[] originalColors;  // one original colour per material
 
     private void Awake()
     {
@@ -19,49 +19,63 @@ public class RangeHighlight : MonoBehaviour
 
         block = new MaterialPropertyBlock();
 
-        if (targetRenderer != null && targetRenderer.sharedMaterial != null)
+        if (targetRenderer == null) return;
+
+        Material[] mats = targetRenderer.sharedMaterials;
+        colorProperties = new int[mats.Length];
+        originalColors = new Color[mats.Length];
+
+        for (int i = 0; i < mats.Length; i++)
         {
-            Material material = targetRenderer.sharedMaterial;
+            Material m = mats[i];
+            if (m == null) continue;
 
-            if (material.HasProperty("_BaseColor"))
-                colorProperty = Shader.PropertyToID("_BaseColor");
-            else if (material.HasProperty("_Color"))
-                colorProperty = Shader.PropertyToID("_Color");
-            else
-                Debug.LogWarning("The object's material has no _BaseColor or _Color property.", this);
+            if (m.HasProperty("_BaseColor"))
+                colorProperties[i] = Shader.PropertyToID("_BaseColor");
+            else if (m.HasProperty("_Color"))
+                colorProperties[i] = Shader.PropertyToID("_Color");
 
-            if (colorProperty != 0)
-                originalColor = material.GetColor(colorProperty);
+            if (colorProperties[i] != 0)
+                originalColors[i] = m.GetColor(colorProperties[i]);
         }
     }
 
     public void SetPlayerInRange(Collider playerCollider, bool inRange)
     {
-        if (inRange)
-            playerColliders.Add(playerCollider);
-        else
-            playerColliders.Remove(playerCollider);
+        if (inRange) playerColliders.Add(playerCollider);
+        else playerColliders.Remove(playerCollider);
 
         if (playerColliders.Count == 0)
-            ApplyColor(originalColor);
+            ClearHighlight();
     }
 
     private void Update()
     {
-        if (playerColliders.Count == 0 || targetRenderer == null || colorProperty == 0)
+        if (playerColliders.Count == 0 || targetRenderer == null || colorProperties == null)
             return;
 
         float pulse = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;
-        ApplyColor(Color.Lerp(originalColor, highlightColor, pulse));
+
+        for (int i = 0; i < colorProperties.Length; i++)
+        {
+            if (colorProperties[i] == 0) continue;
+            targetRenderer.GetPropertyBlock(block, i);
+            block.SetColor(colorProperties[i], Color.Lerp(originalColors[i], highlightColor, pulse));
+            targetRenderer.SetPropertyBlock(block, i);
+        }
     }
 
-    private void ApplyColor(Color color)
+    // Puts every material back to its own original colour
+    private void ClearHighlight()
     {
-        if (targetRenderer == null || colorProperty == 0)
-            return;
+        if (targetRenderer == null || colorProperties == null) return;
 
-        targetRenderer.GetPropertyBlock(block);
-        block.SetColor(colorProperty, color);
-        targetRenderer.SetPropertyBlock(block);
+        for (int i = 0; i < colorProperties.Length; i++)
+        {
+            if (colorProperties[i] == 0) continue;
+            targetRenderer.GetPropertyBlock(block, i);
+            block.SetColor(colorProperties[i], originalColors[i]);
+            targetRenderer.SetPropertyBlock(block, i);
+        }
     }
 }
