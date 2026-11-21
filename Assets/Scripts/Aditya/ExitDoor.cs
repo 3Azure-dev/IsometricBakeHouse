@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 // Exit door of a hunt level (same setup in Bread, Cupcake, Pizza).
 //   Door sprite  : always visible. Brown -> flashes red on E while locked -> green once unlocked.
 //   Status icon  : small padlock / open-door icon above the door, only while the player is near.
-//   E prompt     : only while the player is near AND the door is unlocked.
+//   E prompt     : only while the player is near AND the door is unlocked, above the icon.
 [RequireComponent(typeof(SpriteRenderer))]
 public class ExitDoor1 : MonoBehaviour
 {
@@ -21,13 +21,15 @@ public class ExitDoor1 : MonoBehaviour
     [Header("Status icon (small, above the door)")]
     [SerializeField] private Sprite lockedIconSprite;   // padlock
     [SerializeField] private Sprite openIconSprite;     // open door
-    [SerializeField] private Vector3 iconLocalOffset = new Vector3(0f, 1.2f, 0f);
+    [Tooltip("Uniform world size of the icon (not affected by the door's stretched scale).")]
     [SerializeField] private float iconScale = 0.4f;
+    [Tooltip("World units between the door's top edge and the icon centre.")]
+    [SerializeField] private float iconGapAboveDoor = 0.5f;
     [SerializeField] private float fadeDuration = 0.25f;
 
     [Header("E prompt")]
-    [Tooltip("Local offset from the door. Keep it just above the door, and above the icon.")]
-    [SerializeField] private Vector3 promptLocalOffset = new Vector3(0f, 1.9f, 0f);
+    [Tooltip("World units between the icon and the E prompt centre. Increase if they overlap.")]
+    [SerializeField] private float promptGapAboveIcon = 1.5f;
 
     private SpriteRenderer doorRenderer;
     private SpriteRenderer iconRenderer;
@@ -43,10 +45,9 @@ public class ExitDoor1 : MonoBehaviour
         doorRenderer = GetComponent<SpriteRenderer>();
         doorRenderer.color = lockedColor;
 
-        // Small status icon as a child, in front of the door.
+        // Status icon: NOT a child of the door, so the door's 1.5 x 3 scale doesn't stretch it.
         GameObject icon = new GameObject("DoorStatusIcon");
-        icon.transform.SetParent(transform, false);
-        icon.transform.localPosition = iconLocalOffset;
+        icon.transform.SetParent(transform.parent, true);
         icon.transform.localScale = Vector3.one * iconScale;
 
         iconRenderer = icon.AddComponent<SpriteRenderer>();
@@ -61,22 +62,38 @@ public class ExitDoor1 : MonoBehaviour
 
     private void Start()
     {
+        // Place everything relative to the door's top edge in world space.
+        Bounds b = doorRenderer.bounds;
+        Vector3 iconPos = new Vector3(b.center.x, b.max.y + iconGapAboveDoor, transform.position.z);
+        iconRenderer.transform.position = iconPos;
+
         if (ePrompt != null)
         {
-            // Pin the prompt just above the door (same spot in every level).
-            ePrompt.transform.SetParent(transform, false);
-            ePrompt.transform.localPosition = promptLocalOffset;
+            // Detach from the stretched door, keep its current world size.
+            ePrompt.transform.SetParent(transform.parent, true);
+            ePrompt.transform.position = iconPos + Vector3.up * promptGapAboveIcon;
             ePrompt.SetActive(false);
         }
     }
 
+    private void OnDestroy()
+    {
+        if (iconRenderer != null)
+            Destroy(iconRenderer.gameObject);
+    }
+
     private void Unlock()
     {
+        if (unlocked) return; // don't replay if it runs twice
+
         unlocked = true;
         Debug.Log("Exit door unlocked");
 
         if (iconRenderer != null)
             iconRenderer.sprite = openIconSprite;
+
+        if (BreadSFX.Instance != null)
+            BreadSFX.Instance.PlayExitDoorUnlock();
 
         RefreshPrompt();
     }

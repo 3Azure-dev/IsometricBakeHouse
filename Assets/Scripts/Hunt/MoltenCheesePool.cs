@@ -43,6 +43,9 @@ public class MoltenCheesePool : MonoBehaviour
         _heat = 0f;
         Tint(player, 0f);
 
+        if (BreadSFX.Instance != null)
+            BreadSFX.Instance.PlayMoltenCheeseBurn();
+
         GrandfatherDunk dunk = FindAnyObjectByType<GrandfatherDunk>();
         int lost = dunk != null ? dunk.LoseCaught(_data.ingredientsLost) : 0;
         Debug.Log($"Player burned in molten cheese, lost {lost} ingredient(s)");

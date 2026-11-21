@@ -125,6 +125,7 @@ public class DoughCreature : IngredientCreature1
         if (_blasted) return;
         _blasted = true;
         if (HuntFX.Instance != null) HuntFX.Instance.Blast(transform.position);
+        if (BreadSFX.Instance != null) BreadSFX.Instance.PlayDoughCloneBlast();
 
         if (_player != null && DistanceToPlayer() < _blastRange
             && _player.TryGetComponent(out PlayerController player))

@@ -71,6 +71,10 @@ public class CheeseCreature : IngredientCreature1
             SetVisible(true);
             _poppedUp = true;
 
+            if (BreadSFX.Instance != null)
+                BreadSFX.Instance.PlayCheesePopOut();
+
+
             yield return new WaitForSeconds(Cheese.popUpTime);
 
             _poppedUp = false;

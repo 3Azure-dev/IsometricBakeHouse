@@ -18,10 +18,35 @@ public class BreadSFX : MonoBehaviour
     [SerializeField] private AudioClip eggshellHit;
     [SerializeField] private AudioClip sugarDash;
     [SerializeField] private AudioClip butterTrail;
+    [SerializeField] private AudioClip cupcakeCreatureStunned;
+    [SerializeField] private AudioClip cupcakeCreatureCaught;
 
     [Header("Pizza Creature Sounds")]
     [SerializeField] private AudioClip pizzaCreatureStunned;
     [SerializeField] private AudioClip pizzaCreatureCaught;
+
+    [Header("Hazard Sounds")]
+    [SerializeField] private AudioClip jamPatchStick;
+
+    [Header("Dough Clone Sounds")]
+    [SerializeField] private AudioClip doughCloneBlast;
+
+    [Header("Sauce Sounds")]
+    [SerializeField] private AudioClip sauceDropletHit;
+
+    [Header("Cheese Sounds")]
+    [SerializeField] private AudioClip cheesePopOut;
+
+    [Header("Cheese Sounds")]
+    [SerializeField] private AudioClip moltenCheeseBurn;
+
+    [Header("Dunk Sounds")]
+    [SerializeField] private AudioClip dunkHit;
+    [SerializeField] private AudioClip dunkMiss;
+
+    [Header("Exit Door Sounds")]
+    [SerializeField] private AudioClip exitDoorUnlock;
+
 
     private void Awake()
     {
@@ -101,6 +126,17 @@ public class BreadSFX : MonoBehaviour
         PlaySound(butterTrail);
     }
 
+    public void PlayCupcakeCreatureStunned()
+    {
+        PlaySound(cupcakeCreatureStunned != null ? cupcakeCreatureStunned : creatureStunned);
+    }
+
+    public void PlayCupcakeCreatureCaught()
+    {
+        PlaySound(cupcakeCreatureCaught != null ? cupcakeCreatureCaught : creatureCaught);
+    }
+
+
     // Pizza creature sounds
 
     public void PlayPizzaCreatureStunned()
@@ -113,9 +149,49 @@ public class BreadSFX : MonoBehaviour
         PlaySound(pizzaCreatureCaught);
     }
 
+    public void PlayDoughCloneBlast()
+    {
+        PlaySound(doughCloneBlast);
+    }
+
+    public void PlaySauceDropletHit()
+    {
+        PlaySound(sauceDropletHit);
+    }
+
+    public void PlayCheesePopOut()
+    {
+        PlaySound(cheesePopOut);
+    }
+
+    public void PlayMoltenCheeseBurn()
+    {
+        PlaySound(moltenCheeseBurn);
+    }
+
     private void HandleMouldPlaced(MouldZone zone)
     {
         PlayMouldPlaced();
+    }
+
+    public void PlayJamPatchStick()
+    {
+        PlaySound(jamPatchStick);
+    }
+
+    public void PlayDunkHit()
+    {
+        PlaySound(dunkHit);
+    }
+
+    public void PlayDunkMiss()
+    {
+        PlaySound(dunkMiss);
+    }
+
+    public void PlayExitDoorUnlock()
+    {
+        PlaySound(exitDoorUnlock);
     }
 
     private void PlaySound(AudioClip clip)

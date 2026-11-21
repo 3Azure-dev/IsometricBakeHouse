@@ -244,6 +244,13 @@ public class GrandfatherDunk : MonoBehaviour
         _sack.gameObject.SetActive(false);
 
         Debug.Log(hit ? "DUNK HIT" : "DUNK MISS");
+
+        if (BreadSFX.Instance != null)
+        {
+            if (hit) BreadSFX.Instance.PlayDunkHit();
+            else BreadSFX.Instance.PlayDunkMiss();
+        }
+
         if (hit) GiveBonus();
 
         if (_pot.TryGetComponent(out SpriteRenderer sr))

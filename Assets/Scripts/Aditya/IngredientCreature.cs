@@ -122,13 +122,11 @@ public class IngredientCreature1 : MonoBehaviour
         if (_state != State.Stunned && BreadSFX.Instance != null)
         {
             if (IsPizzaLevel())
-            {
                 BreadSFX.Instance.PlayPizzaCreatureStunned();
-            }
+            else if (IsCupcakeLevel())
+                BreadSFX.Instance.PlayCupcakeCreatureStunned();
             else
-            {
                 BreadSFX.Instance.PlayCreatureStunned();
-            }
         }
 
         _stunTimer = _data.stunDuration;
@@ -151,13 +149,11 @@ public class IngredientCreature1 : MonoBehaviour
         if (BreadSFX.Instance != null)
         {
             if (IsPizzaLevel())
-            {
                 BreadSFX.Instance.PlayPizzaCreatureCaught();
-            }
+            else if (IsCupcakeLevel())
+                BreadSFX.Instance.PlayCupcakeCreatureCaught();
             else
-            {
                 BreadSFX.Instance.PlayCreatureCaught();
-            }
         }
 
        
@@ -183,6 +179,12 @@ public class IngredientCreature1 : MonoBehaviour
     private bool IsPizzaLevel()
     {
         return SceneManager.GetActiveScene().name.Contains("Pizza");
+    }
+
+    private bool IsCupcakeLevel()
+    {
+        return SceneManager.GetActiveScene().name
+            .IndexOf("cupcake", StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     protected virtual void UpdateIdle()

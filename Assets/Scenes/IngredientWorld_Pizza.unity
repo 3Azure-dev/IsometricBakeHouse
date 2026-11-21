@@ -513,8 +513,18 @@ MonoBehaviour:
   eggshellHit: {fileID: 8300000, guid: 759bd47a1c9a6d94c96d1f8708b80f41, type: 3}
   sugarDash: {fileID: 8300000, guid: 4b9fe11e4b50b99488765e46899413f2, type: 3}
   butterTrail: {fileID: 8300000, guid: c6c49ac8bd881dc41b1bdf7e6649b0fe, type: 3}
+  cupcakeCreatureStunned: {fileID: 8300000, guid: ab31f4a996c0c8843bd430d90962e6b6, type: 3}
+  cupcakeCreatureCaught: {fileID: 8300000, guid: 1f2f7f7f0e5b7c64e9c7d325597ea398, type: 3}
   pizzaCreatureStunned: {fileID: 8300000, guid: e9b8f8f5353903c47afadb86ecde4c21, type: 3}
   pizzaCreatureCaught: {fileID: 8300000, guid: d14d140427b81ab4b8c4320c4a9d789a, type: 3}
+  jamPatchStick: {fileID: 8300000, guid: b2df9a8de73759b4e9183c98c2c4d6d4, type: 3}
+  doughCloneBlast: {fileID: 8300000, guid: a2efd3b0161232e469e016153519a067, type: 3}
+  sauceDropletHit: {fileID: 8300000, guid: 5cc9b7bae51dada4c84c6a0e276a0bce, type: 3}
+  cheesePopOut: {fileID: 8300000, guid: 3a8a175d6af8e324c803fb734bf10d96, type: 3}
+  moltenCheeseBurn: {fileID: 8300000, guid: 1aeaeb66f8c0ca04cab91634ed9d3819, type: 3}
+  dunkHit: {fileID: 8300000, guid: c0c2c4c853ab6a04a81a371567a8d5f9, type: 3}
+  dunkMiss: {fileID: 8300000, guid: 695971214c1985a4e846c745d95e8ff5, type: 3}
+  exitDoorUnlock: {fileID: 8300000, guid: a660d47b1c4a1fe4db8229bb9bd8ffea, type: 3}
 --- !u!4 &165504243
 Transform:
   m_ObjectHideFlags: 0
@@ -846,10 +856,10 @@ MonoBehaviour:
   flashDuration: 0.3
   lockedIconSprite: {fileID: 21300000, guid: 8db7da80ffe6f4548856b5ee5aa84da6, type: 3}
   openIconSprite: {fileID: 21300000, guid: 95aaf26fec53766449d69ea19df48996, type: 3}
-  iconLocalOffset: {x: 0, y: 1.2, z: 0}
   iconScale: 0.4
+  iconGapAboveDoor: 0.5
   fadeDuration: 0.5
-  promptLocalOffset: {x: 0, y: 1.9, z: 0}
+  promptGapAboveIcon: 1.5
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3156,7 +3166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3529794232405702368, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -223
+      value: -358
       objectReference: {fileID: 0}
     - target: {fileID: 5144799350880997296, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
       propertyPath: m_fontSize
@@ -15786,6 +15796,10 @@ PrefabInstance:
     - target: {fileID: 7640310456307106565, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
       propertyPath: m_Name
       value: PauseMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 7640310456307106565, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7941879281776349199, guid: 20d8580b5a9b19543beaf7e9fc3ec412, type: 3}
       propertyPath: m_AnchorMax.y
