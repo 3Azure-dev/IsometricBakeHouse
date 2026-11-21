@@ -1075,10 +1075,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   ePrompt: {fileID: 882865576}
   levelCompleteUI: {fileID: 802803902}
-  lockedSprite: {fileID: 21300000, guid: 8db7da80ffe6f4548856b5ee5aa84da6, type: 3}
-  openSprite: {fileID: 21300000, guid: 95aaf26fec53766449d69ea19df48996, type: 3}
+  lockedColor: {r: 0.55, g: 0.35, b: 0.15, a: 1}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  unlockedColor: {r: 0, g: 1, b: 0, a: 1}
+  flashDuration: 0.3
+  lockedIconSprite: {fileID: 21300000, guid: 8db7da80ffe6f4548856b5ee5aa84da6, type: 3}
+  openIconSprite: {fileID: 21300000, guid: 95aaf26fec53766449d69ea19df48996, type: 3}
+  iconLocalOffset: {x: 0, y: 1.2, z: 0}
+  iconScale: 0.4
   fadeDuration: 0.5
-  showOnlyWhenNear: 1
+  promptLocalOffset: {x: 0, y: 1.9, z: 0}
 --- !u!1001 &382219034
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Exit door of a hunt level.
-//   Player near + hunt NOT finished -> LOCKED sprite fades in, E does nothing.
-//   Player near + hunt finished     -> OPEN sprite fades in, E completes the level.
+// Exit door of a hunt level (same setup in Bread, Cupcake, Pizza).
+//   Door sprite  : always visible. Brown -> flashes red on E while locked -> green once unlocked.
+//   Status icon  : small padlock / open-door icon above the door, only while the player is near.
+//   E prompt     : only while the player is near AND the door is unlocked.
 [RequireComponent(typeof(SpriteRenderer))]
 public class ExitDoor1 : MonoBehaviour
 {
@@ -11,40 +12,48 @@ public class ExitDoor1 : MonoBehaviour
     [SerializeField] private GameObject ePrompt;
     [SerializeField] private LevelCompleteUI levelCompleteUI;
 
-    [Header("Door sprites (drag the sprite assets here)")]
-    [SerializeField] private Sprite lockedSprite;
-    [SerializeField] private Sprite openSprite;
+    [Header("Door colours (tint on the whitebox door sprite)")]
+    [SerializeField] private Color lockedColor = new Color(0.55f, 0.35f, 0.15f); // brown
+    [SerializeField] private Color flashColor = Color.red;
+    [SerializeField] private Color unlockedColor = Color.green;
+    [SerializeField] private float flashDuration = 0.3f;
 
-    [Header("Fade")]
-    [SerializeField] private float fadeDuration = 0.5f;
+    [Header("Status icon (small, above the door)")]
+    [SerializeField] private Sprite lockedIconSprite;   // padlock
+    [SerializeField] private Sprite openIconSprite;     // open door
+    [SerializeField] private Vector3 iconLocalOffset = new Vector3(0f, 1.2f, 0f);
+    [SerializeField] private float iconScale = 0.4f;
+    [SerializeField] private float fadeDuration = 0.25f;
 
-    [Tooltip("ON: the door icon only appears while the player is near it.\nOFF: the door is always visible.")]
-    [SerializeField] private bool showOnlyWhenNear = true;
+    [Header("E prompt")]
+    [Tooltip("Local offset from the door. Keep it just above the door, and above the icon.")]
+    [SerializeField] private Vector3 promptLocalOffset = new Vector3(0f, 1.9f, 0f);
 
-    private SpriteRenderer lockedRenderer;
-    private SpriteRenderer openRenderer;
+    private SpriteRenderer doorRenderer;
+    private SpriteRenderer iconRenderer;
 
     private bool playerInRange;
     private bool levelCompleted;
     private bool unlocked;
+    private float flashTimer;
 
     private void Awake()
     {
-        // Locked door uses the SpriteRenderer on this object.
-        lockedRenderer = GetComponent<SpriteRenderer>();
-        lockedRenderer.sprite = lockedSprite;
+        // The door itself: keep whatever whitebox sprite is assigned in the Inspector.
+        doorRenderer = GetComponent<SpriteRenderer>();
+        doorRenderer.color = lockedColor;
 
-        // Open door uses an auto-created child with the same position/size.
-        GameObject child = new GameObject("OpenDoorSprite");
-        child.transform.SetParent(transform, false);
-        openRenderer = child.AddComponent<SpriteRenderer>();
-        openRenderer.sprite = openSprite;
-        openRenderer.sortingLayerID = lockedRenderer.sortingLayerID;
-        openRenderer.sortingOrder = lockedRenderer.sortingOrder + 1;
+        // Small status icon as a child, in front of the door.
+        GameObject icon = new GameObject("DoorStatusIcon");
+        icon.transform.SetParent(transform, false);
+        icon.transform.localPosition = iconLocalOffset;
+        icon.transform.localScale = Vector3.one * iconScale;
 
-        // Start locked.
-        SetAlpha(lockedRenderer, showOnlyWhenNear ? 0f : 1f);
-        SetAlpha(openRenderer, 0f);
+        iconRenderer = icon.AddComponent<SpriteRenderer>();
+        iconRenderer.sprite = lockedIconSprite;
+        iconRenderer.sortingLayerID = doorRenderer.sortingLayerID;
+        iconRenderer.sortingOrder = doorRenderer.sortingOrder + 1;
+        iconRenderer.color = new Color(1f, 1f, 1f, 0f);
     }
 
     private void OnEnable() => GrandfatherDunk.HuntFinished += Unlock;
@@ -53,7 +62,12 @@ public class ExitDoor1 : MonoBehaviour
     private void Start()
     {
         if (ePrompt != null)
+        {
+            // Pin the prompt just above the door (same spot in every level).
+            ePrompt.transform.SetParent(transform, false);
+            ePrompt.transform.localPosition = promptLocalOffset;
             ePrompt.SetActive(false);
+        }
     }
 
     private void Unlock()
@@ -61,8 +75,10 @@ public class ExitDoor1 : MonoBehaviour
         unlocked = true;
         Debug.Log("Exit door unlocked");
 
-        if (playerInRange && ePrompt != null)
-            ePrompt.SetActive(true);
+        if (iconRenderer != null)
+            iconRenderer.sprite = openIconSprite;
+
+        RefreshPrompt();
     }
 
     [ContextMenu("Test: unlock door")]
@@ -71,68 +87,70 @@ public class ExitDoor1 : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
         playerInRange = true;
-
-        if (unlocked && ePrompt != null)
-            ePrompt.SetActive(true);
+        RefreshPrompt();
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
         playerInRange = false;
+        RefreshPrompt();
+    }
 
+    private void RefreshPrompt()
+    {
         if (ePrompt != null)
-            ePrompt.SetActive(false);
+            ePrompt.SetActive(playerInRange && unlocked && !levelCompleted);
     }
 
     private void Update()
     {
-        UpdateFade();
+        UpdateIconFade();
+        UpdateDoorColor();
 
-        if (unlocked && playerInRange && !levelCompleted &&
-            Keyboard.current != null &&
-            Keyboard.current.eKey.wasPressedThisFrame)
+        if (!playerInRange || levelCompleted) return;
+        if (Keyboard.current == null || !Keyboard.current.eKey.wasPressedThisFrame) return;
+
+        if (!unlocked)
         {
-            levelCompleted = true;
+            flashTimer = flashDuration;   // locked: flash red
+            return;
+        }
 
-            if (ePrompt != null)
-                ePrompt.SetActive(false);
+        levelCompleted = true;
+        RefreshPrompt();
 
-            if (levelCompleteUI != null)
-                levelCompleteUI.ShowLevelComplete();
+        if (levelCompleteUI != null)
+            levelCompleteUI.ShowLevelComplete();
+    }
+
+    private void UpdateDoorColor()
+    {
+        if (unlocked)
+        {
+            doorRenderer.color = unlockedColor;   // stays green
+            return;
+        }
+
+        if (flashTimer > 0f)
+        {
+            flashTimer -= Time.deltaTime;
+            doorRenderer.color = flashColor;
+        }
+        else
+        {
+            doorRenderer.color = lockedColor;
         }
     }
 
-    private void UpdateFade()
+    private void UpdateIconFade()
     {
-        bool visible = !showOnlyWhenNear || playerInRange;
-
-        float lockedTarget = (visible && !unlocked) ? 1f : 0f;
-        float openTarget = (visible && unlocked) ? 1f : 0f;
-
+        float target = playerInRange ? 1f : 0f;
         float step = fadeDuration > 0f ? Time.deltaTime / fadeDuration : 1f;
 
-        FadeTowards(lockedRenderer, lockedTarget, step);
-        FadeTowards(openRenderer, openTarget, step);
-    }
-
-    private static void FadeTowards(SpriteRenderer r, float target, float step)
-    {
-        if (r == null) return;
-
-        Color c = r.color;
-        if (Mathf.Approximately(c.a, target)) return;
-
+        Color c = iconRenderer.color;
         c.a = Mathf.MoveTowards(c.a, target, step);
-        r.color = c;
-    }
-
-    private static void SetAlpha(SpriteRenderer r, float alpha)
-    {
-        if (r != null)
-            r.color = new Color(1f, 1f, 1f, alpha);
+        iconRenderer.color = c;
     }
 }
