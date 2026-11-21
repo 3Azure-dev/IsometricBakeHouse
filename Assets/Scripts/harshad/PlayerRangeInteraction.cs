@@ -56,15 +56,28 @@ public class PlayerRangeInteraction : MonoBehaviour
 
         nearbyObjects.Remove(target);
 
-        RangeHighlight highlight =
-            other.GetComponentInParent<RangeHighlight>();
-
+        RangeHighlight highlight = other.GetComponentInParent<RangeHighlight>();
         if (highlight != null)
-        {
             highlight.SetPlayerInRange(other, false);
-        }
+
+        CloseMenuOf(other);
     }
 
+    // Closes the menu that belongs to the thing the player just walked away from
+    private void CloseMenuOf(Collider other)
+    {
+        if (other.GetComponentInParent<StoveController>() != null && StoveUI.Instance != null)
+            StoveUI.Instance.CloseUI();
+
+        if (other.GetComponentInParent<OvenController>() != null && OvenUI.Instance != null)
+            OvenUI.Instance.Close();
+
+        if (other.GetComponentInParent<IngredientShelfInteractable>() != null && IngredientShelfUI.Instance != null)
+            IngredientShelfUI.Instance.Close();
+
+        BuyItemDevice buy = other.GetComponentInParent<BuyItemDevice>();
+        if (buy != null) buy.Close();
+    }
     // Goes through the objects in range, closest first.
     // The first one that can actually use the E press gets it.
     private void InteractWithNearestObject()
