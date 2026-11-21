@@ -60,6 +60,21 @@ public class DayNightClock : MonoBehaviour
         DayNumber = Mathf.Max(1, day);
     }
 
+    private void OnEnable() { SaveSystem.GameReset += ResetForNewGame; }
+    private void OnDisable() { SaveSystem.GameReset -= ResetForNewGame; }
+
+    // New Game: back to day 1, start of the day
+    private void ResetForNewGame()
+    {
+        Phase = DayPhase.Day;
+        DayNumber = 1;
+
+        if (settings != null)
+        {
+            TimeLeft = Mathf.Max(1f, settings.dayLengthSeconds);
+            lastWholeSecond = Mathf.CeilToInt(TimeLeft);
+        }
+    }
     // --------------------------------------------------
     // SETUP
     // --------------------------------------------------

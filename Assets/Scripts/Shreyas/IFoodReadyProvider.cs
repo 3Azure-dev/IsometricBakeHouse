@@ -2,4 +2,5 @@
 public interface IFoodReadyProvider
 {
     bool IsFoodReady { get; }
+    event System.Action FoodTaken;
 }
