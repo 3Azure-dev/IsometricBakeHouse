@@ -75,7 +75,7 @@ public class OvenUI : MonoBehaviour
         {
             statusText.text = oven.IsCooking
                 ? "The oven is cooking " + oven.CurrentFood + "."
-                : "Select a recipe.";
+                : "Choose Food";
         }
 
         if (Inventory1.Instance != null)
