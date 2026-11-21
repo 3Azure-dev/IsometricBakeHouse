@@ -78,12 +78,19 @@ public class OvenUI : MonoBehaviour
                 : "Select a recipe.";
         }
 
+        if (Inventory1.Instance != null)
+        {
+            Inventory1.Instance.OnChanged -= OnStockChanged;
+            Inventory1.Instance.OnChanged += OnStockChanged;
+        }
+
         RefreshRecipeButtons();
     }
 
 
     public void Close()
     {
+        if (Inventory1.Instance != null) Inventory1.Instance.OnChanged -= OnStockChanged;
         if (ovenPanel != null)
             ovenPanel.SetActive(false);
 
@@ -94,7 +101,7 @@ public class OvenUI : MonoBehaviour
             Cursor.visible = previousCursorVisible;
             Cursor.lockState = previousCursorLockState;
         }
-
+        
         isOpen = false;
     }
 
@@ -128,6 +135,7 @@ public class OvenUI : MonoBehaviour
             );
 
             button.gameObject.SetActive(true);
+            button.interactable = Inventory1.Instance != null && Inventory1.Instance.CanCook(recipe);
 
             TMP_Text label = button.GetComponentInChildren<TMP_Text>();
 
@@ -147,6 +155,11 @@ public class OvenUI : MonoBehaviour
                 currentOven.TryStartCooking(selectedFood);
             });
         }
+    }
+
+    private void OnStockChanged(IngredientData i, int c)
+    {
+        if (isOpen && currentOven != null) RefreshRecipeButtons();
     }
 
     private void OnEnable()

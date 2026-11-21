@@ -35,6 +35,8 @@ public class StoveUI : MonoBehaviour
     private void Start()
     {
         stovePanel.SetActive(false);
+        Subscribe();
+        RefreshButtons();
 
         breadButton.onClick.AddListener(
             CookBread
@@ -105,6 +107,7 @@ public class StoveUI : MonoBehaviour
 
     public void CloseUI()
     {
+        Unsubscribe();
         stovePanel.SetActive(false);
 
         currentStove = null;
@@ -112,5 +115,31 @@ public class StoveUI : MonoBehaviour
         Debug.Log(
             "Stove UI closed."
         );
+    }
+
+    private void RefreshButtons()
+    {
+        if (currentStove == null) return;
+        breadButton.interactable = currentStove.HasIngredientsFor(FoodType.Bread);
+    }
+
+    private void OnStockChanged(IngredientData ingredient, int count)
+    {
+        RefreshButtons();
+    }
+
+    private void Subscribe()
+    {
+        if (Inventory1.Instance != null)
+        {
+            Inventory1.Instance.OnChanged -= OnStockChanged; // avoids a double subscribe
+            Inventory1.Instance.OnChanged += OnStockChanged;
+        }
+    }
+
+    private void Unsubscribe()
+    {
+        if (Inventory1.Instance != null)
+            Inventory1.Instance.OnChanged -= OnStockChanged;
     }
 }

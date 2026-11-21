@@ -13000,7 +13000,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 421246933}
         m_TargetAssemblyTypeName: Transport, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 1
@@ -14803,9 +14803,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1024299042}
         m_TargetAssemblyTypeName: Transport, Assembly-CSharp
-        m_MethodName: ChangeScene
+        m_MethodName: 
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14866,7 +14866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldUnlockButton
   world: 1
-  button: {fileID: 0}
+  button: {fileID: 1024299044}
   lockIcon: {fileID: 0}
   lockText: {fileID: 0}
   lockedAlpha: 0.5
@@ -20770,7 +20770,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.50980395, g: 0.50980395, b: 0.50980395, a: 0.627451}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -22465,7 +22465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldUnlockButton
   world: 2
-  button: {fileID: 0}
+  button: {fileID: 1655126694}
   lockIcon: {fileID: 0}
   lockText: {fileID: 0}
   lockedAlpha: 0.5
@@ -28725,7 +28725,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 421246933}
         m_TargetAssemblyTypeName: Transport, Assembly-CSharp
         m_MethodName: ChangeScene
         m_Mode: 5
@@ -28788,7 +28788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldUnlockButton
   world: 0
-  button: {fileID: 0}
+  button: {fileID: 2105288675}
   lockIcon: {fileID: 0}
   lockText: {fileID: 0}
   lockedAlpha: 0.5

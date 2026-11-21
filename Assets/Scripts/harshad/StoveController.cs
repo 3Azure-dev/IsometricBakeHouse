@@ -51,6 +51,13 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
         }
     }
 
+    public bool HasIngredientsFor(FoodType food)
+    {
+        if (recipeDatabase == null || Inventory1.Instance == null) return false;
+        RecipeData recipe = recipeDatabase.GetRecipe(food);
+        return recipe != null && Inventory1.Instance.CanCook(recipe);
+    }
+
     // --------------------------------------------------
     // PLAYER INTERACTION
     // --------------------------------------------------
