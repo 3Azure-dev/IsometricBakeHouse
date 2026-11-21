@@ -683,8 +683,8 @@ MonoBehaviour:
   _target: {fileID: 1460038818031811380}
   _offset: {x: 0, y: 1.5}
   _smoothTime: 0.2
-  _minX: -70
-  _maxX: 250
+  _minX: -60
+  _maxX: 228
   _minY: 0
 --- !u!1 &354446007
 GameObject:

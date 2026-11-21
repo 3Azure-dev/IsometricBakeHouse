@@ -1,6 +1,7 @@
 using UnityEngine;
 
 // Moves between its start and an end point, waits, and comes back. Carries the player.
+// Launcher: set Return Speed high. It loads slowly, snaps back fast and the push throws whoever is on it.
 [RequireComponent(typeof(Rigidbody2D))]
 public class MovingPlatform : MonoBehaviour
 {
@@ -8,11 +9,16 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] private float _speed = 2f;
     [SerializeField] private float _waitTime = 1f;
 
+    [Header("Launcher (0 = normal platform)")]
+    [SerializeField] private float _returnSpeed = 0f; // speed back to the start
+
     private Rigidbody2D _rb;
     private Vector2 _start;
     private Vector2 _end;
     private Vector2 _target;
     private float _waitTimer;
+
+    private bool IsLauncher => _returnSpeed > 0f;
 
     private void Awake()
     {
@@ -31,7 +37,8 @@ public class MovingPlatform : MonoBehaviour
             return;
         }
 
-        Vector2 next = Vector2.MoveTowards(_rb.position, _target, _speed * Time.fixedDeltaTime);
+        float speed = (IsLauncher && _target == _start) ? _returnSpeed : _speed;
+        Vector2 next = Vector2.MoveTowards(_rb.position, _target, speed * Time.fixedDeltaTime);
         _rb.MovePosition(next);
 
         if (Vector2.Distance(next, _target) < 0.01f)
@@ -41,9 +48,10 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    // Normal platforms carry the player. Launchers don't, so the push keeps its speed.
     private void OnCollisionEnter2D(Collision2D hit)
     {
-        if (hit.collider.CompareTag("Player")) hit.transform.SetParent(transform);
+        if (!IsLauncher && hit.collider.CompareTag("Player")) hit.transform.SetParent(transform);
     }
 
     private void OnCollisionExit2D(Collision2D hit)
@@ -54,7 +62,7 @@ public class MovingPlatform : MonoBehaviour
     private void OnDrawGizmos()
     {
         Vector3 from = Application.isPlaying ? (Vector3)_start : transform.position;
-        Gizmos.color = Color.cyan;
+        Gizmos.color = IsLauncher ? Color.magenta : Color.cyan;
         Gizmos.DrawLine(from, from + (Vector3)_offset);
         Gizmos.DrawWireCube(from + (Vector3)_offset, new Vector3(1f, 0.2f, 0f));
     }
