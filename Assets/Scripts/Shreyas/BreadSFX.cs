@@ -1,8 +1,13 @@
 using UnityEngine;
+using System.Collections;
 
 public class BreadSFX : MonoBehaviour
 {
     public static BreadSFX Instance { get; private set; }
+
+    private AudioSource _burnSource;
+    private Coroutine _burnFade;
+    private float _burnBaseVolume;
 
     [Header("Audio Source")]
     [SerializeField] private AudioSource sfxSource;
@@ -69,6 +74,16 @@ public class BreadSFX : MonoBehaviour
                 "BreadSFX: Please add an AudioSource component.",
                 this
             );
+        }
+
+        if (sfxSource != null)
+        {
+            _burnSource = gameObject.AddComponent<AudioSource>();
+            _burnSource.playOnAwake = false;
+            _burnSource.loop = false;
+            _burnSource.spatialBlend = 0f;
+            _burnSource.outputAudioMixerGroup = sfxSource.outputAudioMixerGroup; // keeps your volume sliders working
+            _burnBaseVolume = sfxSource.volume;
         }
     }
 
@@ -166,7 +181,38 @@ public class BreadSFX : MonoBehaviour
 
     public void PlayMoltenCheeseBurn()
     {
-        PlaySound(moltenCheeseBurn);
+        if (_burnSource == null || moltenCheeseBurn == null)
+        {
+            Debug.LogWarning("BreadSFX: molten cheese burn clip or source is missing.", this);
+            return;
+        }
+
+        if (_burnFade != null) { StopCoroutine(_burnFade); _burnFade = null; }
+
+        _burnSource.Stop();
+        _burnSource.volume = _burnBaseVolume;
+        _burnSource.clip = moltenCheeseBurn;
+        _burnSource.Play();
+    }
+
+    public void FadeOutMoltenCheeseBurn(float duration = 0.6f)
+    {
+        if (_burnSource == null || !_burnSource.isPlaying) return;
+        if (_burnFade != null) StopCoroutine(_burnFade);
+        _burnFade = StartCoroutine(FadeBurn(duration));
+    }
+
+    private IEnumerator FadeBurn(float duration)
+    {
+        float start = _burnSource.volume;
+        for (float t = 0f; t < duration; t += Time.unscaledDeltaTime)
+        {
+            _burnSource.volume = Mathf.Lerp(start, 0f, t / duration);
+            yield return null;
+        }
+        _burnSource.Stop();
+        _burnSource.volume = _burnBaseVolume;
+        _burnFade = null;
     }
 
     private void HandleMouldPlaced(MouldZone zone)

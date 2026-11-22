@@ -57,6 +57,7 @@ public class MoltenCheesePool : MonoBehaviour
         if (!other.TryGetComponent(out PlayerController _)) return;
         _heat = 0f;
         _burnSoundPlayed = false;
+        if (BreadSFX.Instance != null) BreadSFX.Instance.FadeOutMoltenCheeseBurn();
         Tint(other, 0f);
     }
 
@@ -66,7 +67,8 @@ public class MoltenCheesePool : MonoBehaviour
         _burnSoundPlayed = false;
         Tint(player, 0f);
 
-        // no sound here: it already played at 90%, and this is where the respawn happens
+        if (BreadSFX.Instance != null)
+            BreadSFX.Instance.FadeOutMoltenCheeseBurn(0.6f);
 
         GrandfatherDunk dunk = FindAnyObjectByType<GrandfatherDunk>();
         int lost = dunk != null ? dunk.LoseCaught(_data.ingredientsLost) : 0;
@@ -74,7 +76,6 @@ public class MoltenCheesePool : MonoBehaviour
 
         if (player.TryGetComponent(out PlayerRespawn respawn)) respawn.Respawn();
     }
-
     private void Tint(Collider2D player, float amount)
     {
         if (_playerSprite == null)
