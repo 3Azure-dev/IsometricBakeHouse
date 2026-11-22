@@ -8,11 +8,14 @@ public class JamPatch : MonoBehaviour
     [SerializeField] private bool _blocksJump = true;
 
     [Header("Walk sound - Pravin can tune these")]
-    [SerializeField] private float _stepInterval = 0.4f;   // seconds between squelch sounds
+    [SerializeField] private float _stepInterval = 0.4f;      // seconds between squelch sounds
     [SerializeField] private float _minMoveDistance = 0.005f; // below this = standing still
 
+    private Collider2D _col;
     private float _nextStepTime;
     private float _lastPlayerX;
+
+    private void Awake() => _col = GetComponent<Collider2D>();
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -27,12 +30,17 @@ public class JamPatch : MonoBehaviour
             player.ApplySlow(_slowMultiplier, _slowDuration);
             if (_blocksJump) player.BlockJump(_slowDuration);
 
-            // play the sound only while the player is actually walking
+            // sound only while the player's feet are really inside the jam
+            Bounds pb = other.bounds;
+            Vector2 feet = new Vector2(pb.center.x, pb.min.y + 0.05f);
+            bool feetInside = _col.OverlapPoint(feet);
+
+            // and only while the player is actually walking
             float x = other.transform.position.x;
             bool isMoving = Mathf.Abs(x - _lastPlayerX) > _minMoveDistance;
             _lastPlayerX = x;
 
-            if (isMoving && Time.time >= _nextStepTime)
+            if (feetInside && isMoving && Time.time >= _nextStepTime)
             {
                 _nextStepTime = Time.time + _stepInterval;
                 if (BreadSFX.Instance != null)

@@ -1089,12 +1089,17 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   unlockedColor: {r: 0, g: 1, b: 0, a: 1}
   flashDuration: 0.3
+  interactRange: 3.5
   lockedIconSprite: {fileID: 21300000, guid: 8db7da80ffe6f4548856b5ee5aa84da6, type: 3}
   openIconSprite: {fileID: 21300000, guid: 95aaf26fec53766449d69ea19df48996, type: 3}
-  iconScale: 0.4
-  iconGapAboveDoor: 0.5
+  iconScale: 0.8
+  iconGapLeftOfDoor: 0.6
+  iconHeightOnDoor: 0.4
   fadeDuration: 0.5
-  promptGapAboveIcon: 1.5
+  promptScale: 0.5
+  promptGapAboveDoor: 0.2
+  pulseAmount: 0.08
+  pulseSpeed: 3
 --- !u!1001 &382219034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14557,6 +14562,14 @@ PrefabInstance:
       propertyPath: m_enableAutoSizing
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1646167328873963190, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 1646167328873963190, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2135519697888740191, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
       propertyPath: m_Name
       value: LevelCompleteCanvas
@@ -14692,6 +14705,14 @@ PrefabInstance:
     - target: {fileID: 7669909496339198078, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
       propertyPath: m_enableAutoSizing
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7669909496339198078, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 7669909496339198078, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8770610539912153625, guid: 80c1ed4a163931845b6669f71c5c2364, type: 3}
       propertyPath: m_SizeDelta.x

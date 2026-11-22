@@ -8,7 +8,12 @@ public class MoltenCheesePool : MonoBehaviour
     [SerializeField] private MoltenCheeseData _data;
     [SerializeField] private Color _burnColor = new Color(1f, 0.45f, 0.1f);
 
+    [Header("Burn sound - Pravin can tune this")]
+    [Tooltip("Sound plays once when the player is this red (0.9 = 90%)")]
+    [SerializeField, Range(0.5f, 1f)] private float _burnSoundAt = 0.9f;
+
     private float _heat;
+    private bool _burnSoundPlayed;
     private SpriteRenderer _playerSprite;
     private Color _playerColor;
 
@@ -26,7 +31,23 @@ public class MoltenCheesePool : MonoBehaviour
         if (grounded) _heat += Time.fixedDeltaTime;
         else _heat = Mathf.Max(0f, _heat - _data.coolSpeed * Time.fixedDeltaTime);
 
-        Tint(other, _heat / _data.burnTime);
+        float ratio = _heat / _data.burnTime;
+        Tint(other, ratio);
+
+        // burn sound: once when the player is almost fully red
+        if (ratio >= _burnSoundAt)
+        {
+            if (!_burnSoundPlayed)
+            {
+                _burnSoundPlayed = true;
+                if (BreadSFX.Instance != null)
+                    BreadSFX.Instance.PlayMoltenCheeseBurn();
+            }
+        }
+        else
+        {
+            _burnSoundPlayed = false; // cooled down, can play again next time
+        }
 
         if (_heat >= _data.burnTime) Burn(other);
     }
@@ -35,16 +56,17 @@ public class MoltenCheesePool : MonoBehaviour
     {
         if (!other.TryGetComponent(out PlayerController _)) return;
         _heat = 0f;
+        _burnSoundPlayed = false;
         Tint(other, 0f);
     }
 
     private void Burn(Collider2D player)
     {
         _heat = 0f;
+        _burnSoundPlayed = false;
         Tint(player, 0f);
 
-        if (BreadSFX.Instance != null)
-            BreadSFX.Instance.PlayMoltenCheeseBurn();
+        // no sound here: it already played at 90%, and this is where the respawn happens
 
         GrandfatherDunk dunk = FindAnyObjectByType<GrandfatherDunk>();
         int lost = dunk != null ? dunk.LoseCaught(_data.ingredientsLost) : 0;
