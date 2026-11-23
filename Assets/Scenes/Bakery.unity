@@ -10733,7 +10733,7 @@ MonoBehaviour:
   bobSpeed: 5
   faceCamera: 1
   followTarget: {fileID: 474399849}
-  worldOffset: {x: 0, y: 2, z: 0}
+  worldOffset: {x: -1, y: 2, z: 0}
 --- !u!1001 &687631679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29580,19 +29580,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 194305369720918834, guid: ec249c4b2124cb44fa9c8dd2f032adb2, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.67897797
+      value: 0.6532815
       objectReference: {fileID: 0}
     - target: {fileID: 194305369720918834, guid: ec249c4b2124cb44fa9c8dd2f032adb2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.2812419
+      value: 0.27059805
       objectReference: {fileID: 0}
     - target: {fileID: 194305369720918834, guid: ec249c4b2124cb44fa9c8dd2f032adb2, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.62653196
+      value: 0.6532815
       objectReference: {fileID: 0}
     - target: {fileID: 194305369720918834, guid: ec249c4b2124cb44fa9c8dd2f032adb2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.25951806
+      value: -0.27059805
       objectReference: {fileID: 0}
     - target: {fileID: 194305369720918834, guid: ec249c4b2124cb44fa9c8dd2f032adb2, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -29608,7 +29608,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 194305369720918834, guid: ec249c4b2124cb44fa9c8dd2f032adb2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 85.399
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 194305369720918834, guid: ec249c4b2124cb44fa9c8dd2f032adb2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
