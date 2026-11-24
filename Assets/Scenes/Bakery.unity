@@ -18628,7 +18628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StoveCookingUI
   stovePanel: {fileID: 1654926681}
   titleText: {fileID: 1904060567}
-  breadButton: {fileID: 160411778732997530, guid: 69580837521aa034ab76258d84307205, type: 3}
+  breadButton: {fileID: 1499217022}
   closeButton: {fileID: 570176042}
 --- !u!1 &1330716246
 GameObject:

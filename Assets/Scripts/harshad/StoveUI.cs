@@ -35,7 +35,8 @@ public class StoveUI : MonoBehaviour
     private void Start()
     {
         stovePanel.SetActive(false);
-       
+        Subscribe();
+        RefreshButtons();
 
         breadButton.onClick.AddListener(
             CookBread
@@ -122,7 +123,12 @@ public class StoveUI : MonoBehaviour
     private void RefreshButtons()
     {
         if (currentStove == null) return;
-        breadButton.interactable = currentStove.HasIngredientsFor(FoodType.Bread);
+
+        bool canCook = currentStove.HasIngredientsFor(FoodType.Bread);
+        breadButton.interactable = canCook;
+
+        Debug.Log("Stove menu: can cook Bread = " + canCook +
+                  " | button interactable = " + breadButton.interactable);
     }
 
     private void OnStockChanged(IngredientData ingredient, int count)
