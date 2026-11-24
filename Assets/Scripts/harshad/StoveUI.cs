@@ -35,8 +35,7 @@ public class StoveUI : MonoBehaviour
     private void Start()
     {
         stovePanel.SetActive(false);
-        Subscribe();
-        RefreshButtons();
+       
 
         breadButton.onClick.AddListener(
             CookBread
@@ -65,6 +64,9 @@ public class StoveUI : MonoBehaviour
             "Choose Food";
 
         stovePanel.SetActive(true);
+
+        Subscribe();        // listen for ingredient changes while open
+        RefreshButtons();   // grey out Bread right now if there are no ingredients
 
         Debug.Log(
             "Stove UI opened."
