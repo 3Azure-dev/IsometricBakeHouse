@@ -5,20 +5,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-// The whole Computer Shop screen (SCRUM-380, layout by Pravin, Nov 2):
-//   Left: Shop Items | Equipment | Level upgrade
-//   Right: tabs of the open section, then the item list.
-//
-//   Shop Items    -> Blueprint (diamonds), Material (coins), Recipe (coins, level locked)
-//   Equipment     -> one list: Oven, Pizza Stone (coins, level locked)
-//   Level upgrade -> Levels (coins), Plots (empty for now, SCRUM-376)
-//
-// Blueprints and materials go to the delivery list and arrive the next day as a box.
 public class ShopScreenUI : MonoBehaviour
 {
     private enum Section { ShopItems, Equipment, LevelUpgrade }
 
-    // Track the last level the player viewed for each category to show "New" dots
     // GDD: nothing unlocks after Level 3 → Level 4+ never triggers dots
     private const int MaxUnlockLevel = 3;
 
@@ -53,11 +43,8 @@ public class ShopScreenUI : MonoBehaviour
     }
 
     [Header("Data (drag the assets in)")]
-    [Tooltip("The 5 furniture assets, including the Counter")]
     [SerializeField] private FurnitureData[] furniture;
-    [Tooltip("Recipe tab: SO_Recipe_Cupcake, SO_Recipe_Pizza")]
     [SerializeField] private RecipeData[] recipes;
-    [Tooltip("Equipment list: Oven and Pizza Stone, with their type")]
     [SerializeField] private EquipmentEntry[] equipment;
 
     [Header("Left section buttons")]
@@ -86,15 +73,15 @@ public class ShopScreenUI : MonoBehaviour
     [Header("SCRUM-376: Plots Panel")]
     [SerializeField] private GameObject plotsPanel;
 
-    [Header("Purchase events (copy the old BakeryShopUI events here)")]
+    [Header("Purchase events")]
     [SerializeField] private UnityEvent onOvenPurchased;
     [SerializeField] private UnityEvent onCupcakeRecipePurchased;
 
     private static readonly string[][] TabNames =
     {
-        new[] { "Blueprint", "Material", "Recipe" },   // Shop Items
-        new string[0],                                  // Equipment: one list, no tabs
-        new[] { "Levels", "Plots" }                     // Level upgrade
+        new[] { "Blueprint", "Material", "Recipe" },
+        new string[0],
+        new[] { "Levels", "Plots" }
     };
 
     private readonly List<Entry> entries = new List<Entry>();
@@ -127,14 +114,12 @@ public class ShopScreenUI : MonoBehaviour
             for (int i = 0; i < tabButtons.Length; i++)
             {
                 int index = i;
-
                 if (tabButtons[i] != null)
                     tabButtons[i].onClick.AddListener(() => ShowTab(index));
             }
         }
     }
 
-    // Makes the list fit the panel without any Inspector layout values
     private void BuildListLayout()
     {
         if (rowContainer == null) return;
@@ -182,16 +167,15 @@ public class ShopScreenUI : MonoBehaviour
         progress = BakeryProgress.Instance;
         delivery = DeliverySystem.Instance;
 
-        // Load saved "viewed" levels — never allowed below 1
         lastViewedLevelRecipe = Mathf.Max(1, PlayerPrefs.GetInt("LastViewedLevel_Recipe", 1));
         lastViewedLevelEquipment = Mathf.Max(1, PlayerPrefs.GetInt("LastViewedLevel_Equipment", 1));
 
         if (wallet != null)
         {
-            wallet.CoinsChanged += OnWalletChanged;      // prices only, NO dots
-            wallet.DiamondsChanged += OnWalletChanged;   // prices only, NO dots
+            wallet.CoinsChanged += OnWalletChanged;
+            wallet.DiamondsChanged += OnWalletChanged;
         }
-        if (level != null) level.LevelChanged += OnLevelChanged;  // dots ONLY here
+        if (level != null) level.LevelChanged += OnLevelChanged;
         if (progress != null) progress.Changed += OnProgressChanged;
         if (delivery != null) delivery.ItemOrdered += OnItemOrdered;
 
@@ -212,10 +196,10 @@ public class ShopScreenUI : MonoBehaviour
         wallet = null; level = null; progress = null; delivery = null;
     }
 
-    // Event handlers - Cleaned up, no duplicates!
     private void OnWalletChanged(int v) { Refresh(); }
     private void OnLevelChanged(int v) { Refresh(); CheckForNewUnlocks(); }
-    private void OnProgressChanged(ProgressChange c) { Refresh(); }
+    // CRITICAL FIX: purchases change progress -> re-check dots so the dot HIDES on buy
+    private void OnProgressChanged(ProgressChange c) { Refresh(); CheckForNewUnlocks(); }
     private void OnItemOrdered(DeliveryItem i) { Refresh(); }
 
     // ---------------- SECTIONS AND TABS ----------------
@@ -225,7 +209,6 @@ public class ShopScreenUI : MonoBehaviour
         currentSection = section;
         currentTab = 0;
 
-        // Reset UI state: show the list, hide the custom plots panel by default
         if (rowContainer != null) rowContainer.gameObject.SetActive(true);
         if (plotsPanel != null) plotsPanel.SetActive(false);
 
@@ -233,7 +216,6 @@ public class ShopScreenUI : MonoBehaviour
         Paint(equipmentButton, section == Section.Equipment);
         Paint(levelUpgradeButton, section == Section.LevelUpgrade);
 
-        // Show only the tab buttons this section needs. One list (Equipment) has no tabs.
         string[] names = TabNames[(int)section];
 
         for (int i = 0; i < tabButtons.Length; i++)
@@ -262,13 +244,13 @@ public class ShopScreenUI : MonoBehaviour
         {
             int lv = Mathf.Max(1, level.Level);
 
-            if (currentSection == Section.ShopItems && index == 2)   // viewed Recipe
+            if (currentSection == Section.ShopItems && index == 2)
             {
                 lastViewedLevelRecipe = lv;
                 PlayerPrefs.SetInt("LastViewedLevel_Recipe", lv);
                 SetVerticalNewDot(shopItemsButton, false);
             }
-            else if (currentSection == Section.Equipment)            // viewed Equipment
+            else if (currentSection == Section.Equipment)
             {
                 lastViewedLevelEquipment = lv;
                 PlayerPrefs.SetInt("LastViewedLevel_Equipment", lv);
@@ -283,7 +265,6 @@ public class ShopScreenUI : MonoBehaviour
     private void Paint(Button button, bool selected)
     {
         if (button == null || button.targetGraphic == null) return;
-
         button.targetGraphic.color = selected ? selectedColor : normalColor;
     }
 
@@ -292,7 +273,6 @@ public class ShopScreenUI : MonoBehaviour
     {
         if (button == null) return;
         Transform dot = button.transform.Find("NewDot");
-        Debug.Log($"[SetVerticalNewDot] Button: {button.name}, Found NewDot: {dot != null}, Show: {show}");
         if (dot != null) dot.gameObject.SetActive(show);
     }
 
@@ -350,7 +330,6 @@ public class ShopScreenUI : MonoBehaviour
         foreach (Entry entry in entries)
         {
             if (entry.row == null) continue;
-
             ItemState state = entry.state();
             entry.row.SetState(state.status, state.canBuy, state.priceRed);
         }
@@ -362,30 +341,26 @@ public class ShopScreenUI : MonoBehaviour
         if (messageText != null) messageText.text = message;
     }
 
-    // One place for every rule: owned, locked by level, waiting, can afford
     private ItemState Evaluate(bool owned, int lockedLevel, int price, bool diamonds, string waitText = null)
     {
         if (owned) return new ItemState("PURCHASED", false, false);
-
         if (lockedLevel > 0) return new ItemState("LOCKED - LEVEL " + lockedLevel, false, false);
 
         bool afford = diamonds ? CanAffordDiamonds(price) : CanAffordCoins(price);
 
         if (waitText != null) return new ItemState(waitText, false, !afford);
-
         if (afford) return new ItemState("BUY", true, false);
 
         return new ItemState("", false, false);
     }
 
-    // ---------------- SHOP ITEMS: BLUEPRINT (diamonds, not locked by level) ----------------
+    // ---------------- SHOP ITEMS: BLUEPRINT ----------------
 
     private void BuildBlueprints()
     {
         foreach (FurnitureData f in furniture)
         {
             if (IsHidden(f)) continue;
-
             FurnitureData item = f;
 
             Add(item.furnitureName, item.icon, item.blueprintDiamonds, true,
@@ -401,34 +376,24 @@ public class ShopScreenUI : MonoBehaviour
 
     private void BuyBlueprint(FurnitureData f)
     {
-        if (string.IsNullOrEmpty(f.itemId))
-        {
-            Say(f.furnitureName + " has no Item Id. Fill it in on the asset.");
-            return;
-        }
-
+        if (string.IsNullOrEmpty(f.itemId)) { Say(f.furnitureName + " has no Item Id."); return; }
         if (progress != null && progress.HasBlueprint(f.itemId)) return;
         if (IsOrdered(DeliveryItemType.Blueprint, f.itemId)) return;
 
-        if (wallet == null || delivery == null || !wallet.SpendDiamonds(f.blueprintDiamonds))
-        {
-            Say("Not enough diamonds.");
-            return;
-        }
+        if (wallet == null || delivery == null || !wallet.SpendDiamonds(f.blueprintDiamonds)) { Say("Not enough diamonds."); return; }
 
         delivery.Order(DeliveryItemType.Blueprint, f.itemId);
         Say(f.furnitureName + " blueprint bought. It arrives tomorrow.");
         Refresh();
     }
 
-    // ---------------- SHOP ITEMS: MATERIAL (coins) ----------------
+    // ---------------- SHOP ITEMS: MATERIAL ----------------
 
     private void BuildMaterials()
     {
         foreach (FurnitureData f in furniture)
         {
             if (IsHidden(f)) continue;
-
             FurnitureData item = f;
 
             Add(item.furnitureName, item.icon, item.cost, false,
@@ -439,25 +404,20 @@ public class ShopScreenUI : MonoBehaviour
 
     private void BuyMaterials(FurnitureData f)
     {
-        if (wallet == null || delivery == null || !wallet.SpendCoins(f.cost))
-        {
-            Say("Not enough coins.");
-            return;
-        }
+        if (wallet == null || delivery == null || !wallet.SpendCoins(f.cost)) { Say("Not enough coins."); return; }
 
         delivery.Order(DeliveryItemType.Material, f.materialId, f.materialBoxes);
         Say(f.furnitureName + " materials bought. They arrive tomorrow.");
         Refresh();
     }
 
-    // ---------------- SHOP ITEMS: RECIPE (coins, locked by level) ----------------
+    // ---------------- SHOP ITEMS: RECIPE ----------------
 
     private void BuildRecipes()
     {
         foreach (RecipeData r in recipes)
         {
             if (r == null) continue;
-
             RecipeData recipe = r;
 
             Add(recipe.recipeName, recipe.icon, recipe.blueprintCost, false,
@@ -471,14 +431,13 @@ public class ShopScreenUI : MonoBehaviour
         }
     }
 
-    // 0 = not locked
     private int RecipeLockedLevel(RecipeData recipe)
     {
         if (level == null || level.IsRecipeAvailable(recipe.foodType)) return 0;
-
         return level.GetRequiredLevel(recipe.foodType);
     }
 
+    // 🔴 FIXED VERSION: Buying counts as "seeing" the unlock level
     private void BuyRecipe(RecipeData recipe)
     {
         if (RecipeLockedLevel(recipe) > 0) return;
@@ -490,23 +449,34 @@ public class ShopScreenUI : MonoBehaviour
             return;
         }
 
+        int req = level != null ? level.GetRequiredLevel(recipe.foodType) : 1;
+        if (req <= 0) req = level != null ? level.Level : 1;
+
         progress.UnlockRecipe(recipe.foodType);
+
+        // KEY FIX: buying counts as "seeing" this unlock level,
+        // so the dot can NEVER appear or stay after a purchase
+        if (level != null && req > lastViewedLevelRecipe)
+        {
+            lastViewedLevelRecipe = req;
+            PlayerPrefs.SetInt("LastViewedLevel_Recipe", lastViewedLevelRecipe);
+        }
 
         if (recipe.foodType == FoodType.Cupcake)
             onCupcakeRecipePurchased?.Invoke();
 
         Say(recipe.recipeName + " recipe bought.");
         Refresh();
+        CheckForNewUnlocks();
     }
 
-    // ---------------- EQUIPMENT (one list, coins, locked by level) ----------------
+    // ---------------- EQUIPMENT ----------------
 
     private void BuildEquipment()
     {
         foreach (EquipmentEntry e in equipment)
         {
             if (e == null || e.data == null) continue;
-
             EquipmentEntry entry = e;
 
             Add(entry.data.equipmentName, entry.data.icon, entry.data.cost, false,
@@ -523,10 +493,10 @@ public class ShopScreenUI : MonoBehaviour
     private int EquipmentLockedLevel(EquipmentEntry entry)
     {
         if (level == null || level.IsEquipmentAvailable(entry.type)) return 0;
-
         return Mathf.Max(2, entry.data.unlockLevel);
     }
 
+    // 🔴 FIXED VERSION: Buying counts as "seeing" the unlock level
     private void BuyEquipment(EquipmentEntry entry)
     {
         if (EquipmentLockedLevel(entry) > 0) return;
@@ -538,16 +508,26 @@ public class ShopScreenUI : MonoBehaviour
             return;
         }
 
+        int req = Mathf.Max(2, entry.data.unlockLevel);
+
         progress.AddEquipment(entry.type);
+
+        // KEY FIX: buying counts as "seeing" this unlock level
+        if (level != null && req > lastViewedLevelEquipment)
+        {
+            lastViewedLevelEquipment = req;
+            PlayerPrefs.SetInt("LastViewedLevel_Equipment", lastViewedLevelEquipment);
+        }
 
         if (entry.type == EquipmentType.Oven)
             onOvenPurchased?.Invoke();
 
         Say(entry.data.equipmentName + " bought.");
         Refresh();
+        CheckForNewUnlocks();
     }
 
-    // ---------------- LEVEL UPGRADE: LEVELS (coins, in order) ----------------
+    // ---------------- LEVEL UPGRADE: LEVELS ----------------
 
     private void BuildLevels()
     {
@@ -563,10 +543,8 @@ public class ShopScreenUI : MonoBehaviour
                 () =>
                 {
                     if (level.Level >= target) return new ItemState("PURCHASED", false, false);
-
                     bool next = level.Level + 1 == target;
                     string wait = next ? null : "BUY LEVEL " + (target - 1) + " FIRST";
-
                     return Evaluate(false, 0, Mathf.Max(0, price), false, wait);
                 });
         }
@@ -586,60 +564,28 @@ public class ShopScreenUI : MonoBehaviour
         Refresh();
     }
 
-    // ---------------- LEVEL UPGRADE: PLOTS (diamonds, in order) ----------------
+    // ---------------- LEVEL UPGRADE: PLOTS ----------------
 
     private void BuildPlots()
     {
-        // Plot 1
-        Add("Expansion Plot 1", null, 200, true,
-            () => BuyPlot(1),
-            () => Evaluate(IsPlotUnlocked(1), 0, 200, true));
-
-        // Plot 2
-        Add("Expansion Plot 2", null, 250, true,
-            () => BuyPlot(2),
-            () => Evaluate(IsPlotUnlocked(2), 0, 250, true));
-
-        // Plot 3
-        Add("Expansion Plot 3", null, 300, true,
-            () => BuyPlot(3),
-            () => Evaluate(IsPlotUnlocked(3), 0, 300, true));
+        Add("Expansion Plot 1", null, 200, true, () => BuyPlot(1), () => Evaluate(IsPlotUnlocked(1), 0, 200, true));
+        Add("Expansion Plot 2", null, 250, true, () => BuyPlot(2), () => Evaluate(IsPlotUnlocked(2), 0, 250, true));
+        Add("Expansion Plot 3", null, 300, true, () => BuyPlot(3), () => Evaluate(IsPlotUnlocked(3), 0, 300, true));
     }
 
     private void BuyPlot(int plotNumber)
     {
-        // 1. Check if previous plot is unlocked
-        if (plotNumber > 1 && !IsPlotUnlocked(plotNumber - 1))
-        {
-            Say("You must buy Plot " + (plotNumber - 1) + " first!");
-            return;
-        }
-
+        if (plotNumber > 1 && !IsPlotUnlocked(plotNumber - 1)) { Say("You must buy Plot " + (plotNumber - 1) + " first!"); return; }
         if (IsPlotUnlocked(plotNumber)) return;
 
-        // 2. Let the ExpansionPlotManager handle the diamonds and unlocking!
         ExpansionPlotManager plotManager = FindAnyObjectByType<ExpansionPlotManager>();
-
         if (plotManager != null)
         {
-            // The Manager will try to spend diamonds and unlock the plot
-            bool success = plotManager.BuyPlot(plotNumber);
-
-            if (success)
-            {
-                Say("Expansion Plot " + plotNumber + " unlocked!");
-            }
-            else
-            {
-                Say("Not enough diamonds or plot already bought!");
-            }
+            if (plotManager.BuyPlot(plotNumber)) Say("Expansion Plot " + plotNumber + " unlocked!");
+            else Say("Not enough diamonds or plot already bought!");
         }
-        else
-        {
-            Say("Plot Manager not found!");
-        }
+        else { Say("Plot Manager not found!"); }
 
-        // 3. Refresh the UI
         Refresh();
         Rebuild();
     }
@@ -648,7 +594,6 @@ public class ShopScreenUI : MonoBehaviour
     {
         ExpansionPlotManager plotManager = FindAnyObjectByType<ExpansionPlotManager>();
         if (plotManager == null) return false;
-
         return plotManager.IsPlotUnlocked(plotNumber);
     }
 
@@ -660,12 +605,8 @@ public class ShopScreenUI : MonoBehaviour
     private bool IsOrdered(DeliveryItemType type, string id)
     {
         if (delivery == null) return false;
-
         foreach (DeliveryItem item in delivery.GetPending())
-        {
             if (item.type == type && item.itemId == id) return true;
-        }
-
         return false;
     }
 
@@ -680,13 +621,10 @@ public class ShopScreenUI : MonoBehaviour
     {
         if (level == null) return;
 
-        // Level 4, 5, 6... all behave like Level 3 for dots
         int dotLevel = Mathf.Min(level.Level, MaxUnlockLevel);
 
         bool newRecipe = dotLevel > lastViewedLevelRecipe;
         bool newEquipment = dotLevel > lastViewedLevelEquipment;
-
-        Debug.Log($"[DOTS] level={level.Level} dotLevel={dotLevel} lastRecipe={lastViewedLevelRecipe} lastEquip={lastViewedLevelEquipment} recipe={newRecipe} equip={newEquipment}");
 
         SetVerticalNewDot(shopItemsButton, newRecipe);
         SetVerticalNewDot(equipmentButton, newEquipment);
@@ -701,14 +639,14 @@ public class ShopScreenUI : MonoBehaviour
             int dotLevel = Mathf.Min(level.Level, MaxUnlockLevel);
             bool newRecipe = dotLevel > lastViewedLevelRecipe;
 
-            SetHorizontalNewDot(0, false);      // Blueprint
-            SetHorizontalNewDot(1, false);      // Material
-            SetHorizontalNewDot(2, newRecipe);  // Recipe
+            SetHorizontalNewDot(0, false);
+            SetHorizontalNewDot(1, false);
+            SetHorizontalNewDot(2, newRecipe);
         }
         else
         {
-            SetHorizontalNewDot(0, false);      // Levels
-            SetHorizontalNewDot(1, false);      // Plots
+            SetHorizontalNewDot(0, false);
+            SetHorizontalNewDot(1, false);
             SetHorizontalNewDot(2, false);
         }
     }
