@@ -10,6 +10,7 @@ public class PlayerFoodInventory : MonoBehaviour
 
     private List<FoodType> carriedFoods =
         new List<FoodType>();
+    public event System.Action Changed;
 
 
     private void Awake()
@@ -71,6 +72,7 @@ public class PlayerFoodInventory : MonoBehaviour
         }
 
         carriedFoods.Add(food);
+        Changed?.Invoke();
 
         Debug.Log(
             "Player picked up " +
@@ -105,6 +107,7 @@ public class PlayerFoodInventory : MonoBehaviour
         }
 
         carriedFoods.Remove(food);
+        Changed?.Invoke();
 
         Debug.Log(
             "Player delivered " +
@@ -134,6 +137,7 @@ public class PlayerFoodInventory : MonoBehaviour
     public void ClearInventory()
     {
         carriedFoods.Clear();
+        Changed?.Invoke();
 
         Debug.Log(
             "Food inventory cleared."

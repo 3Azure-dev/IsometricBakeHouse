@@ -3635,6 +3635,8 @@ MonoBehaviour:
   howToPlayBackdrop: {fileID: 528182383}
   howToPlayPanel: {fileID: 768982532}
   continueButton: {fileID: 0}
+  playButtonLabel: {fileID: 0}
+  newGameButton: {fileID: 0}
   newGameConfirmPanel: {fileID: 0}
 --- !u!1001 &1187442276
 PrefabInstance:
@@ -3741,6 +3743,8 @@ MonoBehaviour:
   howToPlayBackdrop: {fileID: 528182383}
   howToPlayPanel: {fileID: 768982532}
   continueButton: {fileID: 1849601623}
+  playButtonLabel: {fileID: 1328434150}
+  newGameButton: {fileID: 568409038}
   newGameConfirmPanel: {fileID: 946407932}
 --- !u!1 &1328434148
 GameObject:

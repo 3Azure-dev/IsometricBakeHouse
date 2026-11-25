@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
@@ -7,9 +8,18 @@ public class MainMenu : MonoBehaviour
     public GameObject howToPlayBackdrop;
     public GameObject howToPlayPanel;
 
-    [Header("Continue / New Game")]
-    public GameObject continueButton;        // the existing Play button object
+    [Header("Play / Continue / New Game")]
+    public GameObject continueButton;        // the main Play button object
+    public TMP_Text playButtonLabel;         // the text on that button ("Play" / "Continue")
+    public GameObject newGameButton;         // the New Game button (only with a save)
     public GameObject newGameConfirmPanel;   // the "are you sure" popup (starts inactive)
+    private static bool hasPlayedThisSession;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetSessionFlag()
+    {
+        hasPlayedThisSession = false;   // keeps the Editor correct even without a domain reload
+    }
 
     private void Start()
     {
@@ -22,19 +32,28 @@ public class MainMenu : MonoBehaviour
         RefreshButtons();
     }
 
-    // Continue is only shown when a save exists
+    // First time: "Play" only. With a save: "Continue" + "New Game".
+    // "Play" every time the game starts. "Continue" only after coming back from the game.
+    // New Game shows whenever a save exists.
     private void RefreshButtons()
     {
         if (continueButton != null)
-            continueButton.SetActive(SaveSystem.HasSave);
+            continueButton.SetActive(true);
+
+        if (playButtonLabel != null)
+            playButtonLabel.text = hasPlayedThisSession ? "Continue" : "Play";
+
+        if (newGameButton != null)
+            newGameButton.SetActive(SaveSystem.HasSave);
     }
 
     public void PlayGame()
     {
+        hasPlayedThisSession = true;
         SceneManager.LoadScene("Bakery");
     }
 
-    // New Game button: ask first if a save exists
+    // New Game button: ask first (it only shows when a save exists)
     public void OnNewGamePressed()
     {
         if (SaveSystem.HasSave && newGameConfirmPanel != null)
