@@ -855,6 +855,7 @@ MonoBehaviour:
   unlockedColor: {r: 0, g: 1, b: 0, a: 1}
   flashDuration: 0.3
   interactRange: 3.5
+  flashRange: 1.5
   lockedIconSprite: {fileID: 21300000, guid: 8db7da80ffe6f4548856b5ee5aa84da6, type: 3}
   openIconSprite: {fileID: 21300000, guid: 95aaf26fec53766449d69ea19df48996, type: 3}
   iconScale: 0.8
