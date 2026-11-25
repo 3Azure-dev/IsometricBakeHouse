@@ -1,89 +1,81 @@
 using UnityEngine;
 
-// Molten cheese (Pizza world). Slows the player a bit.
-// Too long on the ground in it = burn: lose ingredients from this level and respawn at the last zone.
 [RequireComponent(typeof(Collider2D))]
 public class MoltenCheesePool : MonoBehaviour
 {
     [SerializeField] private MoltenCheeseData _data;
     [SerializeField] private Color _burnColor = new Color(1f, 0.45f, 0.1f);
 
-    [Header("Burn sound - Pravin can tune this")]
-    [Tooltip("Sound plays once when the player is this red (0.9 = 90%)")]
-    [SerializeField, Range(0.5f, 1f)] private float _burnSoundAt = 0.9f;
+    private SpriteRenderer _strip;
+    private Color _safeColor;
+    private double _cycleStart;
+    private bool _isBurning;
+    private bool _burnedDuringContact;
 
-    private float _heat;
-    private bool _burnSoundPlayed;
-    private SpriteRenderer _playerSprite;
-    private Color _playerColor;
-
-    private void Awake() => GetComponent<Collider2D>().isTrigger = true;
-
-    private void OnTriggerStay2D(Collider2D other)
+    private void Awake()
     {
+        GetComponent<Collider2D>().isTrigger = true;
+        _strip = GetComponent<SpriteRenderer>();
+        if (_strip != null)
+            _safeColor = _strip.color;
+    }
+
+    private void OnEnable()
+    {
+        _cycleStart = Time.fixedTimeAsDouble;
+        _isBurning = false;
+        _burnedDuringContact = false;
+
+        if (_strip != null)
+            _strip.color = _safeColor;
+    }
+
+    private void FixedUpdate()
+    {
+        if (_data == null) return;
+
+        double cycleLength = (double)_data.safePhaseDuration + _data.burnPhaseDuration;
+        double phaseTime = (Time.fixedTimeAsDouble - _cycleStart) % cycleLength;
+        bool isBurning = phaseTime >= _data.safePhaseDuration;
+
+        if (isBurning == _isBurning) return;
+
+        _isBurning = isBurning;
+        if (!_isBurning)
+            _burnedDuringContact = false;
+
+        if (_strip != null)
+            _strip.color = _isBurning ? _burnColor : _safeColor;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) => ApplyHazard(other);
+    private void OnTriggerStay2D(Collider2D other) => ApplyHazard(other);
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.TryGetComponent(out PlayerController _))
+            _burnedDuringContact = false;
+    }
+
+    private void ApplyHazard(Collider2D other)
+    {
+        if (!isActiveAndEnabled || _data == null) return;
         if (!other.TryGetComponent(out PlayerController player)) return;
 
         player.ApplySlow(_data.slowMultiplier, _data.slowDuration);
 
-        bool grounded = player.CurrentState == PlayerController.PlayerState.Idle
-                     || player.CurrentState == PlayerController.PlayerState.Running;
+        if (!_isBurning || _burnedDuringContact || !player.IsGrounded) return;
+        if (!other.TryGetComponent(out PlayerRespawn respawn)) return;
 
-        if (grounded) _heat += Time.fixedDeltaTime;
-        else _heat = Mathf.Max(0f, _heat - _data.coolSpeed * Time.fixedDeltaTime);
-
-        float ratio = _heat / _data.burnTime;
-        Tint(other, ratio);
-
-        // burn sound: once when the player is almost fully red
-        if (ratio >= _burnSoundAt)
-        {
-            if (!_burnSoundPlayed)
-            {
-                _burnSoundPlayed = true;
-                if (BreadSFX.Instance != null)
-                    BreadSFX.Instance.PlayMoltenCheeseBurn();
-            }
-        }
-        else
-        {
-            _burnSoundPlayed = false; // cooled down, can play again next time
-        }
-
-        if (_heat >= _data.burnTime) Burn(other);
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.TryGetComponent(out PlayerController _)) return;
-        _heat = 0f;
-        _burnSoundPlayed = false;
-        if (BreadSFX.Instance != null) BreadSFX.Instance.FadeOutMoltenCheeseBurn();
-        Tint(other, 0f);
-    }
-
-    private void Burn(Collider2D player)
-    {
-        _heat = 0f;
-        _burnSoundPlayed = false;
-        Tint(player, 0f);
-
-        if (BreadSFX.Instance != null)
-            BreadSFX.Instance.FadeOutMoltenCheeseBurn(0.6f);
+        _burnedDuringContact = true;
 
         GrandfatherDunk dunk = FindAnyObjectByType<GrandfatherDunk>();
-        int lost = dunk != null ? dunk.LoseCaught(_data.ingredientsLost) : 0;
-        Debug.Log($"Player burned in molten cheese, lost {lost} ingredient(s)");
+        if (dunk != null)
+            dunk.LoseCaught(_data.ingredientsLost);
 
-        if (player.TryGetComponent(out PlayerRespawn respawn)) respawn.Respawn();
-    }
-    private void Tint(Collider2D player, float amount)
-    {
-        if (_playerSprite == null)
-        {
-            _playerSprite = player.GetComponentInChildren<SpriteRenderer>();
-            if (_playerSprite == null) return;
-            _playerColor = _playerSprite.color;
-        }
-        _playerSprite.color = Color.Lerp(_playerColor, _burnColor, amount);
+        if (BreadSFX.Instance != null)
+            BreadSFX.Instance.PlayMoltenCheeseBurn();
+
+        respawn.Respawn();
     }
 }

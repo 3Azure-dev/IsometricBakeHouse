@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject _stunIndicator;
 
     public PlayerState CurrentState { get; private set; }
+    public bool IsGrounded => _isGrounded;
 
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
@@ -125,6 +126,7 @@ public class PlayerController : MonoBehaviour
                 _rb.linearVelocity.x,
                 _jumpForce
             );
+            _isGrounded = false;
         }
 
         _jumpPressed = false;

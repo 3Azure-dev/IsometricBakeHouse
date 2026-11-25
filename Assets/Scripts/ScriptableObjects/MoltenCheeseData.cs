@@ -7,11 +7,11 @@ public class MoltenCheeseData : ScriptableObject
     [Range(0.1f, 1f)] public float slowMultiplier = 0.75f;
     public float slowDuration = 0.2f;
 
-    [Tooltip("Seconds on the ground in the pool before burning")]
-    public float burnTime = 1.5f;
+    [Tooltip("Seconds the pool is safe at the start of each cycle")]
+    [Min(0.01f)] public float safePhaseDuration = 2f;
 
-    [Tooltip("How fast the heat cools while jumping in the pool")]
-    public float coolSpeed = 0.5f;
+    [Tooltip("Seconds the pool burns grounded players at the end of each cycle")]
+    [Min(0.01f)] public float burnPhaseDuration = 1f;
 
     [Tooltip("Ingredients lost per burn (only ones caught in this level)")]
     [Min(0)] public int ingredientsLost = 1;
