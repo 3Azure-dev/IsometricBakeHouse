@@ -36,6 +36,12 @@ public abstract class ProximityPromptBase : MonoBehaviour
     // For subclasses that need the player (e.g. "am I the nearest plate?")
     protected Transform PlayerTransform => player;
 
+    // True when the player is inside the same range that shows the prompt.
+    public bool IsPlayerInPromptRange
+    {
+        get { return player != null && rangeCenter != null && IsPlayerInRange(); }
+    }
+
     protected virtual void Awake()
     {
         if (rangeCenter == null) rangeCenter = transform;

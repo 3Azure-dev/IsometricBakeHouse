@@ -5552,6 +5552,7 @@ MonoBehaviour:
   equipment: {fileID: 11400000, guid: 68aa76871f3208c4b9c11c7533af3a23, type: 2}
   cookingProgressCanvas: {fileID: 1962229313}
   cookingProgressSlider: {fileID: 1104378652}
+  foodReadyPrompt: {fileID: 1407928589}
 --- !u!1 &344326207
 GameObject:
   m_ObjectHideFlags: 0
@@ -13037,6 +13038,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OvenController
   recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
   equipment: {fileID: 11400000, guid: 77cc82b83b181294ba2c34ed02e05b40, type: 2}
+  foodReadyPrompt: {fileID: 911328944}
 --- !u!114 &911328944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13061,8 +13063,11 @@ MonoBehaviour:
       m_Calls: []
   debugForceShow: 0
   foodProvider: {fileID: 911328941}
-  pickupSounds: []
-  soundMode: 0
+  pickupSounds:
+  - {fileID: 8300000, guid: 67decf137e26fc048b550c27ea571d82, type: 3}
+  - {fileID: 8300000, guid: 4de805d127be06545ab1cba8604e67f4, type: 3}
+  - {fileID: 8300000, guid: 41f2514375d71134dae296ed5f07035d, type: 3}
+  soundMode: 1
   pickupVolume: 1
 --- !u!23 &911328945 stripped
 MeshRenderer:
@@ -27242,14 +27247,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1962229313}
-  m_LocalRotation: {x: 0.0010163214, y: 0.99859583, z: -0.017234262, w: -0.050083254}
+  m_LocalRotation: {x: 0.39440995, y: 0.012381839, z: 0.010548149, w: 0.91879064}
   m_LocalPosition: {x: 0, y: 0, z: -26.36}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1104378651}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 1.967, y: 185.746, z: 0.215}
+  m_LocalEulerAnglesHint: {x: 46.427, y: 2.584, z: 2.424}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 19.06, y: 3.67}

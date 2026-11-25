@@ -12,6 +12,9 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
     [SerializeField] private RecipeDatabase recipeDatabase;   // SO_RecipeDatabase
     [SerializeField] private EquipmentData equipment;         // SO_Equipment_Oven or SO_Equipment_PizzaStone
 
+    [Header("Pickup range")]
+    [SerializeField] private FoodReadyPrompt foodReadyPrompt;
+
     public bool IsCooking { get; private set; }
     public FoodType CurrentFood { get; private set; }
 
@@ -31,11 +34,20 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
     public event Action FoodTaken;
     private Coroutine cookingCoroutine;
 
+    private void Awake()
+    {
+        if (foodReadyPrompt == null)
+            foodReadyPrompt = GetComponent<FoodReadyPrompt>();
+    }
+
     public void Interact()
     {
-        // Finished dish waiting? E picks it up (same as the Stove)
         if (FoodReady)
         {
+            // Only collect when the player is inside the E prompt range
+            if (foodReadyPrompt != null && !foodReadyPrompt.IsPlayerInPromptRange)
+                return;
+
             TakeFood();
             return;
         }

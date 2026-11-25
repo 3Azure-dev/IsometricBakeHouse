@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 // Exit door of a hunt level (same setup in Bread, Cupcake, Pizza).
-//   Door sprite  : always visible. Brown -> flashes red on E while locked -> green once unlocked.
+//   Door sprite  : always visible. Brown -> flashes red on E while locked (only when close) -> green once unlocked.
 //   Status icon  : padlock / open-door icon on the LEFT side of the door, only while the player is within range.
 //   E prompt     : only while the player is within range AND the door is unlocked. Gently pulses.
 [RequireComponent(typeof(SpriteRenderer))]
@@ -22,6 +22,10 @@ public class ExitDoor1 : MonoBehaviour
     [Tooltip("How close the player must be (world units, measured from the door's edge to the player) " +
              "for the icon / E prompt to appear and for E to work.")]
     [SerializeField] private float interactRange = 3.5f;
+
+    [Tooltip("The red flash on a locked door only happens when the player is this close " +
+             "(world units from the door's edge). Keep it smaller than Interact Range.")]
+    [SerializeField] private float flashRange = 1.5f;
 
     [Header("Status icon (left side of the door)")]
     [SerializeField] private Sprite lockedIconSprite;   // padlock
@@ -52,6 +56,7 @@ public class ExitDoor1 : MonoBehaviour
     private Vector3 promptBaseScale = Vector3.one;
 
     private bool playerInRange;
+    private float distanceToDoor = Mathf.Infinity;
     private bool levelCompleted;
     private bool unlocked;
     private float flashTimer;
@@ -153,7 +158,9 @@ public class ExitDoor1 : MonoBehaviour
 
         if (!unlocked)
         {
-            flashTimer = flashDuration;   // locked: flash red
+            // Locked: flash red, but only when the player is right next to the door.
+            if (distanceToDoor <= flashRange)
+                flashTimer = flashDuration;
             return;
         }
 
@@ -170,12 +177,13 @@ public class ExitDoor1 : MonoBehaviour
         {
             FindPlayer();
             playerInRange = false;
+            distanceToDoor = Mathf.Infinity;
             return;
         }
 
         Vector2 closest = doorRenderer.bounds.ClosestPoint(player.position);
-        float dist = Vector2.Distance(closest, player.position);
-        playerInRange = dist <= interactRange;
+        distanceToDoor = Vector2.Distance(closest, player.position);
+        playerInRange = distanceToDoor <= interactRange;
     }
 
     private void UpdatePrompt()

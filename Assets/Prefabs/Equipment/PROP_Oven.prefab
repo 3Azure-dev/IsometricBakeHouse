@@ -1402,6 +1402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OvenController
   recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
   equipment: {fileID: 11400000, guid: 0dc06b4214e27334a88a0a571422e388, type: 2}
+  foodReadyPrompt: {fileID: 7317861522367296122}
 --- !u!114 &4742326521485009410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1462,6 +1463,9 @@ MonoBehaviour:
       m_Calls: []
   debugForceShow: 0
   foodProvider: {fileID: 7369345990401911917}
-  pickupSounds: []
-  soundMode: 0
+  pickupSounds:
+  - {fileID: 8300000, guid: 67decf137e26fc048b550c27ea571d82, type: 3}
+  - {fileID: 8300000, guid: 4de805d127be06545ab1cba8604e67f4, type: 3}
+  - {fileID: 8300000, guid: 41f2514375d71134dae296ed5f07035d, type: 3}
+  soundMode: 1
   pickupVolume: 1

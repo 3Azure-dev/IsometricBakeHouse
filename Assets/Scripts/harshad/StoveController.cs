@@ -23,6 +23,9 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
     [SerializeField] private GameObject cookingProgressCanvas;
     [SerializeField] private Slider cookingProgressSlider;
 
+    [Header("Pickup range (drag this stove's FoodReadyPrompt here)")]
+    [SerializeField] private FoodReadyPrompt foodReadyPrompt;
+
     private bool isCooking;
     private bool foodReady;
 
@@ -72,6 +75,10 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
 
         if (foodReady)
         {
+            // Only collect when the player is inside the E prompt range
+            if (foodReadyPrompt != null && !foodReadyPrompt.IsPlayerInPromptRange)
+                return;
+
             TakeFood();
             return;
         }
