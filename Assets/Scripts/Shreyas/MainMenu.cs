@@ -49,6 +49,15 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
+        // Continue (back from the game): keep the bag exactly as it is
+        if (hasPlayedThisSession)
+            IngredientShelf.SkipNextDeposit();
+
+        EnterBakery();
+    }
+
+    private void EnterBakery()
+    {
         hasPlayedThisSession = true;
         SceneManager.LoadScene("Bakery");
     }
@@ -70,7 +79,7 @@ public class MainMenu : MonoBehaviour
         if (SaveSystem.Instance != null)
             SaveSystem.Instance.NewGame();
 
-        PlayGame();
+        EnterBakery();
     }
 
     // "No" on the popup

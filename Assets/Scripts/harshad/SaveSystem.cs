@@ -29,6 +29,7 @@ public class SaveSystem : MonoBehaviour
         public int dayNumber = 1;
         public List<string> equipment = new List<string>();
         public List<string> recipes = new List<string>();
+        public List<string> foods = new List<string>();
         public List<IngredientEntry> ingredients = new List<IngredientEntry>();
     }
 
@@ -188,6 +189,8 @@ public class SaveSystem : MonoBehaviour
                 data.recipes.Add(food.ToString());
         }
 
+        foreach (FoodType carried in PlayerFoodInventory.SnapshotCarried())
+            data.foods.Add(carried.ToString());
         // Ingredients = what is in the bag + what is on the shelf
         Dictionary<string, int> totals = new Dictionary<string, int>();
 
@@ -268,6 +271,13 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+        List<FoodType> savedFoods = new List<FoodType>();
+        foreach (string foodName in data.foods)
+        {
+            if (Enum.TryParse(foodName, out FoodType savedFood))
+                savedFoods.Add(savedFood);
+        }
+        PlayerFoodInventory.RestoreCarried(savedFoods);
         // The loaded save must not be replaced by the starting state at the first shelf visit
         StartingStateInitializer.MarkInitialized();
 

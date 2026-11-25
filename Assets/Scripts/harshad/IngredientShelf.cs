@@ -33,6 +33,14 @@ public class IngredientShelf : MonoBehaviour
 
     // New scene load = new visit, so this resets after every hunt
     private bool depositedThisVisit;
+    // Set by the Main Menu's Continue button, so coming back from the menu
+    // does not put the bag back on the shelf.
+    private static bool skipNextDeposit;
+
+    public static void SkipNextDeposit()
+    {
+        skipNextDeposit = true;
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetSavedStock()
@@ -40,11 +48,16 @@ public class IngredientShelf : MonoBehaviour
         SaveSystem.GameReset -= ClearStockOnNewGame;
         SaveSystem.GameReset += ClearStockOnNewGame;
         savedStock = null;
+        skipNextDeposit = false;
         dataByType = new Dictionary<IngredientType, IngredientData>();
     }
 
     private void Awake()
     {
+        // Back from the Main Menu: treat this as the same visit, so nothing is deposited
+        depositedThisVisit = skipNextDeposit;
+        skipNextDeposit = false;
+
         if (savedStock == null)
         {
             savedStock = new Dictionary<IngredientType, int>();
