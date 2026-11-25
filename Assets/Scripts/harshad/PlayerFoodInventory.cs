@@ -8,8 +8,36 @@ public class PlayerFoodInventory : MonoBehaviour
     [Header("Inventory")]
     [SerializeField] private int maximumFoodCapacity = 4;
 
-    private List<FoodType> carriedFoods =
-        new List<FoodType>();
+    // static: the Bakery scene is rebuilt after every Main Menu / hunt trip,
+    // so the list must live outside the scene object
+    private static List<FoodType> carriedFoods = new List<FoodType>();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetOnStart()
+    {
+        carriedFoods = new List<FoodType>();
+        SaveSystem.GameReset -= ClearOnNewGame;
+        SaveSystem.GameReset += ClearOnNewGame;
+    }
+
+    // New Game: nothing is carried
+    private static void ClearOnNewGame()
+    {
+        carriedFoods.Clear();
+        if (Instance != null) Instance.Changed?.Invoke();
+    }
+
+    // Used by SaveSystem
+    public static List<FoodType> SnapshotCarried()
+    {
+        return new List<FoodType>(carriedFoods);
+    }
+
+    public static void RestoreCarried(List<FoodType> foods)
+    {
+        carriedFoods = new List<FoodType>(foods);
+        if (Instance != null) Instance.Changed?.Invoke();
+    }
     public event System.Action Changed;
 
 
