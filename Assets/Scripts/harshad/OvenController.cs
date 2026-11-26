@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // A cooking station that reads its recipes from the RecipeData assets (SO_Recipe_*).
 // ONE script for the Oven and the Pizza Stone: set "Equipment" to the right asset.
@@ -14,6 +15,10 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
 
     [Header("Pickup range")]
     [SerializeField] private FoodReadyPrompt foodReadyPrompt;
+
+    [Header("Cooking Progress UI")]
+    [SerializeField] private GameObject cookingProgressCanvas;
+    [SerializeField] private Slider cookingProgressSlider;
 
     public bool IsCooking { get; private set; }
     public FoodType CurrentFood { get; private set; }
@@ -34,10 +39,28 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
     public event Action FoodTaken;
     private Coroutine cookingCoroutine;
 
+
+
     private void Awake()
     {
         if (foodReadyPrompt == null)
             foodReadyPrompt = GetComponent<FoodReadyPrompt>();
+    }
+
+    private void Start()
+    {
+        if (cookingProgressCanvas != null)
+            cookingProgressCanvas.SetActive(false);
+
+        if (cookingProgressSlider != null)
+        {
+            cookingProgressSlider.minValue = 0f;
+            cookingProgressSlider.maxValue = 1f;
+            cookingProgressSlider.value = 0f;
+        }
+
+        if (cookingProgressCanvas == null || cookingProgressSlider == null)
+            Debug.LogWarning(name + ": Cooking Progress Canvas/Slider not assigned, no progress bar will show.", this);
     }
 
     public void Interact()
@@ -198,6 +221,9 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
         OnCookingStateChanged?.Invoke();
         SetStatus("Cooking " + food + " (" + recipe.cookTime.ToString("0.#") + " sec)...");
 
+        if (cookingProgressCanvas != null) cookingProgressCanvas.SetActive(true);
+        if (cookingProgressSlider != null) cookingProgressSlider.value = 0f;
+
         cookingCoroutine = StartCoroutine(CookRecipe(recipe));
 
         return true;
@@ -233,16 +259,29 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
 
     private IEnumerator CookRecipe(RecipeData recipe)
     {
-        yield return new WaitForSeconds(Mathf.Max(0f, recipe.cookTime));
+        float cookTime = Mathf.Max(0f, recipe.cookTime);
+        float timer = 0f;
+
+        while (timer < cookTime)
+        {
+            timer += Time.deltaTime;
+
+            if (cookingProgressSlider != null && cookTime > 0f)
+                cookingProgressSlider.value = Mathf.Clamp01(timer / cookTime);
+
+            yield return null;
+        }
 
         // The dish waits on the station until the player presses E. It never burns.
         IsCooking = false;
         FoodReady = true;
         cookingCoroutine = null;
 
+        if (cookingProgressCanvas != null)
+            cookingProgressCanvas.SetActive(false);
+
         if (BakeryAudioManager.Instance != null)
         {
-            // <-- FIX 3: STOP the looping sizzle FIRST, THEN play the ding
             BakeryAudioManager.Instance.StopCookingSound();
             BakeryAudioManager.Instance.PlayCookingDone();
         }
@@ -252,7 +291,6 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
 
         OnCookingStateChanged?.Invoke();
     }
-
     private void SetStatus(string message)
     {
         Debug.Log("[" + StationName + "] " + message);
@@ -261,6 +299,8 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
 
     private void OnDisable()
     {
+        if (cookingProgressCanvas != null) cookingProgressCanvas.SetActive(false);
+
         if (cookingCoroutine != null)
         {
             StopCoroutine(cookingCoroutine);

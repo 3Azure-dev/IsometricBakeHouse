@@ -1043,6 +1043,132 @@ MonoBehaviour:
   m_EffectColor: {r: 0.12156863, g: 0.35686275, b: 0.16862746, a: 1}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!1001 &1182593809730853629
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8491147957794860025}
+    m_Modifications:
+    - target: {fileID: 394835238646129736, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2313936182560521887, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_Name
+      value: CookingProgressCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2517862549572943638, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -31.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.91879064
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.39440995
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.012381839
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.010548149
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -6.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 84.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 46.427
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 2.584
+      objectReference: {fileID: 0}
+    - target: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 2.424
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+--- !u!114 &436310093118563773 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1614399154315509568, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+  m_PrefabInstance: {fileID: 1182593809730853629}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!1 &3491884549152187490 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2313936182560521887, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+  m_PrefabInstance: {fileID: 1182593809730853629}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7314126773396196452 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8496486280780125849, guid: 05c09a3b7e1f5f34bbac8e9740e77a31, type: 3}
+  m_PrefabInstance: {fileID: 1182593809730853629}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5706308504466628711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1352,6 +1478,9 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cd681599f8f2ced468326a01b06bc004, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 7314126773396196452}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cd681599f8f2ced468326a01b06bc004, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5585218823904867157}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cd681599f8f2ced468326a01b06bc004, type: 3}
       insertIndex: -1
@@ -1403,6 +1532,8 @@ MonoBehaviour:
   recipeDatabase: {fileID: 11400000, guid: 5a4b655d5d337ea46b62b91dbd0b7a2d, type: 2}
   equipment: {fileID: 11400000, guid: 0dc06b4214e27334a88a0a571422e388, type: 2}
   foodReadyPrompt: {fileID: 7317861522367296122}
+  cookingProgressCanvas: {fileID: 3491884549152187490}
+  cookingProgressSlider: {fileID: 436310093118563773}
 --- !u!114 &4742326521485009410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1463,6 +1594,7 @@ MonoBehaviour:
       m_Calls: []
   debugForceShow: 0
   foodProvider: {fileID: 7369345990401911917}
+  rangeHighlight: {fileID: 0}
   pickupSounds:
   - {fileID: 8300000, guid: 67decf137e26fc048b550c27ea571d82, type: 3}
   - {fileID: 8300000, guid: 4de805d127be06545ab1cba8604e67f4, type: 3}
