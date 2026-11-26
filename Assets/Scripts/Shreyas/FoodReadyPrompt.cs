@@ -17,6 +17,9 @@ public class FoodReadyPrompt : ProximityPromptBase
     [FormerlySerializedAs("stoveController")]
     [SerializeField] private MonoBehaviour foodProvider;   // StoveController or OvenController
 
+    [Header("Range (same as the blink)")]
+    [SerializeField] private RangeHighlight rangeHighlight;
+
     [Header("Pickup sounds (one is played each time the dish is taken)")]
     [SerializeField] private AudioClip[] pickupSounds;
     [SerializeField] private PickupSoundMode soundMode = PickupSoundMode.RandomNoRepeat;
@@ -35,6 +38,9 @@ public class FoodReadyPrompt : ProximityPromptBase
     protected override void Awake()
     {
         base.Awake();
+
+        if (rangeHighlight == null)
+            rangeHighlight = GetComponent<RangeHighlight>();
 
         provider = foodProvider as IFoodReadyProvider;
 
@@ -91,5 +97,12 @@ public class FoodReadyPrompt : ProximityPromptBase
 
         lastIndex = index;
         return pickupSounds[index];
+    }
+
+    protected override bool IsPlayerInRange()
+    {
+        // Blink range = prompt range = pickup range
+        if (rangeHighlight != null) return rangeHighlight.PlayerInRange;
+        return base.IsPlayerInRange();
     }
 }

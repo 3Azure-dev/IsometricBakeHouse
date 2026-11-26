@@ -8,6 +8,10 @@ public class RangeHighlight : MonoBehaviour
     [SerializeField] private float pulseSpeed = 3f;
 
     private readonly HashSet<Collider> playerColliders = new HashSet<Collider>();
+    
+    // True while the player is inside the blink range.
+    public bool PlayerInRange => playerColliders.Count > 0;
+
     private MaterialPropertyBlock block;
     private int[] colorProperties;   // one colour property per material
     private Color[] originalColors;  // one original colour per material

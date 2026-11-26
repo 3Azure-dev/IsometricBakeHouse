@@ -37,10 +37,8 @@ public abstract class ProximityPromptBase : MonoBehaviour
     protected Transform PlayerTransform => player;
 
     // True when the player is inside the same range that shows the prompt.
-    public bool IsPlayerInPromptRange
-    {
-        get { return player != null && rangeCenter != null && IsPlayerInRange(); }
-    }
+    // True when the player is inside the same range that shows the prompt.
+    public bool IsPlayerInPromptRange => IsPlayerInRange();
 
     protected virtual void Awake()
     {
@@ -96,8 +94,10 @@ public abstract class ProximityPromptBase : MonoBehaviour
         }
     }
 
-    private bool IsPlayerInRange()
+    protected virtual bool IsPlayerInRange()
     {
+        if (player == null || rangeCenter == null) return false;
+
         Vector3 a = player.position;
         Vector3 b = rangeCenter.position;
         a.y = 0f;
