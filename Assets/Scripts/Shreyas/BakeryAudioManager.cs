@@ -4,6 +4,16 @@ public class BakeryAudioManager : MonoBehaviour
 {
     public static BakeryAudioManager Instance { get; private set; }
 
+    public enum CookingStation { Stove, Oven, PizzaStone }
+
+    [Header("New Station Cooking Loops (Oven keeps the existing Cooking Start clip)")]
+    [SerializeField] private AudioClip stoveLoop;
+    [SerializeField] private AudioClip pizzaStoneLoop;
+    [Range(0f, 1f)][SerializeField] private float stoveLoopVolume = 0.5f;
+    [Range(0f, 1f)][SerializeField] private float pizzaStoneLoopVolume = 0.5f;
+
+    private AudioSource stoveSource, pizzaStoneSource;
+
     [Header("Main Audio Source (for one-shots)")]
     [SerializeField] private AudioSource audioSource;
 
@@ -62,6 +72,9 @@ public class BakeryAudioManager : MonoBehaviour
         cookingLoopSource.loop = true;          // CRUCIAL: Makes the sizzle play continuously
         cookingLoopSource.playOnAwake = false;
         cookingLoopSource.spatialBlend = 0f;    // 2D sound
+
+        stoveSource = CreateLoopSource();
+        pizzaStoneSource = CreateLoopSource();
     }
 
     private void OnDestroy()
@@ -72,22 +85,43 @@ public class BakeryAudioManager : MonoBehaviour
 
     // --- COOKING SOUND METHODS ---
 
-    public void PlayCookingStart()
+    public void PlayCookingStart(CookingStation station = CookingStation.Oven)
     {
-        if (cookingStart != null && cookingLoopSource != null)
+        AudioSource src; AudioClip clip; float vol;
+
+        switch (station)
         {
-            cookingLoopSource.clip = cookingStart;
-            cookingLoopSource.volume = cookingStartVolume;
-            cookingLoopSource.Play(); // Starts looping infinitely
+            case CookingStation.Stove:
+                src = stoveSource; clip = stoveLoop; vol = stoveLoopVolume; break;
+            case CookingStation.PizzaStone:
+                src = pizzaStoneSource; clip = pizzaStoneLoop; vol = pizzaStoneLoopVolume; break;
+            default: // Oven: unchanged, uses the existing clip
+                src = cookingLoopSource; clip = cookingStart; vol = cookingStartVolume; break;
         }
+
+        if (src == null || clip == null)
+        {
+            Debug.LogWarning($"BakeryAudioManager: no cooking loop assigned for {station}.", this);
+            return;
+        }
+
+        if (src.isPlaying && src.clip == clip) return; // already cooking
+
+        src.clip = clip;
+        src.volume = vol;
+        src.Play();
     }
 
-    public void StopCookingSound()
+    public void StopCookingSound(CookingStation station = CookingStation.Oven)
     {
-        if (cookingLoopSource != null)
+        AudioSource src = station switch
         {
-            cookingLoopSource.Stop(); // Instantly cuts the sizzle
-        }
+            CookingStation.Stove => stoveSource,
+            CookingStation.PizzaStone => pizzaStoneSource,
+            _ => cookingLoopSource
+        };
+
+        if (src != null) src.Stop();
     }
 
     public void PlayCookingDone()
@@ -169,5 +203,15 @@ public class BakeryAudioManager : MonoBehaviour
             PlayCoinsEarned();
         }
         lastKnownCoins = newBalance;
+    }
+
+    private AudioSource CreateLoopSource()
+    {
+        AudioSource src = gameObject.AddComponent<AudioSource>();
+        src.loop = true;
+        src.playOnAwake = false;
+        src.spatialBlend = 0f;
+        src.outputAudioMixerGroup = audioSource.outputAudioMixerGroup; // keeps your volume sliders working
+        return src;
     }
 }

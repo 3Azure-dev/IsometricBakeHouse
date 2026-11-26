@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using static BakeryAudioManager;
 
 public class StoveController : MonoBehaviour, IFoodReadyProvider
 {
@@ -175,8 +176,9 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
 
         if (BakeryAudioManager.Instance != null)
         {
-            BakeryAudioManager.Instance.PlayCookingStart();
+            BakeryAudioManager.Instance.PlayCookingStart(CookingStation.Stove);
         }
+
 
         if (cookingProgressCanvas != null)
         {
@@ -203,8 +205,8 @@ public class StoveController : MonoBehaviour, IFoodReadyProvider
 
         if (BakeryAudioManager.Instance != null)
         {
-            // 1. STOP the looping sizzle FIRST
-            BakeryAudioManager.Instance.StopCookingSound();
+            // 1. STOP the looping sound FIRST
+            BakeryAudioManager.Instance.StopCookingSound(CookingStation.Stove);
 
             // 2. THEN play the "ding"
             BakeryAudioManager.Instance.PlayCookingDone();

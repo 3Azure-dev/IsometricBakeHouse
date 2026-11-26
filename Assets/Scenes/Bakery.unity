@@ -12960,6 +12960,7 @@ MonoBehaviour:
   foodReadyPrompt: {fileID: 911328944}
   cookingProgressCanvas: {fileID: 812297483}
   cookingProgressSlider: {fileID: 812297482}
+  soundStation: 2
 --- !u!114 &911328944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27352,6 +27353,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cdb415b14560c4b82a45fe6750f3b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BakeryAudioManager
+  stoveLoop: {fileID: 8300000, guid: d3111c25f0425e041b346f14d41ed49d, type: 3}
+  pizzaStoneLoop: {fileID: 8300000, guid: 0ee9dc91c43103f47a3a124da3bfb3e2, type: 3}
+  stoveLoopVolume: 0.5
+  pizzaStoneLoopVolume: 0.5
   audioSource: {fileID: 1989588314}
   cookingLoopSource: {fileID: 0}
   cookingStart: {fileID: 8300000, guid: 8c93dfa2757d09e4dbe09b1d01a17552, type: 3}

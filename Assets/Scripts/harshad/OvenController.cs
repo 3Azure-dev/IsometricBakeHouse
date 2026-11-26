@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static BakeryAudioManager;
 
 // A cooking station that reads its recipes from the RecipeData assets (SO_Recipe_*).
 // ONE script for the Oven and the Pizza Stone: set "Equipment" to the right asset.
@@ -19,6 +20,10 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
     [Header("Cooking Progress UI")]
     [SerializeField] private GameObject cookingProgressCanvas;
     [SerializeField] private Slider cookingProgressSlider;
+
+    [Header("Cooking sound")]
+    [Tooltip("Oven = oven hum. Set this to PizzaStone on the Pizza Stone object.")]
+    [SerializeField] private CookingStation soundStation = CookingStation.Oven;
 
     public bool IsCooking { get; private set; }
     public FoodType CurrentFood { get; private set; }
@@ -215,7 +220,7 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
 
         if (BakeryAudioManager.Instance != null)
         {
-            BakeryAudioManager.Instance.PlayCookingStart();
+            BakeryAudioManager.Instance.PlayCookingStart(soundStation);
         }
 
         OnCookingStateChanged?.Invoke();
@@ -282,7 +287,7 @@ public class OvenController : MonoBehaviour, IFoodReadyProvider // <-- FIX 1: Ad
 
         if (BakeryAudioManager.Instance != null)
         {
-            BakeryAudioManager.Instance.StopCookingSound();
+            BakeryAudioManager.Instance.StopCookingSound(soundStation);
             BakeryAudioManager.Instance.PlayCookingDone();
         }
 
